@@ -1,0 +1,91 @@
+
+# default Dockerfile use nginx, which use port 80, need to in align with app's port
+app:
+   ports: 
+     - 80
+#     - 8080
+#   volumes:
+#     vol1: /upload
+#     vol2: /upload2
+#   env:
+#     - a=global
+#     - b=global b
+#     - c=c
+
+   
+dev:
+  services:
+    - mysql
+    - redis
+    - mongo
+    - swagger-ide 
+
+test:
+  #  ci_image has python, java runtime
+  image: ci_image
+
+  #  These service will export env variables,
+  #  which may be used by ci container and app container
+  services:
+    - mysql
+    - redis
+
+  # These env are  injected to ci containers and app container
+  # not services container, ci container
+  env:
+    - MYENV = "hello"
+    - CTPAAS_TEST = "True"
+
+  # TODO: The installation will be cached.
+  # Better is try to create your own ci image
+  # and avoid installing new packages
+  #install:
+  #  - apt-get install -y  jdk8
+
+  # Prepare the test environment each time
+  # WORKDIR is source code dir
+  before_script:
+    #- mysql -h $MYSQL_SERVICE_HOST -P $MYSQL_SERVICE_PORT -uroot -pcentling  mydb < db/db.sql
+    - echo "run setup.."
+    - echo "run setup2.."
+
+  # APP_URL env is injected to ci container.
+  # Test script will use the env variable
+  #script:
+  #  - env
+  #  - ls -l
+  #  - pwd
+  #  - cat /etc/hosts
+  #  - echo $APP_URL
+  #  - curl $APP_URL
+
+demo:
+  services:
+    - mysql
+#    - mongo
+#    - swagger-ide
+  resources:
+    limits:
+      cpu: 1024m
+      memory: 1024Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi  
+    
+prod:
+# Not supported right now
+  services:
+    - mysql
+
+  env:
+    - MYENV = "hello"
+    - SAAS_URI = "xxxxx"
+    - SAAS_TOKEN = "xxxxx"
+    - TEST_CGIT = true
+  resources:
+    limits:
+      cpu: 1024m
+      memory: 1024Mi
+    requests:
+      cpu: 100m
+      memory: 100Mi 
