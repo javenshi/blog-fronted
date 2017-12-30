@@ -20,65 +20,18 @@
 
             <el-menu-item style="float: right;" index="5" @click="openLoginDialog">登陆</el-menu-item>
         </el-menu>
-        <!--广告条-->
-        <div v-show="show==1">
-        <template >
-            <el-carousel :interval="3000" type="card" height="100px">
-                <el-carousel-item v-for="item in guanggao" :key="item">
-                    <h3 align="center">{{ item.name }}</h3>
-                </el-carousel-item>
-            </el-carousel>
-        </template>
-        </div>
-        <!--查询条件-->
-        <div v-show="show==1" style="margin-top:50px;width:96%;margin-left: 2%;">
-            <el-form ref="selectList" :inline="true" :model="selectList" size="small">
-                <el-form-item label="发布日期">
-                    <el-date-picker type="date" value-format="yyyy-MM-dd" size="small" style="width: 120px;"
-                                    v-model="selectList.startDate" placeholder="最早"></el-date-picker>
-                </el-form-item>
-                <el-form-item label="至">
-                    <el-date-picker type="date" value-format="yyyy-MM-dd" size="small" style="width: 120px;"
-                                    v-model="selectList.endDate" placeholder="最晚"></el-date-picker>
-                </el-form-item>
-                <el-form-item label="点击率">
-                    <el-select size="small" style="width: 100px;" v-model="selectList.clickNum" placeholder="全部">
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="由高到低" value="1"></el-option>
-                        <el-option label="由低到高" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="模块">
-                    <el-select size="small" style="width: 100px;" v-model="selectList.model" placeholder="全部">
-                        <el-option label="全部" value=""></el-option>
-                        <el-option label="博客" value="1"></el-option>
-                        <el-option label="资源" value="2"></el-option>
-                        <el-option label="问题" value="3"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="作者" >
-                   <el-input size="small" style="width: 100px;"  v-model="selectList.userName"  placeholder="请输入"></el-input>
-                </el-form-item>
-                <el-form-item label="关键字" >
-                   <el-input  size="small" v-model="selectList.seachKey"  placeholder="请输入"></el-input>
-                </el-form-item>
 
-                <el-form-item>
-                    <el-button type="primary" size="small" v-waves icon="search" @click="findPage">搜索</el-button>
-                </el-form-item>
-            </el-form>
-        </div>
+
+
         <!--博客资源等-->
         <div v-show="show==1">
             <template id="bokeziyuan">
                 <div class="app-container calendar-list-container;" align="center">
 
                     <el-row :gutter="20">
-                        <el-col :span="12">
+                        <el-col :span="18">
                             <el-card class="box-card">
-                                <div slot="header" class="clearfix">
-                                    <span>博客</span>
-                                </div>
+
                                 <template>
                                     <el-table
                                             :data="blogList"
@@ -96,17 +49,23 @@
                                         </el-table-column>
                                     </el-table>
                                 </template>
-
+                                <div v-show="!listLoading" class="pagination-container">
+                                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                                                   :current-page.sync="listQuery.pageNum"
+                                                   :page-sizes="[10,20,30, 50]" :page-size="listQuery.pageSize"
+                                                   layout="total, sizes, prev, pager, next, jumper" :total="total">
+                                    </el-pagination>
+                                </div>
                             </el-card>
                         </el-col>
 
-                        <el-col :span="12">
+                        <el-col :span="6">
                             <el-card class="box-card">
                                 <div slot="header" class="clearfix">
                                     <span>资源</span>
                                 </div>
                                 <template>
-                                    <el-table
+                                  <!--  <el-table
                                             :data="blogList"
                                             style="width: 100%">
                                         <el-table-column>
@@ -117,7 +76,51 @@
                                                 <span> {{scope.row.classify}}</span>
                                             </template>
                                         </el-table-column>
-                                    </el-table>
+                                    </el-table>-->
+                                    abcd<br>
+                                    abcd<br>
+                                    abcd<br>
+                                    abcd<br>
+                                    abcd<br>
+                                    加载更多
+                                </template>
+                            </el-card>
+                            <el-card class="box-card">
+                                <div slot="header" class="clearfix">
+                                    <span>点击排行</span>
+                                </div>
+                                <template>
+
+                                    abcd<br>
+                                    abcd<br>
+                                    abcd<br>
+                                    abcd<br>
+                                    abcd<br>
+                                </template>
+                            </el-card>
+                            <el-card class="box-card">
+                                <div slot="header" class="clearfix">
+                                    <span>本站公告</span>
+                                </div>
+                                <template>
+                                    abcd<br>
+                                    abcd<br>
+                                    abcd<br>
+                                    abcd<br>
+                                    abcd<br>
+                                </template>
+                            </el-card>
+                            <el-card class="box-card">
+                                <div slot="header" class="clearfix">
+                                    <span>联系我们</span>
+                                </div>
+                                <template>
+
+                                    abcd<br>
+                                    abcd<br>
+                                    abcd<br>
+                                    abcd<br>
+                                    abcd<br>
                                 </template>
                             </el-card>
                         </el-col>
@@ -125,44 +128,7 @@
 
                 </div>
             </template>
-            <template id="jieshaoliuyan">
-                <div class="app-container calendar-list-container;" align="center">
 
-                    <el-row :gutter="20">
-                        <el-col :span="12">
-                            <el-card class="box-card">
-                                <div slot="header" class="clearfix">
-                                    <span>syj社区公告</span>
-                                </div>
-                                abcd<br>
-                                abcd<br>
-                                abcd<br>
-                                abcd<br>
-                                abcd<br>
-                                abcd<br>
-
-                            </el-card>
-                        </el-col>
-
-                        <el-col :span="12">
-                            <el-card class="box-card">
-                                <div slot="header" class="clearfix">
-                                    <span>给我留言</span>
-                                </div>
-                                abcd<br>
-                                abcd<br>
-                                abcd<br>
-                                abcd<br>
-                                abcd<br>
-                                abcd<br>
-                                abcd<br>
-
-                            </el-card>
-                        </el-col>
-                    </el-row>
-
-                </div>
-            </template>
         </div>
 
         <!--写博客-->
@@ -316,7 +282,6 @@
         },
         data() {
             return {
-                guanggao:[{name:"syj社区诞生了"},{name:"syj社区诞生了"},{name:"syj社区诞生了"},{name:"syj社区诞生了"},{name:"syj社区诞生了"},{name:"syj社区诞生了"}],
                /*弹窗状态*/
                 resourceDialog:false,
                 loginDialog:false,
@@ -324,8 +289,43 @@
                 show:1,
                 content: '',
                 datas:'',
-                selectList:{startDate:'', endDate:'', clickNum:'', model:'', userName:'', seachKey:''},
                 blogList: [
+                    {
+                        date: '2016-05-03',
+                        name: '普陀区',
+                        user: '王小虎',
+                        classify: '多线程'
+                    },
+                    {
+                        date: '2016-05-03',
+                        name: '普陀区',
+                        user: '王小虎',
+                        classify: '多线程'
+                    },
+                    {
+                        date: '2016-05-03',
+                        name: '普陀区',
+                        user: '王小虎',
+                        classify: '多线程'
+                    },
+                    {
+                        date: '2016-05-03',
+                        name: '普陀区',
+                        user: '王小虎',
+                        classify: '多线程'
+                    },
+                    {
+                        date: '2016-05-03',
+                        name: '普陀区',
+                        user: '王小虎',
+                        classify: '多线程'
+                    },
+                    {
+                        date: '2016-05-03',
+                        name: '普陀区',
+                        user: '王小虎',
+                        classify: '多线程'
+                    },
                     {
                         date: '2016-05-03',
                         name: '普陀区',
@@ -353,13 +353,15 @@
                 ],
                 blog:{ leixing:'原创',classify:'',context:'',editorOption:{}},
                 resource:{name:'',url:'',context:''},
+                listLoading: false,
                 loginForm:'',
                 rigitsterForm:'',
                 loginOrRigister:true,
                 count: '',
                 timer: null,
                 showTime:false,
-                options: [{
+                options: [
+                    {
                     value: '选项1',
                     label: '黄金糕'
                 }, {
@@ -374,7 +376,9 @@
                 }, {
                     value: '选项5',
                     label: '北京烤鸭'
-                }], leixing: [{
+                }],
+                leixing: [
+                    {
                     value: '原创',
                     label: '原创'
                 }, {
@@ -385,6 +389,14 @@
                     label: '翻译'
                 }],
                 value8: '',
+                listQuery: {
+                    pageNum: 1,
+                    pageSize: 10,
+                    filterList: [],
+                    sortList: [],
+                    searchKey: ''
+                },
+                total: null,
             };
         },mounted(){
 
@@ -439,6 +451,14 @@
                             this.timer = null;
                         }
                     }, 1000)}
+            },
+            handleSizeChange(val) {
+                this.listQuery.pageSize = val;
+                this.getBlogList();
+            },
+            handleCurrentChange(val) {
+                this.listQuery.pageNum = val;
+                this.getBlogList();
             },
         }
     }
