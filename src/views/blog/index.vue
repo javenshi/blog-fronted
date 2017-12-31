@@ -1,35 +1,50 @@
 <template>
     <div>
-<!--导航条-->
+        <!--导航条-->
         <el-menu
-                :default-active="activeIndex2"
+
                 class="el-menu-demo"
                 mode="horizontal"
-                @select="handleSelect"
                 background-color="#000000"
                 text-color="#ffffff"
                 active-text-color="#ffd04b">
             <el-menu-item index="1" @click="index">
-               首页
+                首页
             </el-menu-item>
             <el-menu-item index="2" @click="writeBlog">
                 写博客
             </el-menu-item>
             <el-menu-item index="3" @click="openResourceDialog">贡献资源</el-menu-item>
-         <!--   <el-menu-item index="4">求助</el-menu-item>-->
+            <el-menu-item index="3" ><router-link :to="'/admin/index'">后台</router-link></el-menu-item>
+            <!--   <el-menu-item index="4">求助</el-menu-item>-->
 
-            <el-menu-item style="float: right;" index="5" @click="openLoginDialog">登陆</el-menu-item>
+            <el-menu-item style="float: right;" index="5" v-show="UNAME==''" @click="openLoginDialog">登录</el-menu-item>
+            <el-menu-item style="float: right;" index="5" v-show="UNAME!=''" @click="openLoginDialog">{{UNAME}}
+            </el-menu-item>
         </el-menu>
-
-
-
+        <div style="padding-left: 10px;padding-right:10px;padding-top:15px;">
+            <el-row :gutter="20">
+                <el-col :span="1"><br></el-col>
+                <el-col :span="22">
+                    <div class="block" v-show="show==1">
+                        <el-carousel height="276px">
+                            <el-carousel-item v-for="item in indexUrl" :key="item">
+                                <div v-html="item.url"></div>
+                            </el-carousel-item>
+                        </el-carousel>
+                    </div>
+                </el-col>
+                <el-col :span="1"></el-col>
+            </el-row>
+        </div>
         <!--博客资源等-->
         <div v-show="show==1">
             <template id="bokeziyuan">
-                <div class="app-container calendar-list-container;" align="center">
+                <div class=" calendar-list-container;" style="padding-left: 10px;padding-right:10px; padding-top: 15px;" align="center">
 
                     <el-row :gutter="20">
-                        <el-col :span="18">
+                        <el-col :span="1"><br></el-col>
+                        <el-col :span="17">
                             <el-card class="box-card">
 
                                 <template>
@@ -41,7 +56,7 @@
                                                 <router-link to="/write">
                                                     {{scope.row.name}}
                                                 </router-link>
-                                             <br>
+                                                <br>
                                                 <span> {{scope.row.date}}</span>
                                                 <span> {{scope.row.user}}</span>
                                                 <span> {{scope.row.classify}}</span>
@@ -59,24 +74,24 @@
                             </el-card>
                         </el-col>
 
-                        <el-col :span="6">
+                        <el-col :span="5">
                             <el-card class="box-card">
                                 <div slot="header" class="clearfix">
                                     <span>资源</span>
                                 </div>
                                 <template>
-                                  <!--  <el-table
-                                            :data="blogList"
-                                            style="width: 100%">
-                                        <el-table-column>
-                                            <template scope="scope">
-                                                <span> {{scope.row.name}}</span><br>
-                                                <span> {{scope.row.date}}</span>
-                                                <span> {{scope.row.user}}</span>
-                                                <span> {{scope.row.classify}}</span>
-                                            </template>
-                                        </el-table-column>
-                                    </el-table>-->
+                                    <!--  <el-table
+                                              :data="blogList"
+                                              style="width: 100%">
+                                          <el-table-column>
+                                              <template scope="scope">
+                                                  <span> {{scope.row.name}}</span><br>
+                                                  <span> {{scope.row.date}}</span>
+                                                  <span> {{scope.row.user}}</span>
+                                                  <span> {{scope.row.classify}}</span>
+                                              </template>
+                                          </el-table-column>
+                                      </el-table>-->
                                     abcd<br>
                                     abcd<br>
                                     abcd<br>
@@ -124,6 +139,7 @@
                                 </template>
                             </el-card>
                         </el-col>
+                        <el-col :span="1"></el-col>
                     </el-row>
 
                 </div>
@@ -133,11 +149,11 @@
 
         <!--写博客-->
         <div style="margin-top:50px;width:96%;margin-left: 2%;" v-show="show==2">
-            <template >
-                <el-form :model="blog" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                    <el-form-item label="标题:" prop="name" >
-                        <el-input v-model="blog.name" style="width:88%;" ></el-input>
-                        <el-select v-model="blog.leixing" filterable  style="width:10%;" placeholder="请选择">
+            <template>
+                <el-form :model="blog" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                    <el-form-item label="标题:" prop="name">
+                        <el-input v-model="blog.name" style="width:88%;"></el-input>
+                        <el-select v-model="blog.leixing" filterable style="width:10%;" placeholder="请选择">
                             <el-option
                                     v-for="item in leixing"
                                     :key="item.value"
@@ -161,34 +177,34 @@
                             <quill-editor v-model="blog.context"
                                           ref="myQuillEditor"
                                           class="editer"
-                                          :options="editorOption" @ready="onEditorReady($event)">
+                                          @ready="onEditorReady($event)">
                             </quill-editor>
                         </div>
                     </el-form-item>
-                <el-form-item>
-                    <div style="margin-left: 35%;">
-                    <el-button type="success" @click="saveBlog" round>保存</el-button>
-                    <el-button type="info" round>草稿</el-button>
-                    <el-button type="danger" round>取消</el-button>
-                    </div>
+                    <el-form-item>
+                        <div style="margin-left: 35%;">
+                            <el-button type="success" @click="saveBlog" round>保存</el-button>
+                            <el-button type="info" round>草稿</el-button>
+                            <el-button type="danger" round>取消</el-button>
+                        </div>
                     </el-form-item>
                 </el-form>
                 <div v-html="datas">
-                        <div>{{datas}}</div>
+                    <div>{{datas}}</div>
                 </div>
             </template>
         </div>
         <!--传资源-->
-        <el-dialog :title="传资源" :visible.sync="resourceDialog" align="center">
+        <el-dialog title="传资源" :visible.sync="resourceDialog" align="center">
 
-            <el-form :model="resource" status-icon :rules="rules2" ref="resour"
+            <el-form :model="resource" status-icon ref="resour"
                      class="demo-ruleForm">
                 <el-form-item label="资源名称:" prop="name" required>
                     <el-input size="small" type="input" v-model="resource.name"
                               auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="资源Url:" prop="url" required>
-                    <el-input size="small"  type="input" v-model="resource.url"
+                    <el-input size="small" type="input" v-model="resource.url"
                               auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="资源描述:" prop="context">
@@ -204,68 +220,69 @@
 
         </el-dialog>
         <!--登陸注冊-->
-        <el-dialog :title="登陸注冊" :visible.sync="loginDialog" align="center">
-            <el-form  :model="loginForm" status-icon :rules="loginRules" ref="loginForm"  class="demo-ruleForm" v-show="loginOrRigister">
+        <el-dialog title="" :visible.sync="loginDialog" align="center">
+            <el-form :model="loginForm" status-icon :rules="loginRules" ref="loginForm" class="demo-ruleForm"
+                     v-show="loginOrRigister">
                 <h3 class="title">系统登录</h3>
                 <el-form-item prop="userName" label="用户名:" required>
-                    <el-input name="userName"  type="text" v-model="loginForm.userName"
-                              auto-complete="off"  placeholder="用户名"></el-input>
+                    <el-input name="userName" type="text" v-model="loginForm.userName"
+                              placeholder="用户名"></el-input>
                 </el-form-item>
                 <el-form-item prop="passWord" label="密码:" required>
-                    <el-input name="passWord" type="password"  v-model="loginForm.passWord"
-                               placeholder="密码"></el-input>
+                    <el-input name="passWord" type="password" v-model="loginForm.passWord"
+                              placeholder="密码"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" style="width:100%;">
+                    <el-button type="primary" @click="login('loginForm')" style="width:100%;">
                         登录
                     </el-button>
                 </el-form-item>
-                 <a @click="toRigister" class="forget-pwd">
-                     没有账号?(赶紧注册一个吧)
-                 </a>
+                <a @click="toRigister" class="forget-pwd">
+                    没有账号?(赶紧注册一个吧)
+                </a>
             </el-form>
-            <el-form  :model="rigitsterForm" status-icon :rules="loginRules" ref="loginForm"  class="demo-ruleForm" v-show="!loginOrRigister">
+            <el-form :model="rigitsterForm" status-icon :rules="rigitsterRules" ref="rigitsterForm"
+                     class="demo-ruleForm" v-show="!loginOrRigister">
                 <h3 class="title">系统注册</h3>
                 <el-form-item prop="userName" label="用户名:" required>
-                    <el-input   type="text" v-model="rigitsterForm.userName"
-                              auto-complete="off"  placeholder="用户名"></el-input>
+                    <el-input type="text" v-model="rigitsterForm.userName"
+                              @blur="cheackName" auto-complete="off" placeholder="用户名"></el-input>
                 </el-form-item>
                 <el-form-item prop="passWord" label="密码:" required>
-                    <el-input  type="password"  v-model="rigitsterForm.passWord"
-                               placeholder="密码"></el-input>
+                    <el-input type="password" v-model="rigitsterForm.passWord"
+                              placeholder="密码"></el-input>
                 </el-form-item>
                 <el-form-item prop="checkPassWord" label="确认密码:" required>
-                    <el-input  type="password"  v-model="rigitsterForm.checkPassWord"
-                               placeholder="密码"></el-input>
+                    <el-input type="password" v-model="rigitsterForm.checkPassWord"
+                              placeholder="密码"></el-input>
                 </el-form-item>
                 <el-form-item prop="email" label="邮箱:" required>
-                    <el-input  type="text"  v-model="rigitsterForm.email"
-                               placeholder="邮箱"></el-input>
+                    <el-input type="text" v-model="rigitsterForm.email"
+                              placeholder="邮箱"></el-input>
                 </el-form-item>
                 <el-form-item prop="code" label="验证码:" required>
-                    <el-input  type="text" style="width: 45%" v-model="rigitsterForm.code"
-                               placeholder="验证码"></el-input>
+                    <el-input type="text" style="width: 45%" v-model="rigitsterForm.code"
+                              placeholder="验证码"></el-input>
 
-                        <el-button  v-show="!showTime" type="success"  v-waves icon="plus"
-                                    @click="sendCode">
-                            获取验证码
-                        </el-button>
-                    <el-button  v-show="showTime" type="info"
-                                   >
-                            剩余{{count}}秒
-                        </el-button>
-
+                    <el-button v-show="!showTime" type="success" v-waves icon="plus"
+                               @click="sendCode">
+                        获取验证码
+                    </el-button>
+                    <el-button v-show="showTime" disabled type="primary"
+                    >
+                        剩余{{count}}秒
+                    </el-button>
 
 
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" style="width:100%;">
+                    <el-button type="primary" style="width:100%;" @click="rigster('rigitsterForm')">
                         注册
                     </el-button>
                 </el-form-item>
-                 <a @click="toLogin" class="forget-pwd">
-                    注册成功，赶紧去登陆吧！
-                 </a>
+                <a @click="toLogin" class="forget-pwd">
+                    注册成功，赶紧去登录吧！
+                </a>
             </el-form>
         </el-dialog>
 
@@ -273,7 +290,10 @@
 </template>
 
 <script>
-    import { quillEditor } from 'vue-quill-editor';
+    import {quillEditor} from 'vue-quill-editor';
+    import {getCode, cName, saveUser, login} from 'api/blog/user';
+    import {getAllCarousel} from 'api/admin/index';
+    import tokenStore from 'store2';
 
     export default {
         components: {
@@ -281,14 +301,55 @@
             quillEditor
         },
         data() {
+            var validateRename = (rule, value, callback) => {
+                this.cheackName();
+                if (value === '') {
+                    callback(new Error('请输入用户名'));
+                } else if (value.length <= 0) {
+                    callback(new Error('请输入用户名!'));
+                } else if (this.cna) {
+                    callback(new Error('用户名已存在!'));
+                } else {
+                    callback();
+                }
+            };
+            var validatePassword = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入密码'));
+                } else {
+                    if (this.temp.repassword !== '') {
+                        this.$refs.formName.validateField('repassword');
+                    }
+                    callback();
+                }
+            };
+            var validateRepassword = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请再次输入密码'));
+                } else if (value !== this.rigitsterForm.passWord) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
+            var validateCode = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入验证码'));
+                } else if (value !== this.valCode) {
+                    callback(new Error('验证码不正确'));
+                } else {
+                    callback();
+                }
+            };
             return {
-               /*弹窗状态*/
-                resourceDialog:false,
-                loginDialog:false,
+                /*弹窗状态*/
+                resourceDialog: false,
+                loginDialog: false,
                 /*页面切换*/
-                show:1,
+                show: 1,
                 content: '',
-                datas:'',
+                datas: '',
+                cna: false,
                 blogList: [
                     {
                         date: '2016-05-03',
@@ -351,44 +412,53 @@
                         classify: '多线程'
                     }
                 ],
-                blog:{ leixing:'原创',classify:'',context:'',editorOption:{}},
-                resource:{name:'',url:'',context:''},
+                indexUrl: [],
+                blog: {leixing: '原创', classify: '', context: '', editorOption: {}},
+                resource: {name: '', url: '', context: ''},
                 listLoading: false,
-                loginForm:'',
-                rigitsterForm:'',
-                loginOrRigister:true,
+                loginForm: {userName: '', passWord: ''},
+                rigitsterForm: {
+                    userName: '',
+                    email: '',
+                    code: '',
+                    passWord: '',
+                    checkPassWord: ''
+                },
+                loginOrRigister: true,
                 count: '',
                 timer: null,
-                showTime:false,
+                showTime: false,
                 options: [
                     {
-                    value: '选项1',
-                    label: '黄金糕'
-                }, {
-                    value: '选项2',
-                    label: '双皮奶'
-                }, {
-                    value: '选项3',
-                    label: '蚵仔煎'
-                }, {
-                    value: '选项4',
-                    label: '龙须面'
-                }, {
-                    value: '选项5',
-                    label: '北京烤鸭'
-                }],
+                        value: '选项1',
+                        label: '黄金糕'
+                    }, {
+                        value: '选项2',
+                        label: '双皮奶'
+                    }, {
+                        value: '选项3',
+                        label: '蚵仔煎'
+                    }, {
+                        value: '选项4',
+                        label: '龙须面'
+                    }, {
+                        value: '选项5',
+                        label: '北京烤鸭'
+                    }],
                 leixing: [
                     {
-                    value: '原创',
-                    label: '原创'
-                }, {
-                    value: '转载',
-                    label: '转载'
-                }, {
-                    value: '翻译',
-                    label: '翻译'
-                }],
+                        value: '原创',
+                        label: '原创'
+                    }, {
+                        value: '转载',
+                        label: '转载'
+                    }, {
+                        value: '翻译',
+                        label: '翻译'
+                    }],
                 value8: '',
+                UNAME: '',
+                valCode: '',
                 listQuery: {
                     pageNum: 1,
                     pageSize: 10,
@@ -397,60 +467,157 @@
                     searchKey: ''
                 },
                 total: null,
-            };
-        },mounted(){
+                rigitsterRules: {
+                    userName: [
+                        {validator: validateRename, trigger: 'blur'},
+                        {pattern: /^[^ ]+$/, message: '用户名中不能包含空格', trigger: 'blur'}
+                    ],
+                    email: [
+                        {required: true, message: '请输入邮箱', trigger: 'blur,change'},
+                        {type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change'}
+                    ],
+                    code: [
+                        {validator: validateCode, trigger: 'blur,change'}
+                    ],
+                    password: [
+                        {validator: validatePassword, message: '请输入密码', trigger: 'blur'}
+                    ],
+                    checkPassWord: [
+                        {validator: validateRepassword, trigger: 'blur'}
+                    ]
+                },
+                loginRules: {
+                    userName: [
 
-        }, 
+                        {pattern: /^[^ ]+$/, message: '用户名中不能包含空格', trigger: 'blur'}
+                    ],
+                    password: [
+                        {required: true, message: '请输入密码', trigger: 'blur'},
+                    ]
+                },
+            };
+        }, mounted() {
+            this.UNAME = tokenStore.local('User').userName;
+             getAllCarousel().then(response => {
+                 this.indexUrl= response.data.returnData;
+            });
+        },
         computed: {
             editor() {
                 return this.$refs.myQuillEditor.quill
             }
         },
         methods: {
-            index(){
-                this.show=1;
-            }, writeBlog(){
-                this.show=2;
+            index() {
+                this.show = 1;
+            }, writeBlog() {
+                this.show = 2;
             },
-            handleSelect(key, keyPath) {
-                console.log(key, keyPath);
-            },saveBlog(){
+            saveBlog() {
                 //console.log(this.blog);
-                this.datas=this.blog.context;
+                this.datas = this.blog.context;
                 //console.log(this.datas);
-            },onEditorReady(editor) {
+            }, onEditorReady(editor) {
             },
             /*打开关闭弹框*/
-            openResourceDialog(){
-                this.resourceDialog=true;
-            },closeResourceDialog(formName){
-                this.resourceDialog=false;
+            openResourceDialog() {
+                this.resourceDialog = true;
+            }, closeResourceDialog(formName) {
+                this.resourceDialog = false;
                 this.$refs[formName].resetFields();
             },
-            openLoginDialog(){
-                this.loginDialog=true;
-            },closeLoginDialog(formName){
-                this.loginDialog=false;
+            openLoginDialog() {
+                this.loginDialog = true;
+            }, closeLoginDialog(formName) {
+                this.loginDialog = false;
                 this.$refs[formName].resetFields();
-            },toRigister(){
-                this.loginOrRigister=false;
-            },toLogin(){
-                this.loginOrRigister=true;
+            }, toRigister() {
+                this.loginOrRigister = false;
+            }, toLogin() {
+                this.loginOrRigister = true;
+            },
+            cheackName() {
+                if (this.rigitsterForm.userName.length < 3) {
+                    return false;
+                }
+                cName(this.rigitsterForm.userName).then(response => {
+                    if (response.data.returnCode != 200) {
+                        this.cna = true;
+                    } else {
+                        this.cna = false;
+                    }
+
+                });
             },
             sendCode() {
+                if (this.rigitsterForm.email.length < 3 || this.rigitsterForm.email.indexOf("@") < 1 || this.rigitsterForm.email.indexOf(".") < 1) {
+                    return false;
+                }
+
+                getCode(this.rigitsterForm).then(response => {
+                    if (response.data.returnCode != 200) {
+                        this.$notify({
+                            title: response.data.returnCode == 200 ? '成功' : '失败',
+                            message: response.data.returnMsg,
+                            type: response.data.returnCode == 200 ? 'success' : 'warning',
+                            duration: 5000
+                        });
+                    }
+                    this.valCode = response.data.returnData;
+                });
+
                 const TIME_COUNT = 60;
                 if (!this.timer) {
                     this.count = TIME_COUNT;
-                    this.showTime=true;
+                    this.showTime = true;
                     this.timer = setInterval(() => {
                         if (this.count > 0 && this.count <= TIME_COUNT) {
                             this.count--;
                         } else {
-                            this.showTime=false;
+                            this.showTime = false;
                             clearInterval(this.timer);
                             this.timer = null;
                         }
-                    }, 1000)}
+                    }, 1000)
+                }
+            },
+            rigster(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        saveUser(this.rigitsterForm).then(response => {
+                            this.$notify({
+                                title: response.data.returnCode == 200 ? '成功' : '失败',
+                                message: response.data.returnMsg,
+                                type: response.data.returnCode == 200 ? 'success' : 'warning',
+                                duration: 5000
+                            });
+                            this.toLogin();
+                        });
+                    }
+                });
+            },
+            login(formName) {
+
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+
+                        login(this.loginForm).then(response => {
+                            if (response.data.returnCode == 200) {
+                                this.UNAME = response.data.returnData.userName;
+                                tokenStore.local.set('User', response.data.returnData)
+                                this.loginDialog = false;
+                                return false;
+                            }
+                            this.$notify({
+                                title: response.data.returnCode == 200 ? '成功' : '失败',
+                                message: response.data.returnMsg,
+                                type: response.data.returnCode == 200 ? 'success' : 'warning',
+                                duration: 5000
+                            });
+
+                        });
+                    }
+                });
             },
             handleSizeChange(val) {
                 this.listQuery.pageSize = val;
@@ -481,5 +648,15 @@
         background-color: #d3dce6;
     }
 
+    .el-row {
+        margin-bottom: 20px;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .el-col {
+        border-radius: 4px;
+    }
 
 </style>

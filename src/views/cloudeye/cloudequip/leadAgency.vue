@@ -11,8 +11,8 @@
             <p>第一列为设备类型：DS—章盾，MS—信印。第二列为设备序列号：章盾14位，信印15位。</p>
             <p>第三列为设备所属代理商的企业号</p>
             <p>格式如下：</p>
-            <img alt="cvs文件样式" src="../../../assets/cvs.png">
-            <img alt="cvs文件样式" src="../../../assets/CVS2.png">
+          <!--  <img alt="cvs文件样式" src="../../../assets/cvs.png">
+            <img alt="cvs文件样式" src="../../../assets/CVS2.png">-->
 
             <el-upload
                     class="upload-demo"

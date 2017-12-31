@@ -13,12 +13,12 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(config => {
   // Do something before request is sent
-  if (store.getters.token) {
+
     // config.headers['X-Token'] = store.getters.token; // 让每个请求携带token--['X-Token']为自定义key 请根据实际情况自行修改
     // config.headers.Authorization = store.getters.token;
-    config.headers.Authorization = tokenStore.local('Admin-Token') || tokenStore.session('Admin-Token');
-    config.headers['Content-Type'] = 'application/json';
-  }
+      config.headers.Authorization = tokenStore.local('Admin-Token') || tokenStore.session('Admin-Token');
+      config.headers['Content-Type'] = 'application/json';
+
   return config;
 }, error => {
   // Do something with request error
@@ -63,7 +63,7 @@ service.interceptors.response.use(
           location.reload();// 为了重新实例化vue-router对象 避免bug
       });*/
       Message({
-          message: "用户名或密码错误",
+          message: "系统维护中",
           type: 'error',
           duration: 5 * 1000
       });

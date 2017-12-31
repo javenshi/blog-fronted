@@ -17,7 +17,7 @@ service.interceptors.request.use(config => {
     // config.headers['X-Token'] = store.getters.token; // 让每个请求携带token--['X-Token']为自定义key 请根据实际情况自行修改
     // config.headers.Authorization = store.getters.token;
     config.headers.Authorization = tokenStore.local('Admin-Token') || tokenStore.session('Admin-Token');
-    config.headers['Content-Type'] = 'application/json';
+    config.headers['Content-Type'] = 'application/json;charset=utf-8';
   }
   return config;
 }, error => {

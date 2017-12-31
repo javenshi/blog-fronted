@@ -10,7 +10,7 @@
             <p>每条设备信息占一行，共二列。</p>
             <p>第一列为设备类型：DS—章盾，MS—信印。第二列为设备序列号：章盾14位，信印15位。</p>
             <p>格式如下：</p>
-            <img alt="cvs文件样式" src="../../../assets/cvs.png">
+           <!-- <img alt="cvs文件样式" src="../../../assets/cvs.png">-->
 
             <el-upload
                     class="upload-demo"

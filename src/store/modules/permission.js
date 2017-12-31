@@ -1,4 +1,4 @@
-import { asyncRouterMap, constantRouterMap } from 'src/router';
+import {  constantRouterMap } from 'src/router';
 
 /**
  * 通过meta.role判断是否与当前用户权限匹配
@@ -18,18 +18,6 @@ function hasPermission(roles, route) {
  * @param asyncRouterMap
  * @param roles
  */
-function filterAsyncRouter(asyncRouterMap, roles) {
-  const accessedRouters = asyncRouterMap.filter(route => {
-    if (hasPermission(roles, route)) {
-      if (route.children && route.children.length) {
-        route.children = filterAsyncRouter(route.children, roles)
-      }
-      return true
-    }
-    return false
-  })
-  return accessedRouters
-}
 
 const permission = {
   state: {
