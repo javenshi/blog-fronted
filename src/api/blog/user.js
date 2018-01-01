@@ -8,6 +8,14 @@ export function getCode(query) {
         data:JSON.stringify(query)
     });
 }
+export function valUser(query) {
+    return fetch({
+        url: '/api/blogUser/valUser',
+        method: 'post',
+        data:JSON.stringify(query)
+    });
+}
+
 export function cName(query) {
     return fetch({
         url: '/api/blogUser/cheackName/'+query,
@@ -23,9 +31,7 @@ export function saveUser(query) {
     });
 }
 export function login(query) {
-   console.log(query)
     query.passWord = md5(query.passWord).toUpperCase();
-
     return fetch({
         url: '/api/blogUser/login',
         method: 'post',

@@ -10,6 +10,7 @@ import Layout from '../views/layout/Layout';
 /* blog */
 const Blog = _import('blog/index');
 const write = _import('blog/write');
+const read = _import('blog/read');
 
 const Admin = _import('admin/index');
 /* login */
@@ -62,6 +63,7 @@ Vue.use(Router);
 
 export const constantRouterMap = [
     { meta: { role: [""] }, path: '/', name: '首页', component: Blog, hidden: true },
+    { meta: { role: [""] }, path: '/blog/read', name: '首页', component: read, hidden: true },
     { meta: { role: [""] }, path: '/admin/index', name: '后台管理', component: Admin, hidden: true },
     { path: '*', component: Err404, hidden: true, meta: { role: [""] } }
 

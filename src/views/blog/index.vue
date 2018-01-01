@@ -15,7 +15,9 @@
                 写博客
             </el-menu-item>
             <el-menu-item index="3" @click="openResourceDialog">贡献资源</el-menu-item>
-            <el-menu-item index="3" ><router-link :to="'/admin/index'">后台</router-link></el-menu-item>
+            <el-menu-item index="3">
+                <router-link :to="'/admin/index'">后台</router-link>
+            </el-menu-item>
             <!--   <el-menu-item index="4">求助</el-menu-item>-->
 
             <el-menu-item style="float: right;" index="5" v-show="UNAME==''" @click="openLoginDialog">登录</el-menu-item>
@@ -40,7 +42,8 @@
         <!--博客资源等-->
         <div v-show="show==1">
             <template id="bokeziyuan">
-                <div class=" calendar-list-container;" style="padding-left: 10px;padding-right:10px; padding-top: 15px;" align="center">
+                <div class=" calendar-list-container;" style="padding-left: 10px;padding-right:10px; padding-top: 15px;"
+                     align="center">
 
                     <el-row :gutter="20">
                         <el-col :span="1"><br></el-col>
@@ -53,13 +56,13 @@
                                             style="width: 100%">
                                         <el-table-column>
                                             <template scope="scope">
-                                                <router-link to="/write">
-                                                    {{scope.row.name}}
-                                                </router-link>
+                                                <span @click="read(scope.row.id)">
+                                                    {{scope.row.blogsName}}
+                                                </span>
                                                 <br>
-                                                <span> {{scope.row.date}}</span>
-                                                <span> {{scope.row.user}}</span>
-                                                <span> {{scope.row.classify}}</span>
+                                                <span> {{scope.row.blogsDate|parseTime('{y}-{m}-{d}{h}:{i} ')}}</span>
+                                                <span> {{scope.row.userName}}</span>
+                                                <span> {{scope.row.blogsClassifyName}}</span>
                                             </template>
                                         </el-table-column>
                                     </el-table>
@@ -151,40 +154,50 @@
         <div style="margin-top:50px;width:96%;margin-left: 2%;" v-show="show==2">
             <template>
                 <el-form :model="blog" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                    <el-form-item label="标题:" prop="name">
-                        <el-input v-model="blog.name" style="width:88%;"></el-input>
-                        <el-select v-model="blog.leixing" filterable style="width:10%;" placeholder="请选择">
-                            <el-option
-                                    v-for="item in leixing"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
+                    <el-form-item label="标题:" prop="blogsName">
+                        <el-input v-model="blog.blogsName" style="width:100%;"></el-input>
+                        <!--  <el-select v-model="blog.leixing" filterable style="width:10%;" placeholder="请选择">
+                              <el-option
+                                      v-for="item in leixing"
+                                      :key="item.value"
+                                      :label="item.label"
+                                      :value="item.value">
+                              </el-option>
+                          </el-select>-->
                     </el-form-item>
-                    <el-form-item label="分类:" prop="classify">
-                        <el-select v-model="blog.classify" filterable placeholder="请选择">
-                            <el-option
-                                    v-for="item in options"
-                                    :key="item.value"
-                                    :label="item.label"
-                                    :value="item.value">
-                            </el-option>
-                        </el-select>
-                    </el-form-item>
+
                     <el-form-item label="正文:">
-                        <div class="edit_container">
-                            <quill-editor v-model="blog.context"
+                        <div style="padding-bottom: 40px;">
+                            <quill-editor v-model="blogContext"
                                           ref="myQuillEditor"
+                                          style="height: 500px;"
                                           class="editer"
                                           @ready="onEditorReady($event)">
                             </quill-editor>
                         </div>
                     </el-form-item>
+                    <el-form-item label="分类:" prop="blogsClassifyId">
+                        <el-radio-group v-model="blog.blogsClassifyId">
+                            <el-radio :label="1">人工智能</el-radio>
+                            <el-radio :label="2">移动开发</el-radio>
+                            <el-radio :label="3">物联网架构</el-radio>
+                            <el-radio :label="4"> 云计算/大数据</el-radio>
+                            <el-radio :label="5">游戏开发</el-radio>
+                            <el-radio :label="6"> 运维</el-radio>
+                            <el-radio :label="7"> 数据库</el-radio>
+                            <el-radio :label="8"> 前端</el-radio>
+                            <el-radio :label="9"> 安全</el-radio>
+                            <el-radio :label="10"> 编程语言</el-radio>
+                            <el-radio :label="11"> 程序人生</el-radio>
+                            <el-radio :label="12"> 随笔</el-radio>
+                            <el-radio :label="13"> 其他</el-radio>
+                        </el-radio-group>
+
+                    </el-form-item>
                     <el-form-item>
                         <div style="margin-left: 35%;">
-                            <el-button type="success" @click="saveBlog" round>保存</el-button>
-                            <el-button type="info" round>草稿</el-button>
+                            <el-button type="success" @click="saveBlog(1)" round>保存</el-button>
+                            <el-button type="info" @click="saveBlog(0)" round>草稿</el-button>
                             <el-button type="danger" round>取消</el-button>
                         </div>
                     </el-form-item>
@@ -291,9 +304,11 @@
 
 <script>
     import {quillEditor} from 'vue-quill-editor';
-    import {getCode, cName, saveUser, login} from 'api/blog/user';
+    import {getCode, cName, saveUser, login, valUser} from 'api/blog/user';
+    import {saveB, selectBlogsPage} from 'api/blog/blog';
     import {getAllCarousel} from 'api/admin/index';
     import tokenStore from 'store2';
+    import {parseTime} from 'utils';
 
     export default {
         components: {
@@ -413,7 +428,7 @@
                     }
                 ],
                 indexUrl: [],
-                blog: {leixing: '原创', classify: '', context: '', editorOption: {}},
+                blog: {blogsName: '', blogsClassifyId: '', blogsStatus: ''},
                 resource: {name: '', url: '', context: ''},
                 listLoading: false,
                 loginForm: {userName: '', passWord: ''},
@@ -445,17 +460,7 @@
                         value: '选项5',
                         label: '北京烤鸭'
                     }],
-                leixing: [
-                    {
-                        value: '原创',
-                        label: '原创'
-                    }, {
-                        value: '转载',
-                        label: '转载'
-                    }, {
-                        value: '翻译',
-                        label: '翻译'
-                    }],
+                blogContext: '',
                 value8: '',
                 UNAME: '',
                 valCode: '',
@@ -498,8 +503,9 @@
             };
         }, mounted() {
             this.UNAME = tokenStore.local('User').userName;
-             getAllCarousel().then(response => {
-                 this.indexUrl= response.data.returnData;
+            this.getBlogs();
+            getAllCarousel().then(response => {
+                this.indexUrl = response.data.returnData;
             });
         },
         computed: {
@@ -513,11 +519,40 @@
             }, writeBlog() {
                 this.show = 2;
             },
-            saveBlog() {
-                //console.log(this.blog);
-                this.datas = this.blog.context;
-                //console.log(this.datas);
-            }, onEditorReady(editor) {
+            read(id){
+                this.$router.push('/blog/read?id='+id);
+            },
+            saveBlog(blogsStatus) {
+                this.blog.blogsStatus = blogsStatus;
+                this.blog.blogsUrl = this.blogContext;
+                this.blog.userName = this.UNAME;
+
+                saveB(this.blog).then(response => {
+                    this.$notify({
+                        title: response.data.returnCode == 200 ? '成功' : '失败',
+                        message: response.data.returnMsg,
+                        type: response.data.returnCode == 200 ? 'success' : 'warning',
+                        duration: 5000
+                    });
+                    this.getBlogs();
+                });
+            },
+            getBlogs() {
+                this.listQuery.filterList = [];
+                this.listQuery.filterList.push({
+                    filterKey: 'blogsStatus',
+                    filterValue: 1
+                })
+                this.listQuery.filterList.push({
+                    filterKey: 'status',
+                    filterValue: 2
+                })
+                selectBlogsPage(this.listQuery).then(response => {
+                    this.blogList = response.data.returnData.pageInfo.list;
+                    this.total = response.data.returnData.pageInfo.total;
+                });
+            },
+            onEditorReady(editor) {
             },
             /*打开关闭弹框*/
             openResourceDialog() {
@@ -621,11 +656,11 @@
             },
             handleSizeChange(val) {
                 this.listQuery.pageSize = val;
-                this.getBlogList();
+                this.getBlogs();
             },
             handleCurrentChange(val) {
                 this.listQuery.pageNum = val;
-                this.getBlogList();
+                this.getBlogs();
             },
         }
     }
