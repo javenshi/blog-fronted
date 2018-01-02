@@ -28,17 +28,19 @@
 
             <el-row :gutter="20">
                 <el-col :span="1"><br></el-col>
-                <el-col :span="17">
+                <el-col :span="17" >
                     <el-card class="box-card">
+                            <div v-if="noBlog==false" v-html="blog.blogsUrl" ></div>
 
-                        <template v-show="!noBlog">
-                            <div v-html="blog.blogsUrl"></div>
-                        </template>
-                        <template v-show="noBlog">
+                             <div v-if="noBlog==true" style="font-size: 20px; font-weight: 300; color: #999;" align="center"><img src="../../assets/4044.png"><br>我勒个去，博客被外星人挟持了!</div>
 
-                             <div style="font-size: 20px; font-weight: 300; color: #999;" align="center"><img src="../../assets/4044.png"><br>我勒个去，博客被外星人挟持了!</div>
-                        </template>
-
+                        <el-input
+                                type="textarea"
+                                :rows="2"
+                                placeholder="请输入内容"
+                                v-model="textarea">
+                        </el-input>
+                        评论
                     </el-card>
                 </el-col>
 
@@ -116,6 +118,7 @@
             return {
                 UNAME:'',
                 blog:'',
+                textarea:'',
                 noBlog:false,
             };
         }, mounted() {
