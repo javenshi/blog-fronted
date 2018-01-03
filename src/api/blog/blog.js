@@ -7,6 +7,13 @@ export function saveB(query) {
         data:JSON.stringify(query)
     });
 }
+export function saveComents(query) {
+    return fetch({
+        url: '/api/blog/saveComents',
+        method: 'post',
+        data:JSON.stringify(query)
+    });
+}
 export function selectBlogsPage(query) {
     return fetch({
         url: '/api/blog/page',
@@ -26,5 +33,12 @@ export function passBlog(query,id) {
         url: '/api/blog/passBlog/'+id,
         method: 'post',
         data:query
+    });
+}
+export function getComentsList(query,size) {
+    return fetch({
+        url: '/api/blog/getComentsList/'+size,
+        method: 'post',
+        data:JSON.stringify(query)
     });
 }

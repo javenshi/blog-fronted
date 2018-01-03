@@ -14,7 +14,9 @@
                 写博客
             </el-menu-item>
             <el-menu-item index="3" @click="openResourceDialog">贡献资源</el-menu-item>
-            <el-menu-item index="3" ><router-link :to="'/admin/index'">后台</router-link></el-menu-item>
+            <el-menu-item index="3">
+                <router-link :to="'/admin/index'">后台</router-link>
+            </el-menu-item>
             <!--   <el-menu-item index="4">求助</el-menu-item>-->
 
             <el-menu-item style="float: right;" index="5" v-show="UNAME==''" @click="openLoginDialog">登录</el-menu-item>
@@ -24,33 +26,51 @@
 
 
         <div class=" calendar-list-container;" style="padding: 20px;"
-            >
+        >
 
             <el-row :gutter="20">
                 <el-col :span="1"><br></el-col>
-                <el-col :span="17" >
+                <el-col :span="17">
                     <el-card class="box-card">
-                            <div v-if="noBlog==false"  >
-                                <div>
-                                    <h1> {{blog.blogsName}}</h1>
-                                   {{blog.blogsDate|parseTime('{y}年{m}月{d}日 {h}时{i}分{s}秒')}}     点击 {{blog.blogsClick}}次
-                                </div>
-
-                                <div v-html="blog.blogsUrl"></div>
+                        <div v-if="noBlog==false">
+                            <div>
+                                <h1> {{blog.blogsName}}</h1>
+                                {{blog.blogsDate | parseTime('{y}年{m}月{d}日 ')}}     点击 {{blog.blogsClick}}次
                             </div>
 
-                             <div v-if="noBlog==true" style="font-size: 20px; font-weight: 300; color: #999;" align="center"><img src="../../assets/4044.png"><br>我勒个去，博客被外星人挟持了!</div>
-<div v-if="noBlog==false">
+                            <div v-html="blog.blogsUrl"></div>
+                        </div>
+
+                        <div v-if="noBlog==true" style="font-size: 20px; font-weight: 300; color: #999;" align="center">
+                            <img src="../../assets/4044.png"><br>我勒个去，博客被外星人挟持了!
+                        </div>
+                        <div v-if="noBlog==false">
+                            <el-input
+                                    type="textarea"
+                                    :rows="2"
+                                    placeholder="请输入内容"
+                                    v-model="textarea">
+                            </el-input>
+                            <el-button type="danger" style="float: right;" @click="savePinglun">评论</el-button>
+                        </div>
+                        <div>
+                            <el-table
+                                    :data="comentsList"
+                                    style="width: 100%">
+                                <el-table-column>
+                                    <template scope="scope">
+                                                <span>
+                                                    {{scope.row.AnnouncementContext}}
+                                                </span>
+                                        <br>
+                                        <span> {{scope.row.UserName}}</span>
+                                        <span> {{scope.row.creatTime|parseTime('{y}-{m}-{d}{h}:{i} ')}}</span>
 
 
-                        <el-input
-                                type="textarea"
-                                :rows="2"
-                                placeholder="请输入内容"
-                                v-model="textarea">
-                        </el-input>
-                        <el-button type="danger"  style="float: right;">评论</el-button>
-</div>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </div>
                     </el-card>
                 </el-col>
 
@@ -118,7 +138,7 @@
 </template>
 <script>
     import {getCode, cName, saveUser, login, valUser} from 'api/blog/user';
-    import {getBlogsById} from 'api/blog/blog';
+    import {getBlogsById,saveComents,getComentsList} from 'api/blog/blog';
     import tokenStore from 'store2';
     import {parseTime} from 'utils';
 
@@ -126,16 +146,19 @@
 
         data() {
             return {
-                UNAME:'',
-                blog:'',
-                textarea:'',
-                noBlog:false,
+                UNAME: '',
+                blog: '',
+                textarea: '',
+                Comments:'',
+                pageSize: 5,
+                comentsList:'',
+                noBlog: false,
             };
         }, mounted() {
             this.UNAME = tokenStore.local('User').userName;
             getBlogsById(this.$route.query.id).then(response => {
-                if(response.data.returnCode==404){
-                    this.noBlog=true;
+                if (response.data.returnCode == 404 || response.data.returnCode == 400) {
+                    this.noBlog = true;
                     return false;
                 }
                 this.blog = response.data.returnData;
@@ -144,7 +167,23 @@
         },
 
         methods: {
+            savePinglun(){
+                this.Comments.AnnouncementContext=this.textarea;
+                this.Comments.blogId=this.$route.query.id;
+                this.Comments.userId= tokenStore.local('User').id;
+                this.Comments.UserName=this.UNAME;
+                saveComents(this.Comments).then(response => {
 
+                });
+            },
+            getComents(){
+                this.Comments='';
+                this.Comments.blogId=this.$route.query.id;
+                this.Comments.userId= tokenStore.local('User').id;
+                getComentsList(this.Comments,this.pageSize).then(response => {
+                    this.comentsList=response.data.returnData.pageInfo.list;
+                });
+            }
         }
     }
 </script>
