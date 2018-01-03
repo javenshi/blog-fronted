@@ -30,9 +30,18 @@
                 <el-col :span="1"><br></el-col>
                 <el-col :span="17" >
                     <el-card class="box-card">
-                            <div v-if="noBlog==false" v-html="blog.blogsUrl" ></div>
+                            <div v-if="noBlog==false"  >
+                                <div>
+                                    <h1> {{blog.blogsName}}</h1>
+                                   {{blog.blogsDate|parseTime('{y}年{m}月{d}日 {h}时{i}分{s}秒')}}     点击 {{blog.blogsClick}}次
+                                </div>
+
+                                <div v-html="blog.blogsUrl"></div>
+                            </div>
 
                              <div v-if="noBlog==true" style="font-size: 20px; font-weight: 300; color: #999;" align="center"><img src="../../assets/4044.png"><br>我勒个去，博客被外星人挟持了!</div>
+<div v-if="noBlog==false">
+
 
                         <el-input
                                 type="textarea"
@@ -40,7 +49,8 @@
                                 placeholder="请输入内容"
                                 v-model="textarea">
                         </el-input>
-                        评论
+                        <el-button type="danger"  style="float: right;">评论</el-button>
+</div>
                     </el-card>
                 </el-col>
 
