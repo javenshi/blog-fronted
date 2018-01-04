@@ -83,24 +83,18 @@
                                     <span>资源</span>
                                 </div>
                                 <template>
-                                    <!--  <el-table
-                                              :data="blogList"
+                                      <el-table
+                                              :data="resourceList"
                                               style="width: 100%">
                                           <el-table-column>
                                               <template scope="scope">
-                                                  <span> {{scope.row.name}}</span><br>
-                                                  <span> {{scope.row.date}}</span>
-                                                  <span> {{scope.row.user}}</span>
-                                                  <span> {{scope.row.classify}}</span>
+                                                  <span> {{scope.row.resouceName}}</span><br>
+                                                  <span> {{scope.row.context}}</span>
+                                                  <span> {{scope.row.creatTime}}</span>
                                               </template>
                                           </el-table-column>
-                                      </el-table>-->
-                                    abcd<br>
-                                    abcd<br>
-                                    abcd<br>
-                                    abcd<br>
-                                    abcd<br>
-                                    加载更多
+                                      </el-table>
+                                    <el-button type="danger" style="float: right;" @click="loading">加载更多</el-button>
                                 </template>
                             </el-card>
                             <el-card class="box-card">
@@ -212,12 +206,12 @@
 
             <el-form :model="resource" status-icon ref="resour"
                      class="demo-ruleForm">
-                <el-form-item label="资源名称:" prop="name" required>
-                    <el-input size="small" type="input" v-model="resource.name"
+                <el-form-item label="资源名称:" prop="resouceName" required>
+                    <el-input size="small" type="input" v-model="resource.resouceName"
                               auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="资源Url:" prop="url" required>
-                    <el-input size="small" type="input" v-model="resource.url"
+                <el-form-item label="资源Url:" prop="resouceUrl" required>
+                    <el-input size="small" type="input" v-model="resource.resouceUrl"
                               auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="资源描述:" prop="context">
@@ -225,7 +219,7 @@
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="closeResourceDialog('resour')">取 消</el-button>
-                    <el-button @click="" type="primary">确
+                    <el-button @click="saveReso" type="primary">确
                         定
                     </el-button>
                 </el-form-item>
@@ -307,6 +301,7 @@
     import {getCode, cName, saveUser, login, valUser} from 'api/blog/user';
     import {saveB, selectBlogsPage} from 'api/blog/blog';
     import {getAllCarousel} from 'api/admin/index';
+    import {saveResouce,getResouceList} from 'api/blog/resouce';
     import tokenStore from 'store2';
     import {parseTime} from 'utils';
 
@@ -365,71 +360,11 @@
                 content: '',
                 datas: '',
                 cna: false,
-                blogList: [
-                    {
-                        date: '2016-05-03',
-                        name: '普陀区',
-                        user: '王小虎',
-                        classify: '多线程'
-                    },
-                    {
-                        date: '2016-05-03',
-                        name: '普陀区',
-                        user: '王小虎',
-                        classify: '多线程'
-                    },
-                    {
-                        date: '2016-05-03',
-                        name: '普陀区',
-                        user: '王小虎',
-                        classify: '多线程'
-                    },
-                    {
-                        date: '2016-05-03',
-                        name: '普陀区',
-                        user: '王小虎',
-                        classify: '多线程'
-                    },
-                    {
-                        date: '2016-05-03',
-                        name: '普陀区',
-                        user: '王小虎',
-                        classify: '多线程'
-                    },
-                    {
-                        date: '2016-05-03',
-                        name: '普陀区',
-                        user: '王小虎',
-                        classify: '多线程'
-                    },
-                    {
-                        date: '2016-05-03',
-                        name: '普陀区',
-                        user: '王小虎',
-                        classify: '多线程'
-                    },
-                    {
-                        date: '2016-05-03',
-                        name: '普陀区',
-                        user: '王小虎',
-                        classify: '多线程'
-                    },
-                    {
-                        date: '2016-05-03',
-                        name: '普陀区',
-                        user: '王小虎',
-                        classify: '多线程'
-                    },
-                    {
-                        date: '2016-05-03',
-                        name: '普陀区',
-                        user: '王小虎',
-                        classify: '多线程'
-                    }
-                ],
+                blogList: [],
+                resourceList:[],
                 indexUrl: [],
                 blog: {blogsName: '', blogsClassifyId: '', blogsStatus: ''},
-                resource: {name: '', url: '', context: ''},
+                resource: {resouceName: '', resouceUrl: '', context: ''},
                 listLoading: false,
                 loginForm: {userName: '', passWord: ''},
                 rigitsterForm: {
@@ -443,23 +378,7 @@
                 count: '',
                 timer: null,
                 showTime: false,
-                options: [
-                    {
-                        value: '选项1',
-                        label: '黄金糕'
-                    }, {
-                        value: '选项2',
-                        label: '双皮奶'
-                    }, {
-                        value: '选项3',
-                        label: '蚵仔煎'
-                    }, {
-                        value: '选项4',
-                        label: '龙须面'
-                    }, {
-                        value: '选项5',
-                        label: '北京烤鸭'
-                    }],
+                options: [],
                 blogContext: '',
                 value8: '',
                 UNAME: '',
@@ -471,6 +390,7 @@
                     sortList: [],
                     searchKey: ''
                 },
+                pageSize:5,
                 total: null,
                 rigitsterRules: {
                     userName: [
@@ -507,6 +427,7 @@
             getAllCarousel().then(response => {
                 this.indexUrl = response.data.returnData;
             });
+            this.getReso();
         },
         computed: {
             editor() {
@@ -537,6 +458,17 @@
                     this.getBlogs();
                 });
             },
+            saveReso() {
+                saveResouce(this.resource).then(response => {
+                    this.$notify({
+                        title: response.data.returnCode == 200 ? '成功' : '失败',
+                        message: response.data.returnMsg,
+                        type: response.data.returnCode == 200 ? 'success' : 'warning',
+                        duration: 5000
+                    });
+                    this.getBlogs();
+                });
+            },
             getBlogs() {
                 this.listQuery.filterList = [];
                 this.listQuery.filterList.push({
@@ -552,6 +484,14 @@
                     this.total = response.data.returnData.pageInfo.total;
                 });
             },
+            getReso() {
+                getResouceList("",this.pageSize).then(response => {
+                    this.resourceList = response.data.returnData.list;
+                });
+            }, loading(){
+                this.pageSize+=5;
+                this.getReso();
+            }
             onEditorReady(editor) {
             },
             /*打开关闭弹框*/
