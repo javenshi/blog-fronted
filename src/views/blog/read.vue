@@ -10,17 +10,17 @@
             <el-menu-item index="1" @click="index">
                 首页
             </el-menu-item>
-            <el-menu-item index="2" @click="writeBlog">
+            <el-menu-item index="2">
                 写博客
             </el-menu-item>
-            <el-menu-item index="3" @click="openResourceDialog">贡献资源</el-menu-item>
+            <el-menu-item index="3">贡献资源</el-menu-item>
             <el-menu-item index="3">
                 <router-link :to="'/admin/index'">后台</router-link>
             </el-menu-item>
             <!--   <el-menu-item index="4">求助</el-menu-item>-->
 
-            <el-menu-item style="float: right;" index="5" v-show="UNAME==''" @click="openLoginDialog">登录</el-menu-item>
-            <el-menu-item style="float: right;" index="5" v-show="UNAME!=''" @click="openLoginDialog">{{UNAME}}
+            <el-menu-item style="float: right;" index="5" v-show="UNAME==''" >登录</el-menu-item>
+            <el-menu-item style="float: right;" index="5" v-show="UNAME!=''">{{UNAME}}
             </el-menu-item>
         </el-menu>
 
@@ -60,16 +60,15 @@
                                 <el-table-column>
                                     <template scope="scope">
                                                 <span>
-                                                    {{scope.row.AnnouncementContext}}
+                                                    {{scope.row.context}}
                                                 </span>
                                         <br>
-                                        <span> {{scope.row.UserName}}</span>
+                                        <span> {{scope.row.userName}}</span>
                                         <span> {{scope.row.creatTime|parseTime('{y}-{m}-{d}{h}:{i} ')}}</span>
-
-
                                     </template>
                                 </el-table-column>
                             </el-table>
+                            <el-button type="danger" style="float: right;" @click="loading">加载更多</el-button>
                         </div>
                     </el-card>
                 </el-col>
@@ -149,7 +148,7 @@
                 UNAME: '',
                 blog: '',
                 textarea: '',
-                Comments:'',
+                Comments:{blogId:'',userId:'',context:'',userName:''},
                 pageSize: 5,
                 comentsList:'',
                 noBlog: false,
@@ -163,26 +162,31 @@
                 }
                 this.blog = response.data.returnData;
             });
+            this.getComents();
 
         },
 
         methods: {
             savePinglun(){
-                this.Comments.AnnouncementContext=this.textarea;
+                this.Comments.context=this.textarea;
                 this.Comments.blogId=this.$route.query.id;
                 this.Comments.userId= tokenStore.local('User').id;
-                this.Comments.UserName=this.UNAME;
-                saveComents(this.Comments).then(response => {
+                this.Comments.userName=tokenStore.local('User').userName;
 
+                saveComents(this.Comments).then(response => {
+                    this.getComents();
                 });
             },
             getComents(){
-                this.Comments='';
                 this.Comments.blogId=this.$route.query.id;
                 this.Comments.userId= tokenStore.local('User').id;
                 getComentsList(this.Comments,this.pageSize).then(response => {
-                    this.comentsList=response.data.returnData.pageInfo.list;
+                    this.comentsList=response.data.returnData.list;
                 });
+            },
+            loading(){
+                this.pageSize+=5;
+                this.getComents();
             }
         }
     }
