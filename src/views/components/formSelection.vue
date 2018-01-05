@@ -18,7 +18,7 @@
 </template>
 
 <script>
-    import {getDictionaryListByType} from 'api/system/SDictionary.js';
+   // import {getDictionaryListByType} from 'api/system/SDictionary.js';
     export default {
         data () {
             return {
@@ -44,11 +44,11 @@
             console.log("传入的参数")
             console.log(this.dictionaryParam)
 
-            getDictionaryListByType(this.listQuery, this.dictionaryParam).then(response => {
-                console.log("查询")
-            console.log(response)
-            this.dictionaryOption = response.data.returnData;
-        })
+           /* getDictionaryListByType(this.listQuery, this.dictionaryParam).then(response => {
+                console.log("查询")*/
+           /* console.log(response)
+            this.dictionaryOption = response.data.returnData;*/
+
 
 //            this.dictionaryOption=[
 //                {dicCode:1,dicLabel:'测试1'},
