@@ -153,7 +153,7 @@
                 comentsList:'',
                 noBlog: false,
             };
-        }, mounted() {
+        }, created() {
             this.UNAME = tokenStore.local('User').userName;
             getBlogsById(this.$route.query.id).then(response => {
                 if (response.data.returnCode == 404 || response.data.returnCode == 400) {

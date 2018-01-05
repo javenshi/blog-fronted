@@ -136,7 +136,7 @@
                 resourceList:'',
                 resource:'',
             };
-        }, mounted() {
+        }, created() {
             this.UID = tokenStore.local('User').id;
             this.getBlogs();
             this.getResources();

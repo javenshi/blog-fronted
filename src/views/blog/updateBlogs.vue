@@ -87,7 +87,7 @@
                 comentsList:'',
                 noBlog: false,
             };
-        }, mounted() {
+        }, created() {
             this.UID = tokenStore.local('User').id;
 
             if(this.UID==null||this.UID==0){

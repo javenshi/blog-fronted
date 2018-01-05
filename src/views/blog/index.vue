@@ -461,7 +461,7 @@
                     ]
                 },
             };
-        }, mounted() {
+        }, created() {
             this.UNAME = tokenStore.local('User').userName;
             this.getBlogs();
             getAllCarousel().then(response => {
