@@ -9,7 +9,7 @@
                         <template scope="scope" >
                             <div>
                                 <el-button size="small" type="primary" @click="updateBlogs(scope.row.id)">编辑</el-button>
-                                <el-button size="small" type="danger" @click="pass(scope.row.id)">删除</el-button>
+                                <el-button size="small" type="danger" @click="deleteBlogs(scope.row.id)">删除</el-button>
                             </div>
                         </template>
                     </el-table-column>
@@ -34,7 +34,7 @@
                     </el-table-column>
                 </el-table>
 
-                <div v-show="!listLoading" class="pagination-container">
+                <div  class="pagination-container">
                     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                                    :current-page.sync="listQuery.pageNum"
                                    :page-sizes="[10,20,30, 50]" :page-size="listQuery.pageSize"
@@ -48,19 +48,13 @@
                         style="width: 100%">
                     <el-table-column width="180px">
                         <template scope="scope" >
-                            <div  v-if="scope.row.status==0">
-                                <el-button size="small" type="success" @click="passResourc(2,scope.row.id)">通过</el-button>
-                                <el-button size="small" type="danger" @click="passResourc(1,scope.row.id)">驳回</el-button>
+                            <div>
+                                <el-button size="small" type="primary" @click="openRDis(scope.$index)">编辑</el-button>
+                                <el-button size="small" type="danger" @click="deleteRes(scope.row.id)">删除</el-button>
                             </div>
                         </template>
                     </el-table-column>
-                    <el-table-column width="180px">
-                        <template scope="scope" >
-                            <el-tag v-show="scope.row.status==0"type="warning">未审核</el-tag>
-                            <el-tag v-show="scope.row.status==1" type="danger">驳回</el-tag>
-                            <el-tag v-show="scope.row.status==2"type="success">通过</el-tag>
-                        </template>
-                    </el-table-column>
+
                     <el-table-column>
                         <template scope="scope">
                                                 <span @click="read(scope.row.id)">
@@ -74,15 +68,45 @@
                     </el-table-column>
                 </el-table>
 
+                <div  class="pagination-container">
+                    <el-pagination @size-change="handleSizeChange1" @current-change="handleCurrentChange1"
+                                   :current-page.sync="listQuery1.pageNum"
+                                   :page-sizes="[10,20,30, 50]" :page-size="listQuery1.pageSize"
+                                   layout="total, sizes, prev, pager, next, jumper" :total="total1">
+                    </el-pagination>
+                </div>
+                <el-dialog title="传资源" :visible.sync="resourceDialog" align="center">
 
+                    <el-form :model="resource" status-icon ref="resour"
+                             class="demo-ruleForm">
+                        <el-form-item label="资源名称:" prop="resouceName" required>
+                            <el-input size="small" type="input" v-model="resource.resouceName"
+                                      auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="资源Url:" prop="resouceUrl" required>
+                            <el-input size="small" type="input" v-model="resource.resouceUrl"
+                                      auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="资源描述:" prop="context">
+                            <el-input type="textarea" v-model="resource.context"></el-input>
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button @click="resourceDialog=false">取 消</el-button>
+                            <el-button @click="updateRess" type="primary">确
+                                定
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
+
+                </el-dialog>
             </el-tab-pane>
         </el-tabs>
     </div>
 </template>
 
 <script>
-    import {getCode, cName, saveUser, login, valUser} from 'api/blog/user';
-    import {selectBlogsPage} from 'api/blog/blog';
+    import {selectResourcesPage,updateRes,deleteRe} from 'api/blog/resouce';
+    import {selectBlogsPage,deleteBlog} from 'api/blog/blog';
     import tokenStore from 'store2';
     import {parseTime} from 'utils';
 
@@ -92,6 +116,7 @@
             return {
                 UID:'',
                 blogList:'',
+                resourceDialog: false,
                 listQuery: {
                     pageNum: 1,
                     pageSize: 10,
@@ -100,10 +125,21 @@
                     searchKey: ''
                 },
                 total: '',
+                listQuery1: {
+                    pageNum: 1,
+                    pageSize: 10,
+                    filterList: [],
+                    sortList: [],
+                    searchKey: ''
+                },
+                total1: '',
+                resourceList:'',
+                resource:'',
             };
         }, mounted() {
             this.UID = tokenStore.local('User').id;
             this.getBlogs();
+            this.getResources();
         },
 
         methods: {
@@ -119,9 +155,40 @@
                     this.total = response.data.returnData.pageInfo.total;
                 });
             },
-            updateBlogs(id) {
-                    this.$router.push('/blog/updateBlogs?id=' + id);
+            getResources() {
+                this.listQuery1.filterList=[];
+                this.listQuery1.filterList.push({
+                    filterKey: 'userId',
+                    filterValue: this.UID
+                });
+
+                selectResourcesPage(this.listQuery1).then(response => {
+                    this.resourceList = response.data.returnData.pageInfo.list;
+                    this.total1 = response.data.returnData.pageInfo.total;
+                });
             },
+            deleteBlogs(id) {
+                deleteBlog(id).then(response => {
+                    this.getBlogs();
+                });
+            },
+            updateRess() {
+                updateRes(this.resource).then(response => {
+                    this.resourceDialog=false;
+                    this.getResources();
+                });
+            },
+            deleteRes(id) {
+                deleteRe(id).then(response => {
+                    this.getResources();
+                });
+            },
+            openRDis(id){
+                this.resourceDialog=true;
+             this.resource=this.resourceList[id];
+
+            },
+
             handleSizeChange(val) {
                 this.listQuery.pageSize = val;
                 this.getBlogs();
@@ -129,6 +196,14 @@
             handleCurrentChange(val) {
                 this.listQuery.pageNum = val;
                 this.getBlogs();
+            },
+            handleSizeChange1(val) {
+                this.listQuery1.pageSize = val;
+                this.getResources();
+            },
+            handleCurrentChange1(val) {
+                this.listQuery1.pageNum = val;
+                this.getResources();
             },
 
         }

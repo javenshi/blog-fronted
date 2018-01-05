@@ -7,6 +7,12 @@ export function saveB(query) {
         data:JSON.stringify(query)
     });
 }
+export function deleteBlog(query) {
+    return fetch({
+        url: '/api/blog/deleteBlog/'+query,
+        method: 'post'
+    });
+}
 export function saveComents(query) {
     return fetch({
         url: '/api/blog/saveComents',
