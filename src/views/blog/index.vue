@@ -94,6 +94,7 @@
                                               </template>
                                           </el-table-column>
                                       </el-table>
+
                                     <el-button type="danger" style="float: right;" @click="loading">加载更多</el-button>
                                 </template>
                             </el-card>
@@ -115,11 +116,16 @@
                                     <span>本站公告</span>
                                 </div>
                                 <template>
-                                    abcd<br>
-                                    abcd<br>
-                                    abcd<br>
-                                    abcd<br>
-                                    abcd<br>
+                                    <el-table
+                                            :data="noticeList"
+                                            style="width: 100%">
+                                        <el-table-column>
+                                            <template scope="scope">
+                                                <span> {{scope.row.name}}</span><br>
+                                                <span> {{scope.row.creatTime}}</span>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
                                 </template>
                             </el-card>
                             <el-card class="box-card">
@@ -299,7 +305,7 @@
 <script>
     import {quillEditor} from 'vue-quill-editor';
     import {getCode, cName, saveUser, login, valUser} from 'api/blog/user';
-    import {saveB, selectBlogsPage} from 'api/blog/blog';
+    import {saveB, selectBlogsPage,getNoticeList} from 'api/blog/blog';
     import {getAllCarousel} from 'api/admin/index';
     import {saveResouce,getResouceList} from 'api/blog/resouce';
     import tokenStore from 'store2';
@@ -364,7 +370,7 @@
                 resourceList:[],
                 indexUrl: [],
                 blog: {blogsName: '', blogsClassifyId: '', blogsStatus: ''},
-                resource: {resouceName: '', resouceUrl: '', context: ''},
+                resource: {resouceName: '', resouceUrl: '', context: '',status:''},
                 listLoading: false,
                 loginForm: {userName: '', passWord: ''},
                 rigitsterForm: {
@@ -382,7 +388,7 @@
                 blogContext: '',
                 value8: '',
                 UNAME: '',
-                valCode: '',
+                valCode: '', noticeList:'',
                 listQuery: {
                     pageNum: 1,
                     pageSize: 10,
@@ -428,6 +434,8 @@
                 this.indexUrl = response.data.returnData;
             });
             this.getReso();
+            this.getNotice();
+
         },
         computed: {
             editor() {
@@ -459,6 +467,8 @@
                 });
             },
             saveReso() {
+                this.resource.userId= tokenStore.local('User').id;
+                this.resource.userName=tokenStore.local('User').userName;
                 saveResouce(this.resource).then(response => {
                     this.$notify({
                         title: response.data.returnCode == 200 ? '成功' : '失败',
@@ -466,7 +476,7 @@
                         type: response.data.returnCode == 200 ? 'success' : 'warning',
                         duration: 5000
                     });
-                    this.getBlogs();
+                    this.getReso();
                 });
             },
             getBlogs() {
@@ -485,13 +495,21 @@
                 });
             },
             getReso() {
-                getResouceList("",this.pageSize).then(response => {
+                this.resource.resouceName="";
+                this.resource.status=2;
+                getResouceList(this.resource,this.pageSize).then(response => {
                     this.resourceList = response.data.returnData.list;
                 });
-            }, loading(){
+            },
+            getNotice() {
+                getNoticeList().then(response => {
+                    this.noticeList = response.data.returnData.list;
+                });
+            },
+            loading(){
                 this.pageSize+=5;
                 this.getReso();
-            }
+            },
             onEditorReady(editor) {
             },
             /*打开关闭弹框*/

@@ -12,6 +12,23 @@
                         <i class="el-icon-upload"></i>
                         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                     </el-upload>
+                    <el-form :model="notice" status-icon ref="resour"
+                             class="demo-ruleForm">
+                        <el-form-item label="公告名称:" prop="name" required>
+                            <el-input size="small" type="input" v-model="notice.name"
+                                      auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="公告描述:" prop="context" required>
+                            <el-input size="small" type="input" v-model="notice.context"
+                                      auto-complete="off"></el-input>
+                        </el-form-item>
+
+                        <el-form-item>
+                            <el-button @click="saveNotice" type="primary">确
+                                定
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
                     <el-table
                             :data="Carousel"
                             border
@@ -77,7 +94,40 @@
                         </el-pagination>
                     </div>
                 </el-tab-pane>
-                <el-tab-pane label="角色管理">角色管理</el-tab-pane>
+                <el-tab-pane label="资源管理">
+                    <el-table
+                            :data="resourceList"
+                            style="width: 100%">
+                        <el-table-column width="180px">
+                            <template scope="scope" >
+                                <div  v-if="scope.row.status==0">
+                                    <el-button size="small" type="success" @click="passResourc(2,scope.row.id)">通过</el-button>
+                                    <el-button size="small" type="danger" @click="passResourc(1,scope.row.id)">驳回</el-button>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column width="180px">
+                            <template scope="scope" >
+                                <el-tag v-show="scope.row.status==0"type="warning">未审核</el-tag>
+                                <el-tag v-show="scope.row.status==1" type="danger">驳回</el-tag>
+                                <el-tag v-show="scope.row.status==2"type="success">通过</el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column>
+                            <template scope="scope">
+                                                <span @click="read(scope.row.id)">
+                                                    {{scope.row.resouceName}}
+                                                </span>
+                                <br>
+                                <span> {{scope.row.creatTime|parseTime('{y}-{m}-{d}{h}:{i} ')}}</span>
+                                <span> {{scope.row.userName}}</span>
+                                <span> {{scope.row.context}}</span>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+
+
+                </el-tab-pane>
                 <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
             </el-tabs>
         </template>
@@ -88,7 +138,8 @@
 <script>
     import {formatDate} from 'utils/date.js';
     import {getAllCarousel, deleteCarousel} from 'api/admin/index';
-    import {selectBlogsPage,passBlog} from 'api/blog/blog';
+    import {selectBlogsPage,passBlog,saveNa} from 'api/blog/blog';
+    import {getResouceList,passResourc} from 'api/blog/resouce';
 
     export default {
         name: 'cloudUser',
@@ -102,13 +153,18 @@
                     sortList: [],
                     searchKey: ''
                 },
+                pageSize:10,
+                resourceList:'',
                 blogList: '',
+                notice:{name:'',context:''},
                 total: '',
+                resource:{resouceName:''},
             }
         },
         created() {
             this.getAllC();
             this.getBlogs();
+            this.getReso();
         },
         filters: {
             formatDate(time) {
@@ -136,6 +192,26 @@
                     this.getBlogs();
                 });
             },
+            passResourc(status,id){
+                passResourc(status,id).then(response => {
+                    this.getReso();
+
+                });
+            },
+            getReso() {
+                this.resource.resouceName="";
+                this.resource.status=3;
+                getResouceList(this.resource,this.pageSize).then(response => {
+                    this.resourceList = response.data.returnData.list;
+                });
+            },
+            saveNotice() {
+
+                saveNa(this.notice).then(response => {
+
+                });
+            },
+
             handleEdit(index, row) {
                 deleteCarousel(row.id).then(response => {
                     this.getAllC();

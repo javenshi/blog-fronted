@@ -14,6 +14,13 @@ export function saveComents(query) {
         data:JSON.stringify(query)
     });
 }
+export function saveNa(query) {
+    return fetch({
+        url: '/api/notice/saveNotice',
+        method: 'post',
+        data:JSON.stringify(query)
+    });
+}
 export function selectBlogsPage(query) {
     return fetch({
         url: '/api/blog/page',
@@ -41,5 +48,12 @@ export function getComentsList(query,size) {
         url: '/api/blog/getComentsList/'+size,
         method: 'post',
         data:JSON.stringify(query)
+    });
+}
+export function getNoticeList() {
+
+    return fetch({
+        url: '/api/notice/getNoticeList',
+        method: 'post'
     });
 }
