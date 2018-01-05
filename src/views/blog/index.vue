@@ -158,19 +158,7 @@
                                     </el-table>
                                 </template>
                             </el-card>
-                            <el-card class="box-card">
-                                <div slot="header" class="clearfix">
-                                    <span>联系我们</span>
-                                </div>
-                                <template>
-
-                                    abcd<br>
-                                    abcd<br>
-                                    abcd<br>
-                                    abcd<br>
-                                    abcd<br>
-                                </template>
-                            </el-card>
+                            <contact> </contact>
                         </el-col>
                         <el-col :span="1"></el-col>
                     </el-row>
@@ -333,6 +321,7 @@
 </template>
 
 <script>
+    import contact from '../component/contact';
     import {quillEditor} from 'vue-quill-editor';
     import {getCode, cName, saveUser, login, valUser} from 'api/blog/user';
     import {saveB, selectBlogsPage,getNoticeList} from 'api/blog/blog';
@@ -344,9 +333,9 @@
 
     export default {
         components: {
-//使用编辑器
-            quillEditor
+            quillEditor,contact
         },
+
         data() {
             var validateRename = (rule, value, callback) => {
                 this.cheackName();

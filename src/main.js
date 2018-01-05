@@ -20,6 +20,7 @@ import vueWaves from './directive/waves'; // 水波纹指令
 import errLog from 'store/errLog'; // error log组件
 import './mock/index.js'; // 该项目所有请求使用mockjs模拟
 import VeeValidate from 'vee-validate'; //vue表单验证插件
+import contactIng from 'views/component/contact';
 import { getAuthority } from 'api/login';
 //import messages from 'assets/js/zh_CN';
 // Vue.use(VeeValidate);
@@ -28,6 +29,7 @@ const config = {
     fieldsBagName: 'validafield',
 };
 Vue.use(VeeValidate, config)
+Vue.use(contactIng)
     /*Validator.updateDictionary({
         zh_CN: {
             messages
@@ -47,6 +49,7 @@ Vue.component('multiselect', Multiselect);
 Vue.component('Sticky', Sticky);
 Vue.use(ElementUI);
 Vue.use(vueWaves);
+Vue.use(contactIng);
 
 Vue.config.productionTip = false;
 
