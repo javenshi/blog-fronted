@@ -21,7 +21,7 @@
             <!--   <el-menu-item index="4">求助</el-menu-item>-->
 
             <el-menu-item style="float: right;" index="5" v-show="UNAME==''" @click="openLoginDialog">登录</el-menu-item>
-            <el-menu-item style="float: right;" index="5" v-show="UNAME!=''" @click="openLoginDialog">{{UNAME}}
+            <el-menu-item style="float: right;" index="5" v-show="UNAME!=''" > <router-link :to="'/blog/userCenter'">{{UNAME}}</router-link>
             </el-menu-item>
         </el-menu>
         <div style="padding-left: 10px;padding-right:10px;padding-top:15px;">
