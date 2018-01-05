@@ -21,6 +21,7 @@ import errLog from 'store/errLog'; // error log组件
 import './mock/index.js'; // 该项目所有请求使用mockjs模拟
 import VeeValidate from 'vee-validate'; //vue表单验证插件
 import contactIng from 'views/component/contact';
+import noticeIng from 'views/component/notice';
 import { getAuthority } from 'api/login';
 //import messages from 'assets/js/zh_CN';
 // Vue.use(VeeValidate);
@@ -30,6 +31,7 @@ const config = {
 };
 Vue.use(VeeValidate, config)
 Vue.use(contactIng)
+Vue.use(noticeIng)
     /*Validator.updateDictionary({
         zh_CN: {
             messages

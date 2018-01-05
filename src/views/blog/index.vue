@@ -141,23 +141,8 @@
                                     abcd<br>
                                 </template>
                             </el-card>
-                            <el-card class="box-card">
-                                <div slot="header" class="clearfix">
-                                    <span>本站公告</span>
-                                </div>
-                                <template>
-                                    <el-table
-                                            :data="noticeList"
-                                            style="width: 100%">
-                                        <el-table-column>
-                                            <template scope="scope">
-                                                <span> {{scope.row.name}}</span><br>
-                                                <span> {{scope.row.creatTime}}</span>
-                                            </template>
-                                        </el-table-column>
-                                    </el-table>
-                                </template>
-                            </el-card>
+
+                            <notice></notice>
                             <contact> </contact>
                         </el-col>
                         <el-col :span="1"></el-col>
@@ -322,9 +307,10 @@
 
 <script>
     import contact from '../component/contact';
+    import notice from '../component/notice';
     import {quillEditor} from 'vue-quill-editor';
     import {getCode, cName, saveUser, login, valUser} from 'api/blog/user';
-    import {saveB, selectBlogsPage,getNoticeList} from 'api/blog/blog';
+    import {saveB, selectBlogsPage} from 'api/blog/blog';
     import {getAllCarousel} from 'api/admin/index';
     import {saveResouce,getResouceList} from 'api/blog/resouce';
     import {saveP,getProList} from 'api/blog/proposal';
@@ -333,7 +319,7 @@
 
     export default {
         components: {
-            quillEditor,contact
+            quillEditor,contact,notice
         },
 
         data() {
@@ -410,7 +396,7 @@
                 blogContext: '',
                 value8: '',
                 UNAME: '',
-                valCode: '', noticeList:'',
+                valCode: '',
                 listQuery: {
                     pageNum: 1,
                     pageSize: 10,
@@ -457,7 +443,7 @@
                 this.indexUrl = response.data.returnData;
             });
             this.getReso();
-            this.getNotice();
+
             this.getProList0();
 
         },
@@ -544,11 +530,7 @@
                     this.resourceList = response.data.returnData.list;
                 });
             },
-            getNotice() {
-                getNoticeList().then(response => {
-                    this.noticeList = response.data.returnData.list;
-                });
-            },
+
             loading(){
                 this.pageSize+=5;
                 this.getReso();
