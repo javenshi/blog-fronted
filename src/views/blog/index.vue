@@ -60,20 +60,50 @@
                                                     {{scope.row.blogsName}}
                                                 </span>
                                                 <br>
-                                                <span> {{scope.row.blogsDate|parseTime('{y}-{m}-{d}{h}:{i} ')}}</span>
+                                                <span> {{scope.row.blogsDate|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
                                                 <span> {{scope.row.userName}}</span>
                                                 <span> {{scope.row.blogsClassifyName}}</span>
                                             </template>
                                         </el-table-column>
                                     </el-table>
+
                                 </template>
-                                <div v-show="!listLoading" class="pagination-container">
+                                <div  class="pagination-container">
                                     <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                                                    :current-page.sync="listQuery.pageNum"
                                                    :page-sizes="[10,20,30, 50]" :page-size="listQuery.pageSize"
                                                    layout="total, sizes, prev, pager, next, jumper" :total="total">
                                     </el-pagination>
                                 </div>
+                                <el-collapse style="padding: 20px;">
+                                    <el-collapse-item title="如果您对本站有什么好的建议和意见，请再次留下您宝贵的建议，我们会尽快处理" >
+                                        <el-input
+                                                type="textarea"
+                                                autosize
+                                                placeholder="请输入内容"
+                                                v-model="Proposal.context">
+                                        </el-input>
+                                        <el-button type="danger" style="float: right;" @click="savePro">发表</el-button>
+
+                                    </el-collapse-item>
+
+                                </el-collapse>
+                                <el-table
+                                        :data="proList"
+                                        style="width: 100%">
+                                    <el-table-column>
+                                        <template scope="scope">
+
+                                            {{scope.row.context}}
+
+                                            <br>
+                                            <span> {{scope.row.creatTime|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
+                                            <span> {{scope.row.userName}}</span>
+                                            <span> {{scope.row.answer}}</span>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                                <el-button type="danger"  @click="getMorePro">加载更多</el-button>
                             </el-card>
                         </el-col>
 
@@ -308,6 +338,7 @@
     import {saveB, selectBlogsPage,getNoticeList} from 'api/blog/blog';
     import {getAllCarousel} from 'api/admin/index';
     import {saveResouce,getResouceList} from 'api/blog/resouce';
+    import {saveP,getProList} from 'api/blog/proposal';
     import tokenStore from 'store2';
     import {parseTime} from 'utils';
 
@@ -367,12 +398,14 @@
                 datas: '',
                 cna: false,
                 blogList: [],
+                proList: [],
                 resourceList:[],
                 indexUrl: [],
                 blog: {blogsName: '', blogsClassifyId: '', blogsStatus: ''},
                 resource: {resouceName: '', resouceUrl: '', context: '',status:''},
                 listLoading: false,
                 loginForm: {userName: '', passWord: ''},
+                Proposal:{context:'',userId:'',UserName:'',answer:'',},
                 rigitsterForm: {
                     userName: '',
                     email: '',
@@ -397,6 +430,7 @@
                     searchKey: ''
                 },
                 pageSize:5,
+                proSize:5,
                 total: null,
                 rigitsterRules: {
                     userName: [
@@ -435,6 +469,7 @@
             });
             this.getReso();
             this.getNotice();
+            this.getProList0();
 
         },
         computed: {
@@ -466,6 +501,16 @@
                     this.getBlogs();
                 });
             },
+            savePro() {
+
+                this.Proposal.userName = this.UNAME;
+                this.Proposal.userId = tokenStore.local('User').id;
+
+                saveP(this.Proposal).then(response => {
+
+                    this.getProList0();
+                });
+            },
             saveReso() {
                 this.resource.userId= tokenStore.local('User').id;
                 this.resource.userName=tokenStore.local('User').userName;
@@ -493,6 +538,15 @@
                     this.blogList = response.data.returnData.pageInfo.list;
                     this.total = response.data.returnData.pageInfo.total;
                 });
+            },
+            getProList0() {
+                getProList(this.proSize).then(response => {
+                    this.proList = response.data.returnData.list;
+                });
+            },
+            getMorePro() {
+                this.proSize+=5;
+                this.getProList0();
             },
             getReso() {
                 this.resource.resouceName="";

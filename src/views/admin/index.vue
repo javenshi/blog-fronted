@@ -128,7 +128,46 @@
 
 
                 </el-tab-pane>
-                <el-tab-pane label="定时任务补偿">定时任务补偿</el-tab-pane>
+                <el-tab-pane label="意见管理">
+                    <el-table
+                            :data="proList"
+                            style="width: 100%">
+                        <el-table-column width="180px">
+                            <template scope="scope" >
+                                <div>
+                                    <el-button size="small" type="danger" @click="deletePro(scope.row.id)">删除</el-button>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column>
+                            <template scope="scope">
+
+                                {{scope.row.context}}
+
+                                <br>
+                                <span> {{scope.row.creatTime|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
+                                <span> {{scope.row.userName}}</span>
+                                <span> {{scope.row.answer}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column width="180px">
+                            <template scope="scope" >
+                                <div v-if="scope.row.answer==null">
+                                    <el-button size="small" type="primary" @click="Reply0(scope.$index)">回复</el-button>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <el-button type="danger"  @click="getMorePro">加载更多</el-button>
+                    <el-dialog title="传资源" :visible.sync="proPlyDialog" align="center">
+                        <el-form>
+                        <el-input v-model="answer" placeholder="请输入内容"></el-input>
+                        <el-button size="small" type="primary" @click="Reply">回复</el-button>
+                        </el-form> </el-dialog>
+
+
+                </el-tab-pane>
             </el-tabs>
         </template>
 
@@ -140,7 +179,7 @@
     import {getAllCarousel, deleteCarousel} from 'api/admin/index';
     import {selectBlogsPage,passBlog,saveNa} from 'api/blog/blog';
     import {getResouceList,passResourc} from 'api/blog/resouce';
-
+    import {getProList,deletePro0,updatePro} from 'api/blog/proposal';
     export default {
         name: 'cloudUser',
         data() {
@@ -153,9 +192,14 @@
                     sortList: [],
                     searchKey: ''
                 },
+                rowId:'',
+                proPlyDialog:false,
+                answer:'',
                 pageSize:10,
                 resourceList:'',
                 blogList: '',
+                proList: '',
+                proSize: 5,
                 notice:{name:'',context:''},
                 total: '',
                 resource:{resouceName:''},
@@ -165,6 +209,7 @@
             this.getAllC();
             this.getBlogs();
             this.getReso();
+            this.getProList0();
         },
         filters: {
             formatDate(time) {
@@ -211,7 +256,33 @@
 
                 });
             },
+            getProList0() {
+                getProList(this.proSize).then(response => {
+                    this.proList = response.data.returnData.list;
+                });
+            }, deletePro(id) {
+                deletePro0(id).then(response => {
+                    this.getProList0();
+                });
+            },
+            Reply0(id){
+                this.rowId=id;
+                this.proPlyDialog=true;
+            },
+            Reply() {
 
+                this.proList[this.rowId].answer=this.answer;
+
+
+                updatePro(this.proList[this.rowId]).then(response => {
+                    this.proPlyDialog=false;
+                    this.getProList0();
+                });
+            },
+            getMorePro() {
+                this.proSize+=5;
+                this.getProList0();
+            },
             handleEdit(index, row) {
                 deleteCarousel(row.id).then(response => {
                     this.getAllC();
