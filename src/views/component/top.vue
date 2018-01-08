@@ -10,17 +10,22 @@
                         <span class="icon-logo-new"></span>
                     </a>
 
-                    <a href="http://home.console.aliyun.com" target="_self"
+                    <a href="" target="_self"
                        class="topbar-home-link topbar-btn topbar-left"
                     >
-                        <span ng-bind="data.navLinks.home.text" class="ng-binding">写博客</span>
+                        <router-link :to="'/blog/write'"><span class="ng-binding">写博客</span></router-link>
                     </a>
                 </div>
 
-                <div class="topbar-product topbar-left" ng-class="{'open':isProductOpen}">
+                <div class="topbar-product topbar-left" >
                     <div class="topbar-btn topbar-product-btn"
                     >
-                        <span class="ng-binding">贡献资源</span>
+                         <span class="ng-binding">贡献资源</span>
+                    </div>
+                </div>
+                <div class="topbar-product topbar-left" >
+                    <div class="topbar-btn topbar-product-btn">
+                        <router-link :to="'/blog/leav'"> <span class="ng-binding">留言</span></router-link>
                     </div>
                 </div>
                 <div class="aliyun-common-search-container " style="margin-top: 10px;margin-left: 60%;width: 200px;">
@@ -34,10 +39,7 @@
 
                 </div>
                 <div class="topbar-info topbar-right topbar-clearfix">
-
-
-
-                    <div class="topbar-left topbar-user ng-scope">
+                <div class="topbar-left topbar-user ng-scope">
                         <div class="topbar-info-dropdown topbar-info-item">
                             <a
                                     class="topbar-info-dropdown-toggle topbar-btn">
