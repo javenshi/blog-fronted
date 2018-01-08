@@ -1,87 +1,106 @@
 <template>
     <div>
-        <!--导航条-->
-        <el-menu
-                :default-active="activeIndex2"
-                class="el-menu-demo"
-                mode="horizontal"
-                @select="handleSelect"
-                background-color="#000000"
-                text-color="#ffffff"
-                active-text-color="#ffd04b">
-            <el-menu-item index="1" >
-              <router-link to="/">
-                返回
-              </router-link></el-menu-item>
-        </el-menu>
+        <top></top>
+        <div style="margin-top:50px;width:96%;margin-left: 2%;">
 
-        <div style="width:90%;" align="center">
-        <el-card class="box-card" >
-            <div slot="header" class="clearfix">
-                <span>卡片名称</span>
-            </div>
-            <div v-for="o in 4" :key="o" class="text item">
-                {{'列表内容 ' + o }}
-            </div>
-        </el-card>
-        </div>
-        <!--评论区-->
-        <div>
-        <el-input
-                type="textarea"
-                :autosize="{ minRows: 2, maxRows: 4}"
-                placeholder="请输入内容"
-                v-model="textarea3">
-        </el-input>
-       <!-- <el-rate
-                v-model="value4"
-                :icon-classes="['icon-rate-face-1', 'icon-rate-face-2', 'icon-rate-face-3']"
-                void-icon-class="icon-rate-face-off"
-                :colors="['#99A9BF', '#F7BA2A', '#FF9900']">
-        </el-rate>-->
+            <template>
+                <el-row :gutter="20">
+                    <el-col :span="18">
+                        <el-form :model="blog" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                            <el-form-item label="标题:" prop="blogsName">
+                                <el-input v-model="blog.blogsName" style="width:100%;"></el-input>
 
+                            </el-form-item>
 
+                            <el-form-item label="正文:">
+                                <div style="padding-bottom: 40px;">
+                                    <quill-editor v-model="blogContext"
+                                                  ref="myQuillEditor"
+                                                  style="height: 500px;"
+                                                  class="editer"
+                                                  @ready="onEditorReady($event)">
+                                    </quill-editor>
+                                </div>
+                            </el-form-item>
+                            <el-form-item label="分类:" prop="blogsClassifyId">
+                                <el-radio-group v-model="blog.blogsClassifyId">
+                                    <el-radio :label="1">人工智能</el-radio>
+                                    <el-radio :label="2">移动开发</el-radio>
+                                    <el-radio :label="3">物联网架构</el-radio>
+                                    <el-radio :label="4"> 云计算/大数据</el-radio>
+                                    <el-radio :label="5">游戏开发</el-radio>
+                                    <el-radio :label="6"> 运维</el-radio>
+                                    <el-radio :label="7"> 数据库</el-radio>
+                                    <el-radio :label="8"> 前端</el-radio>
+                                    <el-radio :label="9"> 安全</el-radio>
+                                    <el-radio :label="10"> 编程语言</el-radio>
+                                    <el-radio :label="11"> 程序人生</el-radio>
+                                    <el-radio :label="12"> 随笔</el-radio>
+                                    <el-radio :label="13"> 其他</el-radio>
+                                </el-radio-group>
+
+                            </el-form-item>
+                            <el-form-item>
+                                <div style="margin-left: 35%;">
+                                    <el-button type="success" @click="saveBlog(1)" round>保存</el-button>
+                                    <el-button type="info" @click="saveBlog(0)" round>草稿</el-button>
+                                    <el-button type="danger" round>取消</el-button>
+                                </div>
+                            </el-form-item>
+                        </el-form>
+                    </el-col>
+                    <el-col :span="6"></el-col>
+                </el-row>
+                <div v-html="datas">
+                    <div>{{datas}}</div>
+                </div>
+            </template>
         </div>
     </div>
 </template>
 
 <script>
-
+    import {quillEditor} from 'vue-quill-editor';
+    import top from '../component/top';
+    import tokenStore from 'store2';
+    import {saveB} from 'api/blog/blog';
 
     export default {
-
+        components: {
+            quillEditor, top
+        },
         data() {
             return {
-
+                blog: {blogsName: '', blogsClassifyId: '', blogsStatus: ''},
+                blogContext: '',
+                datas: '',
+                UNAME: '',
             };
-        },mounted(){
-
+        }, mounted() {
+            this.UNAME = tokenStore.local('User').userName;
         },
         computed: {
-
+            editor() {
+                return this.$refs.myQuillEditor.quill
+            }
         },
         methods: {
-
+            saveBlog(blogsStatus) {
+                this.blog.blogsStatus = blogsStatus;
+                this.blog.blogsUrl = this.blogContext;
+                this.blog.userName = this.UNAME;
+                saveB(this.blog).then(response => {
+                    this.$notify({
+                        title: response.data.returnCode == 200 ? '成功' : '失败',
+                        message: response.data.returnMsg,
+                        type: response.data.returnCode == 200 ? 'success' : 'warning',
+                        duration: 5000
+                    });
+                });
+            },
+            onEditorReady(editor) {
+            },
         }
     }
 </script>
-<style lang="scss">
-    @import '../../styles/index.scss'; // 全局自定义的css样式
-    .el-carousel__item h3 {
-        color: #475669;
-        font-size: 14px;
-        opacity: 0.75;
-        line-height: 100px;
-        margin: 0;
-    }
 
-    .el-carousel__item:nth-child(2n) {
-        background-color: #99a9bf;
-    }
-
-    .el-carousel__item:nth-child(2n+1) {
-        background-color: #d3dce6;
-    }
-
-
-</style>

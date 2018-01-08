@@ -5,27 +5,35 @@
             <div class="topbar-wrap topbar-clearfix" style="display: block;">
                 <div class="topbar-head topbar-left">
 
-                    <a href="http://www.zhixiang.org.cn" title="http://www.zhixiang.org.cn"
+                    <a href="/" title="http://www.zhixiang.org.cn"
                        class="topbar-btn topbar-logo topbar-left">
                         <span class="icon-logo-new"></span>
                     </a>
 
-                    <a href="" target="_self"
-                       class="topbar-home-link topbar-btn topbar-left"
-                    >
-                        <router-link :to="'/blog/write'"><span class="ng-binding">写博客</span></router-link>
-                    </a>
+
+
                 </div>
 
-                <div class="topbar-product topbar-left" >
-                    <div class="topbar-btn topbar-product-btn"
-                    >
-                         <span class="ng-binding">贡献资源</span>
+                <div class="topbar-product topbar-left">
+                    <div class="topbar-btn  topbar-product-btn">
+                        <a href="" target="_blank" class="topbar-home-link  ">
+                            <router-link :to="'/blog/write'"><span class="ng-binding">写博客</span></router-link>
+                        </a>
                     </div>
                 </div>
-                <div class="topbar-product topbar-left" >
+                <div class="topbar-product topbar-left">
+                    <div class="topbar-btn  topbar-product-btn">
+                        <span class="ng-binding" @click="openResourceDialog">贡献资源</span>
+                    </div>
+                </div>
+                <div class="topbar-product topbar-left">
                     <div class="topbar-btn topbar-product-btn">
-                        <router-link :to="'/blog/leav'"> <span class="ng-binding">留言</span></router-link>
+                        <router-link :to="'/blog/leav'"><span class="ng-binding">留言</span></router-link>
+                    </div>
+                </div>
+                <div class="topbar-product topbar-left">
+                    <div class="topbar-btn topbar-product-btn">
+                        <router-link :to="'/admin/index'">后台</router-link>
                     </div>
                 </div>
                 <div class="aliyun-common-search-container " style="margin-top: 10px;margin-left: 60%;width: 200px;">
@@ -39,32 +47,325 @@
 
                 </div>
                 <div class="topbar-info topbar-right topbar-clearfix">
-                <div class="topbar-left topbar-user ng-scope">
+                    <div class="topbar-left topbar-user ng-scope">
                         <div class="topbar-info-dropdown topbar-info-item">
-                            <a
-                                    class="topbar-info-dropdown-toggle topbar-btn">
-                                <span>15554067102a</span>
+                            <a class="topbar-info-dropdown-toggle topbar-btn">
+                                <span v-show="UNAME==''" @click="openLoginDialog">登录</span>
+                                <span  @click="openLoginDialog">登录</span>
+                                <span style="float: right;" index="5" v-show="UNAME!=''">
+                                   <router-link :to="'/blog/userCenter'">{{UNAME}}</router-link></span>
                             </a>
 
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
+        <el-dialog title="传资源" :visible.sync="resourceDialog" align="center">
+
+            <el-form :model="resource" status-icon ref="resour"
+                     class="demo-ruleForm">
+                <el-form-item label="资源名称:" prop="resouceName" required>
+                    <el-input size="small" type="input" v-model="resource.resouceName"
+                              auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="资源Url:" prop="resouceUrl" required>
+                    <el-input size="small" type="input" v-model="resource.resouceUrl"
+                              auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="资源描述:" prop="context">
+                    <el-input type="textarea" v-model="resource.context"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button @click="closeResourceDialog('resour')">取 消</el-button>
+                    <el-button @click="saveReso" type="primary">确
+                        定
+                    </el-button>
+                </el-form-item>
+            </el-form>
+
+        </el-dialog>
+        <el-dialog title="" :visible.sync="loginDialog" align="center">
+            <el-form :model="loginForm" status-icon :rules="loginRules" ref="loginForm" class="demo-ruleForm"
+                     v-show="loginOrRigister">
+                <h3 class="title">系统登录</h3>
+                <el-form-item prop="userName" label="用户名:" required>
+                    <el-input name="userName" type="text" v-model="loginForm.userName"
+                              placeholder="用户名"></el-input>
+                </el-form-item>
+                <el-form-item prop="passWord" label="密码:" required>
+                    <el-input name="passWord" type="password" v-model="loginForm.passWord"
+                              placeholder="密码"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="login('loginForm')" style="width:100%;">
+                        登录
+                    </el-button>
+                </el-form-item>
+                <a @click="toRigister" class="forget-pwd">
+                    没有账号?(赶紧注册一个吧)
+                </a>
+            </el-form>
+            <el-form :model="rigitsterForm" status-icon :rules="rigitsterRules" ref="rigitsterForm"
+                     class="demo-ruleForm" v-show="!loginOrRigister">
+                <h3 class="title">系统注册</h3>
+                <el-form-item prop="userName" label="用户名:" required>
+                    <el-input type="text" v-model="rigitsterForm.userName"
+                              @blur="cheackName" auto-complete="off" placeholder="用户名"></el-input>
+                </el-form-item>
+                <el-form-item prop="passWord" label="密码:" required>
+                    <el-input type="password" v-model="rigitsterForm.passWord"
+                              placeholder="密码"></el-input>
+                </el-form-item>
+                <el-form-item prop="checkPassWord" label="确认密码:" required>
+                    <el-input type="password" v-model="rigitsterForm.checkPassWord"
+                              placeholder="密码"></el-input>
+                </el-form-item>
+                <el-form-item prop="email" label="邮箱:" required>
+                    <el-input type="text" v-model="rigitsterForm.email"
+                              placeholder="邮箱"></el-input>
+                </el-form-item>
+                <el-form-item prop="code" label="验证码:" required>
+                    <el-input type="text" style="width: 45%" v-model="rigitsterForm.code"
+                              placeholder="验证码"></el-input>
+
+                    <el-button v-show="!showTime" type="success" v-waves icon="plus"
+                               @click="sendCode">
+                        获取验证码
+                    </el-button>
+                    <el-button v-show="showTime" disabled type="primary"
+                    >
+                        剩余{{count}}秒
+                    </el-button>
+
+
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" style="width:100%;" @click="rigster('rigitsterForm')">
+                        注册
+                    </el-button>
+                </el-form-item>
+                <a @click="toLogin" class="forget-pwd">
+                    注册成功，赶紧去登录吧！
+                </a>
+            </el-form>
+        </el-dialog>
     </div>
 
 </template>
 <script>
+    import tokenStore from 'store2';
+    import {saveResouce} from 'api/blog/resouce';
+    import {getCode, cName, saveUser, login, valUser} from 'api/blog/user';
 
     export default {
         name: 'topIng',
+
         data() {
+            var validateRename = (rule, value, callback) => {
+                this.cheackName();
+                if (value === '') {
+                    callback(new Error('请输入用户名'));
+                } else if (value.length <= 0) {
+                    callback(new Error('请输入用户名!'));
+                } else if (this.cna) {
+                    callback(new Error('用户名已存在!'));
+                } else {
+                    callback();
+                }
+            };
+            var validatePassword = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入密码'));
+                } else {
+                    if (this.temp.repassword !== '') {
+                        this.$refs.formName.validateField('repassword');
+                    }
+                    callback();
+                }
+            };
+            var validateRepassword = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请再次输入密码'));
+                } else if (value !== this.rigitsterForm.passWord) {
+                    callback(new Error('两次输入密码不一致!'));
+                } else {
+                    callback();
+                }
+            };
+            var validateCode = (rule, value, callback) => {
+                if (value === '') {
+                    callback(new Error('请输入验证码'));
+                } else if (value !== this.valCode) {
+                    callback(new Error('验证码不正确'));
+                } else {
+                    callback();
+                }
+            };
+            return {
+                resourceDialog: false,
+                resource: {resouceName: '', resouceUrl: '', context: '', status: ''},
+                loginDialog: false,
 
-            return {};
+                loginForm: {userName: '', passWord: ''},
+                count: '',
+                rigitsterForm: {
+                    userName: '',
+                    email: '',
+                    code: '',
+                    passWord: '',
+                    checkPassWord: ''
+                },
+                loginOrRigister: true,
+                timer: null,
+                showTime: false,
+                valCode: '',
+                rigitsterRules: {
+                    userName: [
+                        {validator: validateRename, trigger: 'blur'},
+                        {pattern: /^[^ ]+$/, message: '用户名中不能包含空格', trigger: 'blur'}
+                    ],
+                    email: [
+                        {required: true, message: '请输入邮箱', trigger: 'blur,change'},
+                        {type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change'}
+                    ],
+                    code: [
+                        {validator: validateCode, trigger: 'blur,change'}
+                    ],
+                    password: [
+                        {validator: validatePassword, message: '请输入密码', trigger: 'blur'}
+                    ],
+                    checkPassWord: [
+                        {validator: validateRepassword, trigger: 'blur'}
+                    ]
+                },
+                loginRules: {
+                    userName: [
+
+                        {pattern: /^[^ ]+$/, message: '用户名中不能包含空格', trigger: 'blur'}
+                    ],
+                    password: [
+                        {required: true, message: '请输入密码', trigger: 'blur'},
+                    ]
+                },
+            };
         }, created() {
-
+            this.UNAME = tokenStore.local('User').userName;
         },
-        methods: {}
+        methods: {
+            saveReso() {
+                this.resource.userId = tokenStore.local('User').id;
+                this.resource.userName = tokenStore.local('User').userName;
+                saveResouce(this.resource).then(response => {
+                    this.$notify({
+                        title: response.data.returnCode == 200 ? '成功' : '失败',
+                        message: response.data.returnMsg,
+                        type: response.data.returnCode == 200 ? 'success' : 'warning',
+                        duration: 5000
+                    });
+
+                });
+            },
+            openResourceDialog() {
+                this.resourceDialog = true;
+            }, closeResourceDialog(formName) {
+                this.resourceDialog = false;
+                this.$refs[formName].resetFields();
+            },  openLoginDialog() {
+                this.loginDialog = true;
+            }, closeLoginDialog(formName) {
+                this.loginDialog = false;
+                this.$refs[formName].resetFields();
+            }, toRigister() {
+                this.loginOrRigister = false;
+            }, toLogin() {
+                this.loginOrRigister = true;
+            },
+            cheackName() {
+                if (this.rigitsterForm.userName.length < 3) {
+                    return false;
+                }
+                cName(this.rigitsterForm.userName).then(response => {
+                    if (response.data.returnCode != 200) {
+                        this.cna = true;
+                    } else {
+                        this.cna = false;
+                    }
+
+                });
+            },
+            sendCode() {
+                if (this.rigitsterForm.email.length < 3 || this.rigitsterForm.email.indexOf("@") < 1 || this.rigitsterForm.email.indexOf(".") < 1) {
+                    return false;
+                }
+
+                getCode(this.rigitsterForm).then(response => {
+                    if (response.data.returnCode != 200) {
+                        this.$notify({
+                            title: response.data.returnCode == 200 ? '成功' : '失败',
+                            message: response.data.returnMsg,
+                            type: response.data.returnCode == 200 ? 'success' : 'warning',
+                            duration: 5000
+                        });
+                    }
+                    this.valCode = response.data.returnData;
+                });
+
+                const TIME_COUNT = 60;
+                if (!this.timer) {
+                    this.count = TIME_COUNT;
+                    this.showTime = true;
+                    this.timer = setInterval(() => {
+                        if (this.count > 0 && this.count <= TIME_COUNT) {
+                            this.count--;
+                        } else {
+                            this.showTime = false;
+                            clearInterval(this.timer);
+                            this.timer = null;
+                        }
+                    }, 1000)
+                }
+            },
+            rigster(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        saveUser(this.rigitsterForm).then(response => {
+                            this.$notify({
+                                title: response.data.returnCode == 200 ? '成功' : '失败',
+                                message: response.data.returnMsg,
+                                type: response.data.returnCode == 200 ? 'success' : 'warning',
+                                duration: 5000
+                            });
+                            this.toLogin();
+                        });
+                    }
+                });
+            },
+            login(formName) {
+
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+
+                        login(this.loginForm).then(response => {
+                            if (response.data.returnCode == 200) {
+                                this.UNAME = response.data.returnData.userName;
+                                tokenStore.local.set('User', response.data.returnData)
+                                this.loginDialog = false;
+                                return false;
+                            }
+                            this.$notify({
+                                title: response.data.returnCode == 200 ? '成功' : '失败',
+                                message: response.data.returnMsg,
+                                type: response.data.returnCode == 200 ? 'success' : 'warning',
+                                duration: 5000
+                            });
+
+                        });
+                    }
+                });
+            },
+        }
     }
 </script>
 <style>

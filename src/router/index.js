@@ -36,6 +36,7 @@ Vue.use(Router);
 export const constantRouterMap = [
     { meta: { role: [""] }, path: '/', name: '首页', component: Blog, hidden: true },
     { meta: { role: [""] }, path: '/blog/read', name: '读博客', component: read, hidden: true },
+    { meta: { role: [""] }, path: '/blog/write', name: '写博客', component: write, hidden: true },
     { meta: { role: [""] }, path: '/admin/index', name: '后台管理', component: Admin, hidden: true },
     { meta: { role: [""] }, path: '/blog/userCenter', name: '个人中心', component: userCenter, hidden: true },
     { meta: { role: [""] }, path: '/blog/updateBlogs', name: '编辑博客', component: updateBlogs, hidden: true },
