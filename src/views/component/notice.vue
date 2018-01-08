@@ -1,11 +1,12 @@
 <template >
     <el-card class="box-card">
-        <div slot="header" class="clearfix">
-            <span>本站公告</span>
+        <div slot="header" >
+            <span style="margin-left:-75%;color: #666;font-size: 16px;">本站公告</span>
         </div>
         <template>
             <el-table
                     :data="noticeList"
+                    :show-header=false
                     style="width: 100%">
                 <el-table-column>
                     <template scope="scope">
