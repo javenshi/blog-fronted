@@ -16,9 +16,9 @@
 
                 <div class="topbar-product topbar-left">
                     <div class="topbar-btn  topbar-product-btn">
-                        <a href="" target="_blank" class="topbar-home-link  ">
-                            <router-link :to="'/blog/write'"><span class="ng-binding">写博客</span></router-link>
-                        </a>
+
+                        <router-link :to="'/blog/write'"><span class="ng-binding"><a href="" target="_blank" class="topbar-home-link  ">写博客</a></span></router-link>
+
                     </div>
                 </div>
                 <div class="topbar-product topbar-left">
@@ -264,6 +264,7 @@
                         type: response.data.returnCode == 200 ? 'success' : 'warning',
                         duration: 5000
                     });
+                    this.resourceDialog=false;
 
                 });
             },

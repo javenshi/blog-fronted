@@ -42,9 +42,11 @@
                                                     {{scope.row.blogsName}}
                                                 </span>
                                             <br>
-                                            <span style="margin-left:-1%;padding: 1%;font-size: 14px;color:#f9c855"> {{scope.row.blogsClassifyName}}</span>
+                                            <span > {{scope.row.blogsPart}}</span>
+                                           <br> <span style="margin-left:-1%;padding: 1%;font-size: 14px;color:#f9c855"> {{scope.row.blogsClassifyName}}</span>
                                             <span> <img src="">{{scope.row.blogsDate|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
                                             <span><img src=""> {{scope.row.userName}}</span>
+                                            <span><img src=""> {{scope.row.blogsClick}}</span>
                                             <br><br>
                                         </template>
                                     </el-table-column>
@@ -68,6 +70,7 @@
                                     <el-pagination
                                             style="padding-top: -39px;"
                                             small
+                                            :total="totalRe"
                                             @current-change="loading"
                                             layout="prev, pager, next"
                                            >
@@ -140,28 +143,10 @@
         data() {
 
             return {
-                /*弹窗状态*/
-
-                activeIndex:'1',
-
-
-
-
-
-
                 blogList: [],
-
                 resourceList: [],
                 indexUrl: [],
-
-
                 listLoading: false,
-
-
-
-
-
-
                 listQuery: {
                     pageNum: 1,
                     pageSize: 10,
@@ -170,9 +155,9 @@
                     searchKey: ''
                 },
                 pageSize: 5,
-
+                resource:{resouceName:'',status:''},
                 total: null,
-
+                totalRe:null,
             };
         },
         created() {
@@ -213,6 +198,7 @@
                 this.resource.status = 2;
                 getResouceList(this.resource, this.pageSize).then(response => {
                     this.resourceList = response.data.returnData.list;
+                    this.totalRe = response.data.returnData.total;
                 });
             },
 

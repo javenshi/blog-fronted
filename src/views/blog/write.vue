@@ -13,7 +13,7 @@
                             </el-form-item>
 
                             <el-form-item label="正文:">
-                                <div style="padding-bottom: 40px;">
+                                <div style="padding-bottom: 10%;">
                                     <quill-editor v-model="blogContext"
                                                   ref="myQuillEditor"
                                                   style="height: 500px;"
@@ -51,9 +51,7 @@
                     </el-col>
                     <el-col :span="6"></el-col>
                 </el-row>
-                <div v-html="datas">
-                    <div>{{datas}}</div>
-                </div>
+
             </template>
         </div>
     </div>
@@ -71,7 +69,7 @@
         },
         data() {
             return {
-                blog: {blogsName: '', blogsClassifyId: '', blogsStatus: ''},
+                blog: {blogsName: '', blogsClassifyId: '', blogsStatus: '',blogsPart:''},
                 blogContext: '',
                 datas: '',
                 UNAME: '',
@@ -85,7 +83,11 @@
             }
         },
         methods: {
+
             saveBlog(blogsStatus) {
+
+              this.blog.blogsPart=this.delHtmlTag(this.blogContext).substring(0,200);
+
                 this.blog.blogsStatus = blogsStatus;
                 this.blog.blogsUrl = this.blogContext;
                 this.blog.userName = this.UNAME;
@@ -97,8 +99,13 @@
                         duration: 5000
                     });
                 });
+                this.$router.push('/');
             },
             onEditorReady(editor) {
+
+            },
+            delHtmlTag(str) {
+                return str.replace(/<[^>]+>/g, "");
             },
         }
     }
