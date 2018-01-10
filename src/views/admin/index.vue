@@ -57,6 +57,13 @@
                     <el-table
                             :data="blogList"
                             style="width: 100%">
+                        <el-table-column width="120px">
+                            <template scope="scope" >
+
+                                    <el-button size="small" type="danger" @click="deleteBlogsById(scope.row.id)">删除</el-button>
+
+                            </template>
+                        </el-table-column>
                         <el-table-column width="180px">
                             <template scope="scope" >
                                 <div v-if="scope.row.blogsStatus==1&&scope.row.status==0">
@@ -99,6 +106,11 @@
                             :data="resourceList"
                             style="width: 100%">
                         <el-table-column width="180px">
+                            <el-table-column width="120px">
+                                <template scope="scope" >
+                                    <el-button size="small" type="danger" @click="deleteResourceById(scope.row.id)">删除</el-button>
+                                </template>
+                            </el-table-column>
                             <template scope="scope" >
                                 <div  v-if="scope.row.status==0">
                                     <el-button size="small" type="success" @click="passResourc(2,scope.row.id)">通过</el-button>
@@ -177,8 +189,8 @@
 <script>
     import {formatDate} from 'utils/date.js';
     import {getAllCarousel, deleteCarousel} from 'api/admin/index';
-    import {selectBlogsPage,passBlog,saveNa} from 'api/blog/blog';
-    import {getResouceList,passResourc} from 'api/blog/resouce';
+    import {selectBlogsPage,passBlog,saveNa,deleteBlog} from 'api/blog/blog';
+    import {getResouceList,passResourc,deleteRe} from 'api/blog/resouce';
     import {getProList,deletePro0,updatePro} from 'api/blog/proposal';
     export default {
         name: 'cloudUser',
@@ -195,7 +207,7 @@
                 rowId:'',
                 proPlyDialog:false,
                 answer:'',
-                pageSize:10,
+                pageSize:1,
                 resourceList:'',
                 blogList: '',
                 proList: '',
@@ -235,6 +247,16 @@
             pass(status,id){
                 passBlog(status,id).then(response => {
                     this.getBlogs();
+                });
+            },
+            deleteBlogsById(id){
+                deleteBlog(id).then(response => {
+                    this.getBlogs();
+                });
+            },
+            deleteResourceById(id){
+                deleteRe(id).then(response => {
+                    this.getReso();
                 });
             },
             passResourc(status,id){

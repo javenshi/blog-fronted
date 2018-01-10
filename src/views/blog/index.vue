@@ -154,7 +154,7 @@
                     sortList: [],
                     searchKey: ''
                 },
-                pageSize: 5,
+                pageSize: 1,
                 resource:{resouceName:'',status:''},
                 total: null,
                 totalRe:null,

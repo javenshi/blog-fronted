@@ -1,4 +1,5 @@
 <template>
+    <div><top></top>
     <div class="app-container calendar-list-container">
         <el-tabs type="border-card">
             <el-tab-pane label="我的博客" >
@@ -101,7 +102,7 @@
                 </el-dialog>
             </el-tab-pane>
         </el-tabs>
-    </div>
+    </div></div>
 </template>
 
 <script>
@@ -109,9 +110,11 @@
     import {selectBlogsPage,deleteBlog} from 'api/blog/blog';
     import tokenStore from 'store2';
     import {parseTime} from 'utils';
-
+    import top from '../component/top';
     export default {
-
+        components: {
+            top
+        },
         data() {
             return {
                 UID:'',
