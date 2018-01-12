@@ -89,6 +89,7 @@
                                             </template>
                                         </el-table-column>
                                     </el-table>
+
                                 </template>
                             </el-card>
                             <div style="padding-top: 20px;">
@@ -97,12 +98,23 @@
                                         <span  style="margin-left:-75%;color: #666;font-size: 16px;">点击排行</span>
                                     </div>
                                     <template>
+                                        <aside style="margin-left: -40px; margin-top: -20px;">
+                                            <div class="tuijian">
 
-                                        abcd<br>
-                                        abcd<br>
-                                        abcd<br>
-                                        abcd<br>
-                                        abcd<br>
+                                                <ol>
+                                                    <li><span><strong>1</strong></span><a href="/">有一种思念，是淡淡的幸福,一个心情一行文字</a></li>
+                                                    <li><span><strong>2</strong></span><a href="/">励志人生-要做一个潇洒的女人</a></li>
+                                                    <li><span><strong>3</strong></span><a href="/">女孩都有浪漫的小情怀——浪漫的求婚词</a></li>
+                                                    <li><span><strong>4</strong></span><a href="/">Green绿色小清新的夏天-个人博客模板</a></li>
+                                                    <li><span><strong>5</strong></span><a href="/">女生清新个人博客网站模板</a></li>
+                                                    <li><span><strong>6</strong></span><a href="/">Wedding-婚礼主题、情人节网站模板</a></li>
+                                                    <li><span><strong>7</strong></span><a href="/">Column 三栏布局 个人网站模板</a></li>
+                                                    <li><span><strong>8</strong></span><a href="/">时间煮雨-个人网站模板</a></li>
+                                                    <li><span><strong>9</strong></span><a href="/">花气袭人是酒香—个人网站模板</a></li>
+                                                </ol>
+                                            </div>
+
+                                        </aside>
                                     </template>
                                 </el-card>
                             </div>
@@ -249,4 +261,13 @@
         border-radius: 4px;
     }
 
+    .tuijian li, .clicks li { white-space: nowrap; text-overflow: ellipsis; overflow: hidden }
+    .tuijian li a:hover { padding-left: 10px }
+    .tuijian li span:before { content: "0"; }/* 数字列表前面统一加0  */
+    .tuijian li span { margin-right: 10px; font-size: 14px; font-family: "微软雅黑"; }
+    .tuijian li:nth-child(-n+3) span { width: 39px; color: #999 } /* 选择从第3个开始倒数也就是第三个前面的 */
+    .tuijian li:nth-child(-n+3) strong { font-size: 24px; font-weight: normal; }
+    .tuijian li:first-child span { color: #f8490b; } /* 选择第一个 */
+    .tuijian li:nth-child(n+3) { line-height: 24px } /* 选择从第3个开始往后数 */
+    .tuijian li:nth-child(4) { margin: 5px 0 0 0 } /* 选择第四个 */
 </style>
