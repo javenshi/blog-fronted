@@ -5,10 +5,16 @@
             <el-row :gutter="20">
                 <el-col :span="1"><br></el-col>
                 <el-col :span="22">
-                    <div class="block" v-show="show==1">
+                    <div class="block" >
                         <el-carousel height="276px">
                             <el-carousel-item v-for="item in indexUrl" :key="item">
                                 <div v-html="item.url"></div>
+                                11<br>
+                                11<br>
+                                11<br>
+                                11<br>
+                                11<br>
+                                11<br>
                             </el-carousel-item>
                         </el-carousel>
                     </div>
@@ -176,6 +182,7 @@
             this.getBlogs();
             getAllCarousel().then(response => {
                 this.indexUrl = response.data.returnData;
+
             });
             this.getReso();
         },
