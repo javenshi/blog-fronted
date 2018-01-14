@@ -146,6 +146,9 @@
         },
 
         methods: {
+            updateBlogs(id){
+                this.$router.push('/blog/updateBlogs?id=' + id);
+            },
             getBlogs() {
                 this.listQuery.filterList=[];
                 this.listQuery.filterList.push({

@@ -8,7 +8,10 @@
             <el-row :gutter="20">
                 <el-col :span="1"><br></el-col>
                 <el-col :span="17">
-               <div v-if="!noBlog" >
+               <div v-if="!noBlog"v-loading="loadingBlog"
+                    element-loading-text="拼命加载中"
+                    element-loading-spinner="el-icon-loading"
+                    element-loading-background="rgba(0, 0, 0, 0.8)" >
                             <div>
                                 <div>
                                     <h1> {{blog.blogsName}}</h1>
@@ -124,6 +127,7 @@
         },
         data() {
             return {
+                loadingBlog:false,
                 UNAME: '',
                 blog: '',
                 textarea: '',
@@ -133,6 +137,7 @@
                 noBlog: false,
             };
         }, created() {
+            this.loadingBlog=true;
             this.UNAME = tokenStore.local('User').userName;
             getBlogsById(this.$route.query.id).then(response => {
                 if (response.data.returnCode == 404 || response.data.returnCode == 400) {
@@ -140,7 +145,7 @@
                     return false;
                 }
                 this.blog = response.data.returnData;
-            });
+                this.loadingBlog=false;});
             this.getComents();
 
         },

@@ -1,10 +1,11 @@
 <template>
     <div>
         <top></top>
-        <div style="margin-top:50px;width:96%;margin-left: 2%;">
+        <div style="margin-top:50px;width:96%;">
 
             <template>
                 <el-row :gutter="20">
+                    <el-col :span="3"><br></el-col>
                     <el-col :span="18">
                         <el-form :model="blog" ref="ruleForm" label-width="100px" class="demo-ruleForm">
                             <el-form-item label="标题:" prop="blogsName">
@@ -16,7 +17,7 @@
                                 <div style="padding-bottom: 10%;">
                                     <quill-editor v-model="blogContext"
                                                   ref="myQuillEditor"
-                                                  style="height: 500px;"
+                                                  style="height: 500px;background-color: white"
                                                   class="editer"
                                                   @ready="onEditorReady($event)">
                                     </quill-editor>
@@ -44,12 +45,12 @@
                                 <div style="margin-left: 35%;">
                                     <el-button type="success" @click="saveBlog(1)" round>保存</el-button>
                                     <el-button type="info" @click="saveBlog(0)" round>草稿</el-button>
-                                    <el-button type="danger" round>取消</el-button>
+                                    <el-button type="danger" round><router-link :to="'/'">取消</router-link></el-button>
                                 </div>
                             </el-form-item>
                         </el-form>
                     </el-col>
-                    <el-col :span="6"></el-col>
+                    <el-col :span="3"></el-col>
                 </el-row>
 
             </template>
@@ -77,16 +78,12 @@
         }, mounted() {
             this.UNAME = tokenStore.local('User').userName;
         },
-        computed: {
-            editor() {
-                return this.$refs.myQuillEditor.quill
-            }
-        },
+
         methods: {
 
             saveBlog(blogsStatus) {
 
-              this.blog.blogsPart=this.delHtmlTag(this.blogContext).substring(0,200);
+              this.blog.blogsPart=this.delHtmlTag(this.blogContext).substring(0,100);
 
                 this.blog.blogsStatus = blogsStatus;
                 this.blog.blogsUrl = this.blogContext;

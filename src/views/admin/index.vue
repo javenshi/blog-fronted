@@ -12,7 +12,7 @@
                         <i class="el-icon-upload"></i>
                         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
                     </el-upload>
-                    <el-form :model="notice" status-icon ref="resour"
+                    <!--<el-form :model="notice" status-icon ref="resour"
                              class="demo-ruleForm">
                         <el-form-item label="公告名称:" prop="name" required>
                             <el-input size="small" type="input" v-model="notice.name"
@@ -28,7 +28,7 @@
                                 定
                             </el-button>
                         </el-form-item>
-                    </el-form>
+                    </el-form>-->
                     <el-table
                             :data="Carousel"
                             border
@@ -109,14 +109,16 @@
                             <el-table-column width="120px">
                                 <template scope="scope" >
                                     <el-button size="small" type="danger" @click="deleteResourceById(scope.row.id)">删除</el-button>
+                                    <div  v-if="scope.row.status==0">
+                                        <el-button size="small" type="success" @click="passResourc(2,scope.row.id)">通过</el-button>
+                                        <el-button size="small" type="danger" @click="passResourc(1,scope.row.id)">驳回</el-button>
+                                    </div>
                                 </template>
+
+
+
                             </el-table-column>
-                            <template scope="scope" >
-                                <div  v-if="scope.row.status==0">
-                                    <el-button size="small" type="success" @click="passResourc(2,scope.row.id)">通过</el-button>
-                                    <el-button size="small" type="danger" @click="passResourc(1,scope.row.id)">驳回</el-button>
-                                </div>
-                            </template>
+
                         </el-table-column>
                         <el-table-column width="180px">
                             <template scope="scope" >

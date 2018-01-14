@@ -2,33 +2,44 @@
 
     <div class="ng-scope">
         <div class="console-component-topbar ng-scope">
-            <div class="topbar-wrap topbar-clearfix" style="display: block;">
+            <div class=" topbar-clearfix" style="display: block; color: #666;">
                 <div class="topbar-head topbar-left">
 
-                    <a href="/" title="http://www.zhixiang.org.cn"
-                       class="topbar-btn topbar-logo topbar-left">
-                        <span class="icon-logo-new"></span>
+                    <a
+                            class="topbar-btn topbar-logo topbar-left">
+                        <img style="margin-top: 14px;" src="../../img/logo.png"/>
                     </a>
 
 
-
                 </div>
-
-                <div class="topbar-product topbar-left">
+                <div style="margin-left: 30px;" class="topbar-product topbar-left">
                     <div class="topbar-btn  topbar-product-btn">
 
-                        <router-link :to="'/blog/write'"><span class="ng-binding"><a href="" target="_blank" class="topbar-home-link  ">写博客</a></span></router-link>
+                        <router-link :to="'/'"><span style="color: #999;" class="ng-binding"><a href="" target="_blank"
+                                                                                                class="topbar-home-link  ">首页</a></span>
+                        </router-link>
 
                     </div>
                 </div>
                 <div class="topbar-product topbar-left">
                     <div class="topbar-btn  topbar-product-btn">
-                        <span class="ng-binding" @click="openResourceDialog">贡献资源</span>
+
+                        <router-link :to="'/blog/write'"><span style="color: #999;" class="ng-binding"><a href=""
+                                                                                                          target="_blank"
+                                                                                                          class="topbar-home-link  ">写博客</a></span>
+                        </router-link>
+
+                    </div>
+                </div>
+                <div class="topbar-product topbar-left">
+                    <div class="topbar-btn  topbar-product-btn">
+                        <span class="ng-binding" style="color: #999;" @click="openResourceDialog"><a>贡献资源</a></span>
                     </div>
                 </div>
                 <div class="topbar-product topbar-left">
                     <div class="topbar-btn topbar-product-btn">
-                        <router-link :to="'/blog/leav'"><span class="ng-binding">留言</span></router-link>
+                        <router-link :to="'/blog/leav'"><span style="color: #999;" class="ng-binding"><a>留言</a></span>
+                        </router-link>
                     </div>
                 </div>
                 <div class="topbar-product topbar-left">
@@ -38,11 +49,11 @@
                 </div>
                 <div class="aliyun-common-search-container " style="margin-top: 10px;margin-left: 60%;width: 200px;">
                     <input
-                            class="aliyun-common-search-input-elem " placeholder="全站搜索"
+                            class="aliyun-common-search-input-elem " @keyup.enter="searchBySel" v-model="search"
+                            placeholder="全站搜索"
                     >
 
-                    <div
-                            class="aliyun-common-search-icon"></div>
+                    <div @click="searchBySel" class="aliyun-common-search-icon"></div>
                     <div class="aliyun-common-search-outline"></div>
 
                 </div>
@@ -50,10 +61,10 @@
                     <div class="topbar-left topbar-user ng-scope">
                         <div class="topbar-info-dropdown topbar-info-item">
                             <a class="topbar-info-dropdown-toggle topbar-btn">
-                                <span v-show="UNAME==''" @click="openLoginDialog">登录</span>
-                                <span  @click="openLoginDialog">登录</span>
-                                <span style="float: right;" index="5" v-show="UNAME!=''">
-                                   <router-link :to="'/blog/userCenter'">{{UNAME}}</router-link></span>
+                                <span v-show="UNAME==''" style="color: #999;" @click="openLoginDialog"><a>登录</a></span>
+                                <span @click="openLoginDialog">登录</span>
+                                <span style="float: right;  color: #999;" v-show="UNAME!=''">
+                                    <router-link :to="'/blog/userCenter'"><a>{{UNAME}}</a></router-link></span>
                             </a>
 
                         </div>
@@ -86,71 +97,91 @@
             </el-form>
 
         </el-dialog>
-        <el-dialog title="" :visible.sync="loginDialog" align="center">
-            <el-form :model="loginForm" status-icon :rules="loginRules" ref="loginForm" class="demo-ruleForm"
-                     v-show="loginOrRigister">
-                <h3 class="title">系统登录</h3>
-                <el-form-item prop="userName" label="用户名:" required>
-                    <el-input name="userName" type="text" v-model="loginForm.userName"
-                              placeholder="用户名"></el-input>
-                </el-form-item>
-                <el-form-item prop="passWord" label="密码:" required>
-                    <el-input name="passWord" type="password" v-model="loginForm.passWord"
-                              placeholder="密码"></el-input>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="login('loginForm')" style="width:100%;">
-                        登录
-                    </el-button>
-                </el-form-item>
-                <a @click="toRigister" class="forget-pwd">
-                    没有账号?(赶紧注册一个吧)
-                </a>
-            </el-form>
-            <el-form :model="rigitsterForm" status-icon :rules="rigitsterRules" ref="rigitsterForm"
-                     class="demo-ruleForm" v-show="!loginOrRigister">
-                <h3 class="title">系统注册</h3>
-                <el-form-item prop="userName" label="用户名:" required>
-                    <el-input type="text" v-model="rigitsterForm.userName"
-                              @blur="cheackName" auto-complete="off" placeholder="用户名"></el-input>
-                </el-form-item>
-                <el-form-item prop="passWord" label="密码:" required>
-                    <el-input type="password" v-model="rigitsterForm.passWord"
-                              placeholder="密码"></el-input>
-                </el-form-item>
-                <el-form-item prop="checkPassWord" label="确认密码:" required>
-                    <el-input type="password" v-model="rigitsterForm.checkPassWord"
-                              placeholder="密码"></el-input>
-                </el-form-item>
-                <el-form-item prop="email" label="邮箱:" required>
-                    <el-input type="text" v-model="rigitsterForm.email"
-                              placeholder="邮箱"></el-input>
-                </el-form-item>
-                <el-form-item prop="code" label="验证码:" required>
-                    <el-input type="text" style="width: 45%" v-model="rigitsterForm.code"
-                              placeholder="验证码"></el-input>
+        <el-dialog :visible.sync="loginDialog" align="center">
 
-                    <el-button v-show="!showTime" type="success" v-waves icon="plus"
-                               @click="sendCode">
-                        获取验证码
-                    </el-button>
-                    <el-button v-show="showTime" disabled type="primary"
-                    >
-                        剩余{{count}}秒
-                    </el-button>
+            <div>
+                <img src="../../img/login.png">
+            </div>
+            <br>
+            <br>
+            <span>---请选择快捷登录方式---</span>
+            <br>
+            <br>
+            <br>
+            <img style="margin-right: 10%; "  width="10%" height="10%"src="../../img/qq.png">
+            <img style=" margin-right: 10%;" width="10%" height="10%" src="../../img/wexin.png">
+            <img src="../../img/weibo.png"  width="10%" height="10%">
+            <br>
+            <br>
+            <span style=" margin-right: 10%;">QQ登录</span>
+            <span style=" margin-left: 1%; margin-right: 10%;">微信登录</span>
+            <span style=" margin-left: 1%;">微博登录</span>
+            <br><br>
+
+            <!--      <el-form :model="loginForm" status-icon :rules="loginRules" ref="loginForm" class="demo-ruleForm"
+                           v-show="loginOrRigister">
+                      <h3 class="title">系统登录</h3>
+                      <el-form-item prop="userName" label="用户名:" required>
+                          <el-input name="userName" type="text" v-model="loginForm.userName"
+                                    placeholder="用户名"></el-input>
+                      </el-form-item>
+                      <el-form-item prop="passWord" label="密码:" required>
+                          <el-input name="passWord" type="password" v-model="loginForm.passWord"
+                                    placeholder="密码"></el-input>
+                      </el-form-item>
+                      <el-form-item>
+                          <el-button type="primary" @click="login('loginForm')" style="width:100%;">
+                              登录
+                          </el-button>
+                      </el-form-item>
+                      <a @click="toRigister" class="forget-pwd">
+                          没有账号?(赶紧注册一个吧)
+                      </a>
+                  </el-form>
+                  <el-form :model="rigitsterForm" status-icon :rules="rigitsterRules" ref="rigitsterForm"
+                           class="demo-ruleForm" v-show="!loginOrRigister">
+                      <h3 class="title">系统注册</h3>
+                      <el-form-item prop="userName" label="用户名:" required>
+                          <el-input type="text" v-model="rigitsterForm.userName"
+                                    @blur="cheackName" auto-complete="off" placeholder="用户名"></el-input>
+                      </el-form-item>
+                      <el-form-item prop="passWord" label="密码:" required>
+                          <el-input type="password" v-model="rigitsterForm.passWord"
+                                    placeholder="密码"></el-input>
+                      </el-form-item>
+                      <el-form-item prop="checkPassWord" label="确认密码:" required>
+                          <el-input type="password" v-model="rigitsterForm.checkPassWord"
+                                    placeholder="密码"></el-input>
+                      </el-form-item>
+                      <el-form-item prop="email" label="邮箱:" required>
+                          <el-input type="text" v-model="rigitsterForm.email"
+                                    placeholder="邮箱"></el-input>
+                      </el-form-item>
+                      <el-form-item prop="code" label="验证码:" required>
+                          <el-input type="text" style="width: 45%" v-model="rigitsterForm.code"
+                                    placeholder="验证码"></el-input>
+
+                          <el-button v-show="!showTime" type="success" v-waves icon="plus"
+                                     @click="sendCode">
+                              获取验证码
+                          </el-button>
+                          <el-button v-show="showTime" disabled type="primary"
+                          >
+                              剩余{{count}}秒
+                          </el-button>
 
 
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" style="width:100%;" @click="rigster('rigitsterForm')">
-                        注册
-                    </el-button>
-                </el-form-item>
-                <a @click="toLogin" class="forget-pwd">
-                    注册成功，赶紧去登录吧！
-                </a>
-            </el-form>
-        </el-dialog>
+                      </el-form-item>
+                      <el-form-item>
+                          <el-button type="primary" style="width:100%;" @click="rigster('rigitsterForm')">
+                              注册
+                          </el-button>
+                      </el-form-item>
+                      <a @click="toLogin" class="forget-pwd">
+                          注册成功，赶紧去登录吧！
+                      </a>
+                  </el-form>
+             --> </el-dialog>
     </div>
 
 </template>
@@ -204,6 +235,7 @@
                 }
             };
             return {
+                search: '',
                 resourceDialog: false,
                 resource: {resouceName: '', resouceUrl: '', context: '', status: ''},
                 loginDialog: false,
@@ -254,6 +286,13 @@
             this.UNAME = tokenStore.local('User').userName;
         },
         methods: {
+            searchBySel() {
+                if (this.search != null && this.search != '') {
+                    tokenStore.local.set('search', this.search)
+                }
+                this.$router.push('/');
+                window.location.reload();
+            },
             saveReso() {
                 this.resource.userId = tokenStore.local('User').id;
                 this.resource.userName = tokenStore.local('User').userName;
@@ -264,7 +303,7 @@
                         type: response.data.returnCode == 200 ? 'success' : 'warning',
                         duration: 5000
                     });
-                    this.resourceDialog=false;
+                    this.resourceDialog = false;
 
                 });
             },
@@ -273,7 +312,7 @@
             }, closeResourceDialog(formName) {
                 this.resourceDialog = false;
                 this.$refs[formName].resetFields();
-            },  openLoginDialog() {
+            }, openLoginDialog() {
                 this.loginDialog = true;
             }, closeLoginDialog(formName) {
                 this.loginDialog = false;
@@ -283,6 +322,7 @@
             }, toLogin() {
                 this.loginOrRigister = true;
             },
+
             cheackName() {
                 if (this.rigitsterForm.userName.length < 3) {
                     return false;
@@ -370,6 +410,7 @@
     }
 </script>
 <style>
+
 
     @media (max-width: 1124px) and (min-width: 1004px) {
         .common-topbar-dropdown .common-topbar-dropdown-category-container.column-5 {
@@ -1340,7 +1381,7 @@
 
     .console-component-topbar .topbar-logo {
         display: block;
-        width: 50px;
+        width: 150px;
         font-size: 24px !important;
         color: #FFF;
         text-align: center;
@@ -1361,6 +1402,10 @@
         background: #373d41;
         width: 128px;
         text-align: center;
+    }
+
+    a:hover {
+        color: white;
     }
 
     .console-component-topbar .topbar-btn {

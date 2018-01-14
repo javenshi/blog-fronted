@@ -1,7 +1,7 @@
 <template>
     <div>
 
-
+        <top></top>
 
         <div class=" calendar-list-container;" style="padding: 20px;"
         >
@@ -25,7 +25,7 @@
                             <div style="padding-bottom: 40px;">
                                 <quill-editor v-model="blog.blogsUrl"
                                               ref="myQuillEditor"
-                                              style="height: 500px;"
+                                              style="height: 500px;background-color: white"
                                               class="editer"
                                               @ready="onEditorReady($event)">
                                 </quill-editor>
@@ -53,7 +53,7 @@
                             <div style="margin-left: 35%;">
                                 <el-button type="success" @click="saveBlog(1)" round>保存</el-button>
                                 <el-button type="info" @click="saveBlog(0)" round>草稿</el-button>
-                                <el-button type="danger" round><router-link :to="'/blog/userCenter'">取消</router-link></el-button>
+                                <el-button type="danger" round><router-link :to="'/'">取消</router-link></el-button>
                             </div>
                         </el-form-item>
                     </el-form>
@@ -66,8 +66,8 @@
 
 </template>
 <script>
+    import top from '../component/top';
     import {quillEditor} from 'vue-quill-editor';
-    import {getCode, cName, saveUser, login, valUser} from 'api/blog/user';
     import {getBlogsById,saveB} from 'api/blog/blog';
     import tokenStore from 'store2';
     import {parseTime} from 'utils';
@@ -75,7 +75,7 @@
     export default {
         components: {
 //使用编辑器
-            quillEditor
+            quillEditor,top
         },
         data() {
             return {
