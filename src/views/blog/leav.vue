@@ -21,95 +21,54 @@
                 <div class="grid-content bg-purple"></div>
 
                 <el-button
-                        style="float: right;margin-top: 10px; border: 1px red solid;background-color: white;color: red"
+                        style="float: right;margin-top: 10px; border: 1px #20a0ff solid;background-color: white;color: #20a0ff;"
                         @click="savePro">&nbsp;&nbsp;留&nbsp;&nbsp;&nbsp;&nbsp;言&nbsp;&nbsp;
                 </el-button>
                 <br><br>
                 <br><br>
                 <div class="blogs">
-                    <ul class="bloglist">
+
+                    <ul class="bloglist" v-for="item in proList" :key="item">
                         <li>
                             <div class="arrow_box">
                                 <div class="ti"></div>
-                                <!--三角形-->
                                 <div class="ci"></div>
-                                <!--圆形-->
                                 <ul class="details">
-                                    <li><a href="#">zhang3</a></li>
-                                    <li class="comments"><a href="#">2013-8-7</a></li>
+                                    <li><a href="#">{{item.userName}}</a></li>
+                                    <li class="comments"><a href="#">{{item.creatTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</a></li>
                                 </ul>
                                 <ul class="textinfo">
-                                    <p style="padding-top:18px;"> 我希望我的做饭，洗衣服，缝一颗掉了的纽扣。然后，我们一起在时光中变老。</p>
+                                    <p style="padding-top:18px;"> {{item.context}}</p>
                                 </ul>
                                 <ul class="details">
-                                    <li><a href="#">回复</a></li>
-                                    <li><a href="#">更多回复</a></li>
-                                    <ul class="details">
-                                        <li><a href="#">zhang3</a></li>
-                                        <li class="comments"><a href="#">2013-8-7</a></li>
-                                    </ul>
-                                    <ul class="textinfo">
-                                        <p style="padding-top:18px;"> 我希望我的做饭，洗衣服，缝一颗掉了的纽扣。然后，我们一起在时光中变老。</p>
-                                    </ul>
-                                    <ul class="details">
-                                        <li><a href="#">回复</a></li>
-                                        <li><a href="#">更多回复</a></li>
-                                        <ul class="details">
-                                            <li><a href="#">zhang3</a></li>
-                                            <li class="comments"><a href="#">2013-8-7</a></li>
-                                        </ul>
-                                        <ul class="textinfo">
-                                            <p style="padding-top:18px;"> 我希望我的做饭，洗衣服，缝一颗掉了的纽扣。然后，我们一起在时光中变老。</p>
-                                        </ul>
-                                        <ul class="details">
-                                            <li><a href="#">回复</a></li>
-                                            <li><a href="#">更多回复</a></li>
-                                        </ul>
-                                    </ul>
+                                    <li><a @click="reply(item.id)">回复</a></li>
+                                    <li v-if="replyId!=''">
+                                        <el-input
+                                                type="textarea"
+                                                :autosize="{ minRows: 2, maxRows: 4}"
+                                                width="60%"
+                                                placeholder="请输入内容"
+                                                v-model="item.toUserName"></el-input>
+                                        <div class="grid-content bg-purple"></div>
+
+                                        <el-button
+                                                style="float: right;margin-top: 10px; border: 1px #20a0ff solid;background-color: white;color: #20a0ff;"
+                                                @click="saveReply">&nbsp;&nbsp;回&nbsp;&nbsp;&nbsp;&nbsp;复&nbsp;&nbsp;
+                                        </el-button>
+                                    </li>
+                                    <li v-if="item.hasChild==1">
+                                        <div v-for="it in item.children" :key="it">
+                                            <ul class="details">
+                                                <li>{{it.userName}}回复:{{it.toUserName}}</li>
+                                                <li class="comments">{{it.creatTime|parseTime('{y}-{m}-{d}  {h}:{i}:{s} ')}}</li>
+                                            </ul>
+                                            <ul class="textinfo">
+                                                <p style="padding-top:18px;"> {{it.context}}</p>
+                                            </ul>
+
+                                        </div>
+                                    </li>
                                 </ul>
-
-                            </div>
-                        </li>
-                        <li>
-                            <div class="arrow_box">
-                                <div class="ti"></div>
-                                <!--三角形-->
-                                <div class="ci"></div>
-                                <!--圆形-->
-                                <ul class="textinfo">
-
-                                    <p style="padding-top:18px;"> 我希望我的做饭，洗衣服，缝一颗掉了的纽扣。然后，我们一起在时光中变老。</p>
-                                </ul>
-                                <ul class="details">
-
-                                    <li class="comments"><a href="#">zhang3</a></li>
-                                    <li class="icon-time"><a href="#">2013-8-7</a></li>
-                                </ul>
-
-
-                                <span style="padding:15px;"><a href="#">站长回复:--------------------------</a></span>
-
-                            </div>
-                        </li>
-                        <li>
-                            <div class="arrow_box">
-                                <div class="ti"></div>
-                                <!--三角形-->
-                                <div class="ci"></div>
-                                <!--圆形-->
-                                <ul class="textinfo">
-
-                                    <p style="padding-top:18px;"> 我希望我的做饭，洗衣服，缝一颗掉了的纽扣。然后，我们一起在时光中变老。</p>
-                                </ul>
-                                <ul class="details">
-
-                                    <li class="comments"><a href="#">zhang3</a></li>
-                                    <li class="icon-time"><a href="#">2013-8-7</a></li>
-                                </ul>
-
-
-                                <span style="padding:15px;"><a href="#">站长回复:--------------------------</a></span>
-
                             </div>
                         </li>
                     </ul>
@@ -166,23 +125,7 @@
 
         </el-row>
         <br>
-        <!--  <el-table
-                  :data="proList"
-                  :show-header=false
-                  style="width: 100%">
-              <el-table-column>
-                  <template scope="scope">
-                      <br>
-                      <span style="font-size: 16px;color: #666;">{{scope.row.context}}</span>
 
-                      <br>
-                      <span style="font-size: 14px;color: #666;"> {{scope.row.creatTime|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
-                      <span style="font-size: 14px;color: #666;"> {{scope.row.userName}}</span>
-                      <span> {{scope.row.answer}}</span>
-                      <br> <br>
-                  </template>
-              </el-table-column>
-          </el-table>-->
 
         <div>
 
@@ -203,19 +146,26 @@
         data() {
 
             return {
-                proSize: 5,
+                replyId:'',
+                listQuery: {
+                    pageNum: 1,
+                    pageSize: 5,
+                    filterList: [],
+                    sortList: [],
+                    searchKey: ''
+                },
                 proList: [],
-                Proposal: {context: '', userId: '', UserName: '', answer: '',},
-                list: [{context: '太丑了', answer: '现在不丑了'},
-                    {context: '太丑了', answer: '现在不丑了'},
-                    {context: '太丑了', answer: '现在不丑了'},
-                    {context: '太丑了', answer: '现在不丑了'},
-                    {context: '太丑了', answer: '现在不丑了'},
-                    {context: '太丑了', answer: '现在不丑了'},
-                    {context: '太丑了', answer: '现在不丑了'}],
+                Proposal: {context: '', userId: '', UserName: '', answer: ''},
+returnDate:'',
+
+                filterList:[],
             };
         },
         created() {
+            this.listQuery.filterList.push({
+                filterKey: 'index',
+                filterValue: "11"
+            })
             this.getProList0();
         },
         methods: {
@@ -225,19 +175,46 @@
                 this.Proposal.userId = tokenStore.local('User').id;
 
                 saveP(this.Proposal).then(response => {
-
                     this.getProList0();
                 });
             },
+            reply(proId){
+                this.replyId=proId;
+            },
+            saveReply(){
+                for(var one  of  this.proList ){
+                    if(one.id===this.replyId){
+                        this.Proposal.pid =  this.replyId;
+                        this.Proposal.context =  one.toUserName;
+                        break;
+                    }
+                }
+
+               this.savePro();
+                this.Proposal.pid='';
+                this.replyId='';
+                this.Proposal.context='';
+            },
             getMorePro() {
-                this.proSize += 5;
+
+                this. listQuery.pageSize += 5;
+                this.listQuery.filterList=[];
+                this.listQuery.filterList.push({
+                    filterKey: 'index',
+                    filterValue: "11"
+                })
                 this.getProList0();
             },
             getProList0() {
-                getProList(this.proSize).then(response => {
+                this.listQuery.filterList.push({
+                    filterKey: 'noblog',
+                    filterValue: "11"
+                })
+                getProList(this.listQuery).then(response => {
                     this.proList = response.data.returnData.list;
                 });
             },
+
 
         },
     }
@@ -410,7 +387,7 @@
 
     .textinfo {
         overflow: hidden;
-        border: 1px red solid;
+        border: 1px #20a0ff solid;
     }
 
     .arrow_box img {

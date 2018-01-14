@@ -5,14 +5,16 @@ export function saveP(query) {
         url: '/api/proposal/insert',
         method: 'post',
         data:JSON.stringify(query)
+
     });
 }
 
 export function getProList(size) {
 
     return fetch({
-        url: '/api/proposal/getProposalList/'+size,
-        method: 'post'
+        url: '/api/proposal/getProposalList',
+        method: 'post',
+        data:JSON.stringify(size)
     });
 }
 

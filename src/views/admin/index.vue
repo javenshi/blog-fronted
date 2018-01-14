@@ -106,13 +106,13 @@
                             :data="resourceList"
                             style="width: 100%">
                         <el-table-column width="180px">
-                            <el-table-column width="120px">
+                            <el-table-column width="220px">
                                 <template scope="scope" >
                                     <el-button size="small" type="danger" @click="deleteResourceById(scope.row.id)">删除</el-button>
-                                    <div  v-if="scope.row.status==0">
+                                    <span  v-if="scope.row.status==0">
                                         <el-button size="small" type="success" @click="passResourc(2,scope.row.id)">通过</el-button>
                                         <el-button size="small" type="danger" @click="passResourc(1,scope.row.id)">驳回</el-button>
-                                    </div>
+                                    </span>
                                 </template>
 
 
@@ -127,14 +127,23 @@
                                 <el-tag v-show="scope.row.status==2"type="success">通过</el-tag>
                             </template>
                         </el-table-column>
-                        <el-table-column>
+                        <el-table-column width="210px">
+                            <template scope="scope">
+                                <span> {{scope.row.userName}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column width="160px">
+                            <template scope="scope">
+                                <span> {{scope.row.creatTime|parseTime('{y}-{m}-{d}{h}:{i} ')}}</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column width="380px">
                             <template scope="scope">
                                                 <span @click="read(scope.row.id)">
                                                     {{scope.row.resouceName}}
                                                 </span>
                                 <br>
-                                <span> {{scope.row.creatTime|parseTime('{y}-{m}-{d}{h}:{i} ')}}</span>
-                                <span> {{scope.row.userName}}</span>
+
                                 <span> {{scope.row.context}}</span>
                             </template>
                         </el-table-column>

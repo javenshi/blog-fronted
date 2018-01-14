@@ -1,6 +1,6 @@
 <template>
     <div>
-        <top ></top>
+        <top></top>
         <div style="padding-left: 10px;padding-right:10px;padding-top:15px;">
             <el-row :gutter="20">
                 <el-col :span="1"><br></el-col>
@@ -50,9 +50,11 @@
                                             <span style="font-size: 14px;color: #666;"> {{scope.row.blogsPart}}...</span>
                                             <br> <span
                                                 style="margin-left:-1%;margin-right:18px;padding: 1%;font-size: 14px;color:#20a0ff"> {{scope.row.blogsClassifyName}}</span>
-                                            <span style="margin-right:18px; margin-top: 2px;"> <img src="../../img/time.png" style="margin-right:6px;">{{scope.row.blogsDate|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
+                                            <span style="margin-right:18px; margin-top: 2px;"> <img
+                                                    src="../../img/time.png" style="margin-right:6px;">{{scope.row.blogsDate|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
                                             <span style="margin-right:18px;"><img src="" style="margin-right:6px;"> {{scope.row.userName}}</span>
-                                            <span style="margin-right:18px; margin-top: 2px;"><img src="../../img/click.png" style="margin-right:6px;"> {{scope.row.blogsClick}}</span>
+                                            <span style="margin-right:18px; margin-top: 2px;"><img
+                                                    src="../../img/click.png" style="margin-right:6px;"> {{scope.row.blogsClick}}</span>
                                             <br><br>
                                         </template>
                                     </el-table-column>
@@ -70,35 +72,37 @@
                         </el-col>
 
                         <el-col :span="5">
-                            <el-card >
-                                <div slot="header" >
+                            <el-card>
+                                <div slot="header">
                                     <span style="margin-left:-75%;color: #666;font-size: 16px;">资源</span>
 
                                 </div>
-                                <template >
+                                <template>
                                     <div v-for="item in resourceList" :key="item">
-                                        <span  style=" width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 14px; color: #282828;"> {{item.resouceName}}</span><br>
-<div style=" margin: 10px;"></div>
+                                        <span style=" width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 14px; color: #282828;"> <span style="float: left;"> {{item.resouceName}}</span></span>
+
+<br>
                                         <div style="width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 12px;">
-                                        <span > <img src="" style="margin-right:6px;"> {{item.userName}}</span>
-                                        <span style="margin-right:18px;"> <img src="../../img/time.png" style="margin-right:6px;">{{item.creatTime |parseTime('{y}-{m}-{d} ')}}</span>
+                                            <span> <img src="" style="margin-right:6px;"> {{item.userName}}</span>
+                                            <span style="margin-right:18px;"> <img src="../../img/time.png"
+                                                                                   style="margin-right:6px;">{{item.creatTime |parseTime('{y}-{m}-{d} ')}}</span>
                                         </div>
                                         <hr>
                                     </div>
-                                  <!--  <el-table
-                                            :data="resourceList"
-                                            v-loading="loadingRes"
-                                            style="margin-top: -20px;margin-left: -39px; "
+                                    <!--  <el-table
+                                              :data="resourceList"
+                                              v-loading="loadingRes"
+                                              style="margin-top: -20px;margin-left: -39px; "
 
-                                            :show-header=false>
-                                        <el-table-column style="padding-right: -40px;"  show-overflow-tooltip >
-                                            <template scope="scope">
-                                                <span style="font-size: 14px; color: #282828;"> {{scope.row.resouceName}}</span><br>
-                                                <span> <img src="" style="margin-right:6px;"> {{scope.row.userName}}</span>
-                                                <span style="margin-right:18px;"> <img src="" style="margin-right:6px;">{{scope.row.creatTime |parseTime('{y}-{m}-{d} ')}}</span>
-                                            </template>
-                                        </el-table-column>
-                                    </el-table>-->
+                                              :show-header=false>
+                                          <el-table-column style="padding-right: -40px;"  show-overflow-tooltip >
+                                              <template scope="scope">
+                                                  <span style="font-size: 14px; color: #282828;"> {{scope.row.resouceName}}</span><br>
+                                                  <span> <img src="" style="margin-right:6px;"> {{scope.row.userName}}</span>
+                                                  <span style="margin-right:18px;"> <img src="" style="margin-right:6px;">{{scope.row.creatTime |parseTime('{y}-{m}-{d} ')}}</span>
+                                              </template>
+                                          </el-table-column>
+                                      </el-table>-->
                                     <el-pagination
                                             style="padding-top: -39px;"
                                             small
