@@ -14,6 +14,7 @@ const read = _import('blog/read');
 const userCenter = _import('blog/userCenter');
 const updateBlogs = _import('blog/updateBlogs');
 const leav = _import('blog/leav');
+const wLogin = _import('login/login');
 
 const Admin = _import('admin/index');
 
@@ -41,6 +42,7 @@ export const constantRouterMap = [
     { meta: { role: [""] }, path: '/blog/userCenter', name: '个人中心', component: userCenter, hidden: true },
     { meta: { role: [""] }, path: '/blog/updateBlogs', name: '编辑博客', component: updateBlogs, hidden: true },
     { meta: { role: [""] }, path: '/blog/leav', name: '留言', component: leav, hidden: true },
+    { meta: { role: [""] }, path: '/login' , name: '微博登录', component: wLogin, hidden: true },
     { path: '*', component: Err404, hidden: true, meta: { role: [""] } }
 
 ]

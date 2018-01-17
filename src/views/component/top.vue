@@ -110,7 +110,7 @@
             <br>
             <img style="margin-right: 10%; "  width="10%" height="10%"src="../../img/qq.png">
             <img style=" margin-right: 10%;" width="10%" height="10%" src="../../img/wexin.png">
-            <img src="../../img/weibo.png"  width="10%" height="10%">
+            <a href="https://api.weibo.com/oauth2/authorize?client_id=3191489564&response_type=code&redirect_uri=http://39.108.12.206/#!/login"> <img src="../../img/weibo.png" width="10%" height="10%"></a>
             <br>
             <br>
             <span style=" margin-right: 10%;">QQ登录</span>
@@ -189,6 +189,7 @@
     import tokenStore from 'store2';
     import {saveResouce} from 'api/blog/resouce';
     import {getCode, cName, saveUser, login, valUser} from 'api/blog/user';
+
 
     export default {
         name: 'topIng',
@@ -306,6 +307,30 @@
                     this.resourceDialog = false;
 
                 });
+            },
+            weiboLogin() {
+                var https = require("https");
+                var iconv = require("iconv-lite");
+                var url="";
+                https.get(url, function (res) {
+                    var datas = [];
+                    var size = 0;
+                    res.on('data', function (data) {
+                        datas.push(data);
+                        size += data.length;
+                        //process.stdout.write(data);
+                    });
+                    res.on("end", function () {
+                        var buff = Buffer.concat(datas, size);
+                        var result = iconv.decode(buff, "utf8");//转码//var result = buff.toString();//不需要转编码,直接tostring
+                        console.log(result);
+                    });
+                }).on("error", function (err) {
+                    Logger.error(err.stack)
+                    callback.apply(null);
+                });
+
+
             },
             openResourceDialog() {
                 this.resourceDialog = true;

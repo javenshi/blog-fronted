@@ -6,6 +6,13 @@
 [wiki](https://github.com/PanJiaChen/vue-element-admin/wiki)
 
 **注意：该项目目前使用element-ui@1.3.3版本,所以最低兼容 Vue 2.3.0**
+/*
+ "codemirror": "5.26.0",
+  "color-convert": "^1.9.1",
+ "color-name": "^1.1.3",
+ "dropzone": "5.1.0",
+ "echarts": "3.6.1",
+ "escape-string-regexp": "^1.0.5",*/
 
 ## 前言
 > 这半年来一直在用vue写管理后台，目前后台已经有百来个个页面，十几种权限，但维护成本依然很低，所以准备开源分享一下后台开发的经验和成果。目前的技术栈主要的采用vue+element+axios由webpack2打包.由于是个人项目，所以数据请求都是用了mockjs模拟。注意：在次项目基础上改造开发时请移除mock文件。

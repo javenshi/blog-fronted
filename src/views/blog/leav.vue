@@ -35,14 +35,14 @@
                                 <div class="ci"></div>
                                 <ul class="details">
                                     <li><a href="#">{{item.userName}}</a></li>
-                                    <li class="comments"><a href="#">{{item.creatTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</a></li>
+                                    <li class="comments"><a href="#">{{item.creatTime|parseTime('{y}-{m}-{d}  {h}:{i}:{s}')}}</a></li>
                                 </ul>
                                 <ul class="textinfo">
                                     <p style="padding-top:18px;"> {{item.context}}</p>
                                 </ul>
                                 <ul class="details">
                                     <li><a @click="reply(item.id)">回复</a></li>
-                                    <li v-if="replyId!=''">
+                                    <li v-if="replyId!=''" style="margin-bottom: 20px;">
                                         <el-input
                                                 type="textarea"
                                                 :autosize="{ minRows: 2, maxRows: 4}"
@@ -60,7 +60,8 @@
                                         <div v-for="it in item.children" :key="it">
                                             <ul class="details">
                                                 <li>{{it.userName}}回复:{{it.toUserName}}</li>
-                                                <li class="comments">{{it.creatTime|parseTime('{y}-{m}-{d}  {h}:{i}:{s} ')}}</li>
+                                                <li class="comments">{{it.creatTime|parseTime('{y}-{m}-{d}  {h}:{i}:{s}')}}
+                                                </li>
                                             </ul>
                                             <ul class="textinfo">
                                                 <p style="padding-top:18px;"> {{it.context}}</p>
@@ -146,7 +147,7 @@
         data() {
 
             return {
-                replyId:'',
+                replyId: '',
                 listQuery: {
                     pageNum: 1,
                     pageSize: 5,
@@ -156,9 +157,9 @@
                 },
                 proList: [],
                 Proposal: {context: '', userId: '', UserName: '', answer: ''},
-returnDate:'',
+                returnDate: '',
 
-                filterList:[],
+                filterList: [],
             };
         },
         created() {
@@ -178,27 +179,27 @@ returnDate:'',
                     this.getProList0();
                 });
             },
-            reply(proId){
-                this.replyId=proId;
+            reply(proId) {
+                this.replyId = proId;
             },
-            saveReply(){
-                for(var one  of  this.proList ){
-                    if(one.id===this.replyId){
-                        this.Proposal.pid =  this.replyId;
-                        this.Proposal.context =  one.toUserName;
+            saveReply() {
+                for (var one  of  this.proList) {
+                    if (one.id === this.replyId) {
+                        this.Proposal.pid = this.replyId;
+                        this.Proposal.context = one.toUserName;
                         break;
                     }
                 }
 
-               this.savePro();
-                this.Proposal.pid='';
-                this.replyId='';
-                this.Proposal.context='';
+                this.savePro();
+                this.Proposal.pid = '';
+                this.replyId = '';
+                this.Proposal.context = '';
             },
             getMorePro() {
 
-                this. listQuery.pageSize += 5;
-                this.listQuery.filterList=[];
+                this.listQuery.pageSize += 5;
+                this.listQuery.filterList = [];
                 this.listQuery.filterList.push({
                     filterKey: 'index',
                     filterValue: "11"
@@ -220,80 +221,13 @@ returnDate:'',
     }
 </script>
 <style>
-    body {
-        background-color: #f5f6f7;
-        line-height: 24px;
-    }
 
-    a, abbr, body, button, cite, dd, div, dl, dt, h1, h2, h3, h4, h5, h6, iframe, input, li, object, ol, option, p, pre, select, span, ul {
-        margin: 0;
-        padding: 0;
-        font-weight: 400;
-        box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        -webkit-box-sizing: border-box;
-    }
 
-    body, h1, h2, h3, h4, h5, h6 {
-        font-family: 'PingFang SC', 'Microsoft YaHei', SimHei, Arial, SimSun;
-    }
 
-    .iconfont, body {
-        font-size: 16px;
-    }
 
-    body {
-        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-size: 14px;
-        line-height: 1.428571429;
-        color: #333;
-        background-color: #fff;
-    }
 
-    html {
-        font-size: 62.5%;
-        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    }
 
-    html {
-        font-family: sans-serif;
-        -webkit-text-size-adjust: 100%;
-        -ms-text-size-adjust: 100%;
-    }
 
-    .clearfix:before, .clearfix:after {
-        display: table;
-        content: " ";
-    }
-
-    *, *:before, *:after {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-    }
-
-    .clearfix:after {
-        content: '.';
-        height: 0;
-        visibility: hidden;
-        display: block;
-        clear: both;
-    }
-
-    .clearfix:after {
-        clear: both;
-    }
-
-    .clearfix:before, .clearfix:after {
-        display: table;
-        content: " ";
-    }
-
-    *, *:before, *:after {
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-    }
 
     /* CSS Document */
     * {
@@ -323,7 +257,7 @@ returnDate:'',
         color: #fff;
     }
 
-    /* --------------------博客列表-------------------- */
+    /* --------------------评论列表-------------------- */
     .blogs {
         width: 1000px;
         margin: 0 auto 20px;
@@ -332,16 +266,17 @@ returnDate:'',
     .bloglist {
         width: 666px;
         float: left;
+
     }
 
     .bloglist > li {
-        border-right: #111 2px solid;
+        border-right: #000 2px solid;
         padding: 20px 0;
     }
 
     .arrow_box {
         background: white;
-        box-shadow: 0px 1px 0px rgba(255, 255, 255, .1), inset 0px 1px 1px rgba(0, 0, 0, .7);
+        box-shadow: 0px 1px 1px rgba(255, 0, 0, .7), inset 0px 1px 1px rgba(255, 0, 0, .7);
         width: 630px;
         color: #000000;
         border-radius: 6px;
@@ -353,7 +288,7 @@ returnDate:'',
         height: 0px;
         border-style: solid;
         border-width: 0px 0 20px 22px;
-        border-color: transparent transparent transparent #f1f1f1;
+        border-color: transparent transparent transparent #20a0ff;
         position: absolute;
         left: 630px;
         top: 20px;
