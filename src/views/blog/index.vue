@@ -168,13 +168,12 @@
     import contact from '../component/contact';
     import notice from '../component/notice';
     import top from '../component/top';
-
+    import {weibo} from 'api/admin/login';
     import {selectBlogsPage} from 'api/blog/blog';
     import {getAllCarousel} from 'api/admin/index';
     import {getResouceList} from 'api/blog/resouce';
     import tokenStore from 'store2';
     import {parseTime} from 'utils';
-
     export default {
         components: {
             contact, notice, top
@@ -204,6 +203,12 @@
         },
         created() {
 
+            var ht=window.location.href;
+            if(ht.indexOf("=")){
+               ht= ht.substring(ht.indexOf("=")+1,ht.length-2);
+                weibo(ht).then(response => {
+                    console.log(response)
+                });
             this.getBlogs();
             this.getReso();
             getAllCarousel().then(response => {
@@ -222,7 +227,6 @@
             getBlogs() {
                 this.loadingBlog = true;
                 this.listQuery.filterList = [];
-                console.log(this.listQuery.filterList)
                 this.listQuery.filterList.push({
                     filterKey: 'blogsStatus',
                     filterValue: 1

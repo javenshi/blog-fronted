@@ -110,7 +110,7 @@
             <br>
             <img style="margin-right: 10%; "  width="10%" height="10%"src="../../img/qq.png">
             <img style=" margin-right: 10%;" width="10%" height="10%" src="../../img/wexin.png">
-            <a href="https://api.weibo.com/oauth2/authorize?client_id=3191489564&response_type=code&redirect_uri=http://39.108.12.206/#!/login"> <img src="../../img/weibo.png" width="10%" height="10%"></a>
+            <a href="https://api.weibo.com/oauth2/authorize?client_id=3191489564&response_type=code&redirect_uri=http://39.108.12.206"> <img src="../../img/weibo.png" width="10%" height="10%"></a>
             <br>
             <br>
             <span style=" margin-right: 10%;">QQ登录</span>
@@ -191,51 +191,14 @@
     import {getCode, cName, saveUser, login, valUser} from 'api/blog/user';
 
 
+
     export default {
         name: 'topIng',
 
         data() {
-            var validateRename = (rule, value, callback) => {
-                this.cheackName();
-                if (value === '') {
-                    callback(new Error('请输入用户名'));
-                } else if (value.length <= 0) {
-                    callback(new Error('请输入用户名!'));
-                } else if (this.cna) {
-                    callback(new Error('用户名已存在!'));
-                } else {
-                    callback();
-                }
-            };
-            var validatePassword = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入密码'));
-                } else {
-                    if (this.temp.repassword !== '') {
-                        this.$refs.formName.validateField('repassword');
-                    }
-                    callback();
-                }
-            };
-            var validateRepassword = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请再次输入密码'));
-                } else if (value !== this.rigitsterForm.passWord) {
-                    callback(new Error('两次输入密码不一致!'));
-                } else {
-                    callback();
-                }
-            };
-            var validateCode = (rule, value, callback) => {
-                if (value === '') {
-                    callback(new Error('请输入验证码'));
-                } else if (value !== this.valCode) {
-                    callback(new Error('验证码不正确'));
-                } else {
-                    callback();
-                }
-            };
+
             return {
+                UNAME:'',
                 search: '',
                 resourceDialog: false,
                 resource: {resouceName: '', resouceUrl: '', context: '', status: ''},
@@ -255,36 +218,15 @@
                 showTime: false,
                 valCode: '',
                 rigitsterRules: {
-                    userName: [
-                        {validator: validateRename, trigger: 'blur'},
-                        {pattern: /^[^ ]+$/, message: '用户名中不能包含空格', trigger: 'blur'}
-                    ],
-                    email: [
-                        {required: true, message: '请输入邮箱', trigger: 'blur,change'},
-                        {type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change'}
-                    ],
-                    code: [
-                        {validator: validateCode, trigger: 'blur,change'}
-                    ],
-                    password: [
-                        {validator: validatePassword, message: '请输入密码', trigger: 'blur'}
-                    ],
-                    checkPassWord: [
-                        {validator: validateRepassword, trigger: 'blur'}
-                    ]
+
                 },
                 loginRules: {
-                    userName: [
 
-                        {pattern: /^[^ ]+$/, message: '用户名中不能包含空格', trigger: 'blur'}
-                    ],
-                    password: [
-                        {required: true, message: '请输入密码', trigger: 'blur'},
-                    ]
                 },
             };
         }, created() {
-            this.UNAME = tokenStore.local('User').userName;
+
+            //this.UNAME = tokenStore.local('User').userName;
         },
         methods: {
             searchBySel() {

@@ -6,26 +6,16 @@ import router from './router';
 import store from './store';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-default/index.css';
-import 'assets/custom-theme/index.css'; // 换肤版本element-ui css
-import NProgress from 'nprogress'; // Progress 进度条
-import 'nprogress/nprogress.css'; // Progress 进度条 样式
-import 'normalize.css/normalize.css'; // normalize.css 样式格式化
-import 'components/Icon-svg/index'; // 封装的svg组件
-import 'assets/iconfont/iconfont'; // iconfont 具体图标见https://github.com/PanJiaChen/vue-element-admin/wiki
+
+
 import * as filters from './filters'; // 全局vue filter
 import Multiselect from 'vue-multiselect'; // 使用的一个多选框组件，element-ui的select不能满足所有需求
 import 'vue-multiselect/dist/vue-multiselect.min.css'; // 多选框组件css
-import Sticky from 'components/Sticky'; // 粘性header组件
-import vueWaves from './directive/waves'; // 水波纹指令
-import errLog from 'store/errLog'; // error log组件
-import './mock/index.js'; // 该项目所有请求使用mockjs模拟
+
 import VeeValidate from 'vee-validate'; //vue表单验证插件
 import contactIng from 'views/component/contact';
 import noticeIng from 'views/component/notice';
 import topIng from 'views/component/top';
-import { getAuthority } from 'api/login';
-//import messages from 'assets/js/zh_CN';
-// Vue.use(VeeValidate);
 
 const config = {
     fieldsBagName: 'validafield',
@@ -47,12 +37,9 @@ Vue.use(topIng)
     //     strict: true
     // };
     // Vue.use(VeeValidate,config);*/
-
 // register globally
 Vue.component('multiselect', Multiselect);
-Vue.component('Sticky', Sticky);
 Vue.use(ElementUI);
-Vue.use(vueWaves);
 Vue.use(contactIng);
 
 Vue.config.productionTip = false;
@@ -148,16 +135,7 @@ const whiteList = ['/login', '/authredirect', '/reset', '/sendpwd', '/index']; /
 // };
 
 // 生产环境错误日志
-if (process.env === 'production') {
-    Vue.config.errorHandler = function(err, vm) {
-        console.log(err, window.location.href);
-        errLog.pushLog({
-            err,
-            url: window.location.href,
-            vm
-        })
-    };
-}
+
 
 // window.onerror = function (msg, url, lineNo, columnNo, error) {
 //     console.log('window')
