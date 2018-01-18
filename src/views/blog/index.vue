@@ -9,7 +9,6 @@
                         <el-carousel height="276px">
                             <el-carousel-item v-for="item in indexUrl" :key="item">
                                 <div v-html="item.url"></div>
-
                             </el-carousel-item>
                         </el-carousel>
                     </div>
@@ -155,7 +154,7 @@
                         </el-col>
                         <el-col :span="1"></el-col>
                     </el-row>
-
+<down></down>
                 </div>
             </template>
 
@@ -168,6 +167,7 @@
     import contact from '../component/contact';
     import notice from '../component/notice';
     import top from '../component/top';
+    import down from '../component/down';
     import {weibo} from 'api/admin/login';
     import {selectBlogsPage} from 'api/blog/blog';
     import {getAllCarousel} from 'api/admin/index';
@@ -176,7 +176,7 @@
     import {parseTime} from 'utils';
     export default {
         components: {
-            contact, notice, top
+            contact, notice, top,down
         },
 
         data() {
@@ -204,11 +204,13 @@
         created() {
 
             var ht=window.location.href;
-            if(ht.indexOf("=")){
+            if(ht.indexOf("=")>1){
                ht= ht.substring(ht.indexOf("=")+1,ht.length-2);
                 weibo(ht).then(response => {
-                    console.log(response)
+                    console.log(response.data.returnData)
+                    tokenStore.local.set("user",response.data.returnData);
                 });
+            }
             this.getBlogs();
             this.getReso();
             getAllCarousel().then(response => {

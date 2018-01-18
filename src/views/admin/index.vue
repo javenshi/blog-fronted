@@ -7,7 +7,7 @@
                             class="upload-demo"
                             drag
                             :onSuccess="uploadSuccess"
-                            action="http://localhost:8088/api/admin/upl"
+                            action="url"
                             multiple>
                         <i class="el-icon-upload"></i>
                         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -207,6 +207,7 @@
         name: 'cloudUser',
         data() {
             return {
+                url:process.env.BASE_API+'/api/admin/upl',
                 Carousel: '',
                 listQuery: {
                     pageNum: 1,

@@ -14,14 +14,14 @@
 
             };
         }, created() {
-            alert("登录")
+           /* alert("登录")
             if(this.$route.query.code!=''&&this.$route.query.code!=null){
                 console.log(this.$route.query.code)
                 weibo(this.$route.query.code).then(response => {
                     console.log(response)
                     alert("成功")
                 });
-            }
+            }*/
 
         },
 

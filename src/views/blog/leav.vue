@@ -131,10 +131,12 @@
         <div>
 
         </div>
+        <down></down>
     </div>
 </template>
 <script>
     import top from '../component/top';
+    import down from '../component/down';
     import {saveP, getProList} from 'api/blog/proposal';
     import tokenStore from 'store2';
     import {parseTime} from 'utils';
@@ -142,7 +144,7 @@
     export default {
         name: 'leavIng',
         components: {
-            top
+            top,down
         },
         data() {
 

@@ -24,9 +24,7 @@
                 <div class="topbar-product topbar-left">
                     <div class="topbar-btn  topbar-product-btn">
 
-                        <router-link :to="'/blog/write'"><span style="color: #999;" class="ng-binding"><a href=""
-                                                                                                          target="_blank"
-                                                                                                          class="topbar-home-link  ">写博客</a></span>
+                        <router-link :to="'/blog/write'"><span style="color: #999;" class="ng-binding"><a href="" target="_blank"class="topbar-home-link  ">写博客</a></span>
                         </router-link>
 
                     </div>
@@ -57,16 +55,21 @@
                     <div class="aliyun-common-search-outline"></div>
 
                 </div>
-                <div class="topbar-info topbar-right topbar-clearfix">
-                    <div class="topbar-left topbar-user ng-scope">
+                <div v-if="user==null" class="topbar-info topbar-right topbar-clearfix">
+                    <div class=" topbar-user ">
                         <div class="topbar-info-dropdown topbar-info-item">
                             <a class="topbar-info-dropdown-toggle topbar-btn">
-                                <span v-show="UNAME==''" style="color: #999;" @click="openLoginDialog"><a>登录</a></span>
                                 <span @click="openLoginDialog">登录</span>
-                                <span style="float: right;  color: #999;" v-show="UNAME!=''">
-                                    <router-link :to="'/blog/userCenter'"><a>{{UNAME}}</a></router-link></span>
                             </a>
-
+                        </div>
+                    </div>
+                </div>
+                <div v-if="user!=null" class="topbar-info topbar-right topbar-clearfix">
+                    <div class=" topbar-user ">
+                        <div class="topbar-info-dropdown topbar-info-item">
+                            <a class="topbar-info-dropdown-toggle topbar-btn">
+                                <span ><img src="user.profileUrl"/> <router-link :to="'/blog/userCenter'">{{user.userName}}</router-link></span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -198,7 +201,10 @@
         data() {
 
             return {
-                UNAME:'',
+                user:{
+                   id:'', uid:'', userName:'', uSource:'', location:'', description:'',
+                    profileUrl:'', gender:'', passWord:'', email:'', integral:'', status:'', createdTime:'',
+                },
                 search: '',
                 resourceDialog: false,
                 resource: {resouceName: '', resouceUrl: '', context: '', status: ''},
@@ -225,8 +231,8 @@
                 },
             };
         }, created() {
-
-            //this.UNAME = tokenStore.local('User').userName;
+            this.user = tokenStore.local('user');
+            console.log(this.user)
         },
         methods: {
             searchBySel() {

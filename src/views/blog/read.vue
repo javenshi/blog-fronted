@@ -111,19 +111,21 @@
             </el-row>
 
         </div>
+        <down></down>
     </div>
 
 
 </template>
 <script>
     import top from '../component/top';
+    import down from '../component/down';
     import {getBlogsById, saveComents, getComentsList} from 'api/blog/blog';
     import tokenStore from 'store2';
     import {parseTime} from 'utils';
 
     export default {
         components: {
-             top
+             top,down
         },
         data() {
             return {

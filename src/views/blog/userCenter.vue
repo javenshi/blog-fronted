@@ -102,10 +102,13 @@
                 </el-dialog>
             </el-tab-pane>
         </el-tabs>
-    </div></div>
+    </div>
+    <down></down>
+    </div>
 </template>
 
 <script>
+    import down from '../component/down';
     import {selectResourcesPage,updateRes,deleteRe} from 'api/blog/resouce';
     import {selectBlogsPage,deleteBlog} from 'api/blog/blog';
     import tokenStore from 'store2';
@@ -113,7 +116,7 @@
     import top from '../component/top';
     export default {
         components: {
-            top
+            top,down
         },
         data() {
             return {

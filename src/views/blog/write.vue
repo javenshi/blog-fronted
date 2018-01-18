@@ -52,13 +52,14 @@
                     </el-col>
                     <el-col :span="3"></el-col>
                 </el-row>
-
+<down></down>
             </template>
         </div>
     </div>
 </template>
 
 <script>
+    import down from '../component/down';
     import {quillEditor} from 'vue-quill-editor';
     import top from '../component/top';
     import tokenStore from 'store2';
@@ -66,7 +67,7 @@
 
     export default {
         components: {
-            quillEditor, top
+            quillEditor, top,down
         },
         data() {
             return {

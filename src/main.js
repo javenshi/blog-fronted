@@ -16,6 +16,7 @@ import VeeValidate from 'vee-validate'; //vue表单验证插件
 import contactIng from 'views/component/contact';
 import noticeIng from 'views/component/notice';
 import topIng from 'views/component/top';
+import downIng from 'views/component/down';
 
 const config = {
     fieldsBagName: 'validafield',
@@ -24,6 +25,7 @@ Vue.use(VeeValidate, config)
 Vue.use(contactIng)
 Vue.use(noticeIng)
 Vue.use(topIng)
+Vue.use(downIng)
     /*Validator.updateDictionary({
         zh_CN: {
             messages

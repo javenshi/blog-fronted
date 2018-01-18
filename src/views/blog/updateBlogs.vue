@@ -61,12 +61,14 @@
             </div>
 
         </div>
+        <down></down>
     </div>
 
 
 </template>
 <script>
     import top from '../component/top';
+    import down from '../component/down';
     import {quillEditor} from 'vue-quill-editor';
     import {getBlogsById,saveB} from 'api/blog/blog';
     import tokenStore from 'store2';
@@ -75,7 +77,7 @@
     export default {
         components: {
 //使用编辑器
-            quillEditor,top
+            quillEditor,top,down
         },
         data() {
             return {
