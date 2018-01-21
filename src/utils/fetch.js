@@ -62,7 +62,7 @@ service.interceptors.response.use(
     /*  store.dispatch('FedLogOut').then(() => {
           location.reload();// 为了重新实例化vue-router对象 避免bug
       });*/
-      Message({
+        this.$message({
           message: "系统维护中",
           type: 'error',
           duration: 5 * 1000

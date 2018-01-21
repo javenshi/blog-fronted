@@ -68,7 +68,7 @@
                     <div class=" topbar-user ">
                         <div class="topbar-info-dropdown topbar-info-item">
                             <a class="topbar-info-dropdown-toggle topbar-btn">
-                                <span ><img src="user.profileUrl"/> <router-link :to="'/blog/userCenter'">{{user.userName}}</router-link></span>
+                                <span ><div v-html="headurl"></div> <router-link :to="'/blog/userCenter'">{{user.userName}}</router-link></span>
                             </a>
                         </div>
                     </div>
@@ -113,7 +113,7 @@
             <br>
             <img style="margin-right: 10%; "  width="10%" height="10%"src="../../img/qq.png">
             <img style=" margin-right: 10%;" width="10%" height="10%" src="../../img/wexin.png">
-            <a href="https://api.weibo.com/oauth2/authorize?client_id=3191489564&response_type=code&redirect_uri=http://39.108.12.206"> <img src="../../img/weibo.png" width="10%" height="10%"></a>
+            <a href="https://api.weibo.com/oauth2/authorize?client_id=3191489564&response_type=code&redirect_uri=http://zhixiang.org.cn/%23/login"> <img src="../../img/weibo.png" width="10%" height="10%"></a>
             <br>
             <br>
             <span style=" margin-right: 10%;">QQ登录</span>
@@ -121,70 +121,7 @@
             <span style=" margin-left: 1%;">微博登录</span>
             <br><br>
 
-            <!--      <el-form :model="loginForm" status-icon :rules="loginRules" ref="loginForm" class="demo-ruleForm"
-                           v-show="loginOrRigister">
-                      <h3 class="title">系统登录</h3>
-                      <el-form-item prop="userName" label="用户名:" required>
-                          <el-input name="userName" type="text" v-model="loginForm.userName"
-                                    placeholder="用户名"></el-input>
-                      </el-form-item>
-                      <el-form-item prop="passWord" label="密码:" required>
-                          <el-input name="passWord" type="password" v-model="loginForm.passWord"
-                                    placeholder="密码"></el-input>
-                      </el-form-item>
-                      <el-form-item>
-                          <el-button type="primary" @click="login('loginForm')" style="width:100%;">
-                              登录
-                          </el-button>
-                      </el-form-item>
-                      <a @click="toRigister" class="forget-pwd">
-                          没有账号?(赶紧注册一个吧)
-                      </a>
-                  </el-form>
-                  <el-form :model="rigitsterForm" status-icon :rules="rigitsterRules" ref="rigitsterForm"
-                           class="demo-ruleForm" v-show="!loginOrRigister">
-                      <h3 class="title">系统注册</h3>
-                      <el-form-item prop="userName" label="用户名:" required>
-                          <el-input type="text" v-model="rigitsterForm.userName"
-                                    @blur="cheackName" auto-complete="off" placeholder="用户名"></el-input>
-                      </el-form-item>
-                      <el-form-item prop="passWord" label="密码:" required>
-                          <el-input type="password" v-model="rigitsterForm.passWord"
-                                    placeholder="密码"></el-input>
-                      </el-form-item>
-                      <el-form-item prop="checkPassWord" label="确认密码:" required>
-                          <el-input type="password" v-model="rigitsterForm.checkPassWord"
-                                    placeholder="密码"></el-input>
-                      </el-form-item>
-                      <el-form-item prop="email" label="邮箱:" required>
-                          <el-input type="text" v-model="rigitsterForm.email"
-                                    placeholder="邮箱"></el-input>
-                      </el-form-item>
-                      <el-form-item prop="code" label="验证码:" required>
-                          <el-input type="text" style="width: 45%" v-model="rigitsterForm.code"
-                                    placeholder="验证码"></el-input>
-
-                          <el-button v-show="!showTime" type="success" v-waves icon="plus"
-                                     @click="sendCode">
-                              获取验证码
-                          </el-button>
-                          <el-button v-show="showTime" disabled type="primary"
-                          >
-                              剩余{{count}}秒
-                          </el-button>
-
-
-                      </el-form-item>
-                      <el-form-item>
-                          <el-button type="primary" style="width:100%;" @click="rigster('rigitsterForm')">
-                              注册
-                          </el-button>
-                      </el-form-item>
-                      <a @click="toLogin" class="forget-pwd">
-                          注册成功，赶紧去登录吧！
-                      </a>
-                  </el-form>
-             --> </el-dialog>
+            </el-dialog>
     </div>
 
 </template>
@@ -205,6 +142,7 @@
                    id:'', uid:'', userName:'', uSource:'', location:'', description:'',
                     profileUrl:'', gender:'', passWord:'', email:'', integral:'', status:'', createdTime:'',
                 },
+                headurl:'',
                 search: '',
                 resourceDialog: false,
                 resource: {resouceName: '', resouceUrl: '', context: '', status: ''},
@@ -231,8 +169,11 @@
                 },
             };
         }, created() {
-            this.user = tokenStore.local('user');
-            console.log(this.user)
+            if(tokenStore.local('user')!=null){
+                this.user = tokenStore.local('user');
+                this.headurl='<img STYLE="width: 20PX;height: 20PX;" src='+this.user.profileUrl+'/>';
+                console.log("user:"+ this.user)
+            }
         },
         methods: {
             searchBySel() {
@@ -256,30 +197,7 @@
 
                 });
             },
-            weiboLogin() {
-                var https = require("https");
-                var iconv = require("iconv-lite");
-                var url="";
-                https.get(url, function (res) {
-                    var datas = [];
-                    var size = 0;
-                    res.on('data', function (data) {
-                        datas.push(data);
-                        size += data.length;
-                        //process.stdout.write(data);
-                    });
-                    res.on("end", function () {
-                        var buff = Buffer.concat(datas, size);
-                        var result = iconv.decode(buff, "utf8");//转码//var result = buff.toString();//不需要转编码,直接tostring
-                        console.log(result);
-                    });
-                }).on("error", function (err) {
-                    Logger.error(err.stack)
-                    callback.apply(null);
-                });
 
-
-            },
             openResourceDialog() {
                 this.resourceDialog = true;
             }, closeResourceDialog(formName) {
@@ -665,7 +583,6 @@
     .common-topbar-body .common-topbar-bottom .common-topbar-dropdown .common-topbar-dropdown-all-product .product-column .product-item li.line {
         width: 220px;
         height: 1px;
-        margin-top: 8px;
         opacity: .5;
         background: #73777a
     }

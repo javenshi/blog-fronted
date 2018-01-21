@@ -202,15 +202,6 @@
             };
         },
         created() {
-
-            var ht=window.location.href;
-            if(ht.indexOf("=")>1){
-               ht= ht.substring(ht.indexOf("=")+1,ht.length-2);
-                weibo(ht).then(response => {
-                    console.log(response.data.returnData)
-                    tokenStore.local.set("user",response.data.returnData);
-                });
-            }
             this.getBlogs();
             this.getReso();
             getAllCarousel().then(response => {

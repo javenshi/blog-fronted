@@ -9,8 +9,7 @@ import 'element-ui/lib/theme-default/index.css';
 
 
 import * as filters from './filters'; // 全局vue filter
-import Multiselect from 'vue-multiselect'; // 使用的一个多选框组件，element-ui的select不能满足所有需求
-import 'vue-multiselect/dist/vue-multiselect.min.css'; // 多选框组件css
+
 
 import VeeValidate from 'vee-validate'; //vue表单验证插件
 import contactIng from 'views/component/contact';
@@ -40,7 +39,7 @@ Vue.use(downIng)
     // };
     // Vue.use(VeeValidate,config);*/
 // register globally
-Vue.component('multiselect', Multiselect);
+
 Vue.use(ElementUI);
 Vue.use(contactIng);
 
