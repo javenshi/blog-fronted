@@ -24,8 +24,7 @@
                 <div class="topbar-product topbar-left">
                     <div class="topbar-btn  topbar-product-btn">
 
-                        <router-link :to="'/blog/write'"><span style="color: #999;" class="ng-binding"><a href="" target="_blank"class="topbar-home-link  ">写博客</a></span>
-                        </router-link>
+                       <span style="color: #999;" class="ng-binding"><a @click="write" target="_blank"class="topbar-home-link  ">写博客</a></span>
 
                     </div>
                 </div>
@@ -68,7 +67,7 @@
                     <div class=" topbar-user ">
                         <div class="topbar-info-dropdown topbar-info-item">
                             <a class="topbar-info-dropdown-toggle topbar-btn">
-                                <span ><div v-html="headurl"></div> <router-link :to="'/blog/userCenter'">{{user.userName}}</router-link></span>
+                                <router-link :to="'/blog/userCenter'"><span v-html="headurl"></span> </router-link>
                             </a>
                         </div>
                     </div>
@@ -128,9 +127,8 @@
 <script>
     import tokenStore from 'store2';
     import {saveResouce} from 'api/blog/resouce';
+
     import {getCode, cName, saveUser, login, valUser} from 'api/blog/user';
-
-
 
     export default {
         name: 'topIng',
@@ -169,23 +167,35 @@
                 },
             };
         }, created() {
-            if(tokenStore.local('user')!=null){
-                this.user = tokenStore.local('user');
-                this.headurl='<img STYLE="width: 20PX;height: 20PX;" src='+this.user.profileUrl+'/>';
-                console.log("user:"+ this.user)
+            if(tokenStore.session('user')!=null){
+                this.user = tokenStore.session('user');
+                this.headurl='<img style="width: 55%;height: 55%;margin-left: -20%;" src='+this.user.profileUrl+'/>';
             }
         },
         methods: {
+
+            write(){
+                if(tokenStore.session('user')!=null){
+                    window.location.href = "/%23/blog/write";
+                }else{
+                    this.$message({
+                        message: "请先登录后再发表文章",
+                        type: 'error',
+                        duration: 5 * 1000
+                    });
+                    window.location.href = "/";
+                }
+            },
             searchBySel() {
                 if (this.search != null && this.search != '') {
-                    tokenStore.local.set('search', this.search)
+                    tokenStore.session.set('search', this.search)
                 }
                 this.$router.push('/');
                 window.location.reload();
             },
             saveReso() {
-                this.resource.userId = tokenStore.local('User').id;
-                this.resource.userName = tokenStore.local('User').userName;
+                this.resource.userId = tokenStore.session('User').id;
+                this.resource.userName = tokenStore.session('User').userName;
                 saveResouce(this.resource).then(response => {
                     this.$notify({
                         title: response.data.returnCode == 200 ? '成功' : '失败',
@@ -199,7 +209,16 @@
             },
 
             openResourceDialog() {
-                this.resourceDialog = true;
+                if(tokenStore.session('user')!=null){
+                    this.resourceDialog = true;
+                }else{
+                    this.$message({
+                        message: "请先登录后再上传资源",
+                        type: 'error',
+                        duration: 5 * 1000
+                    });
+                }
+
             }, closeResourceDialog(formName) {
                 this.resourceDialog = false;
                 this.$refs[formName].resetFields();
@@ -282,7 +301,7 @@
                         login(this.loginForm).then(response => {
                             if (response.data.returnCode == 200) {
                                 this.UNAME = response.data.returnData.userName;
-                                tokenStore.local.set('User', response.data.returnData)
+                                tokenStore.session.set('User', response.data.returnData)
                                 this.loginDialog = false;
                                 return false;
                             }

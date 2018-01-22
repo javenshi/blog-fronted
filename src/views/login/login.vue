@@ -26,7 +26,7 @@
                         });
                     }else{
 
-                        tokenStore.local.set("user", response.data.returnData);
+                        tokenStore.session.set("user", response.data.returnData);
                         this.$message({
                             message: "登录成功",
                             type: 'success',

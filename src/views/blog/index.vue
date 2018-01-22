@@ -228,13 +228,13 @@
                     filterKey: 'status',
                     filterValue: 2
                 })
-                if (tokenStore.local('search') != '' && tokenStore.local('search') != null) {
+                if (tokenStore.session('search') != '' && tokenStore.session('search') != null) {
                     this.listQuery.filterList.push({
                         filterKey: 'select',
-                        filterValue: tokenStore.local('search')
+                        filterValue: tokenStore.session('search')
                     })
-                    this.resource.resouceName = tokenStore.local('search');
-                    tokenStore.local.remove('search');
+                    this.resource.resouceName = tokenStore.session('search');
+                    tokenStore.session.remove('search');
 
                 }
                 selectBlogsPage(this.listQuery).then(response => {

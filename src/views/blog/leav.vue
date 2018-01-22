@@ -26,13 +26,11 @@
                 </el-button>
                 <br><br>
                 <br><br>
-                <div class="blogs">
-
-                    <ul class="bloglist" v-for="item in proList" :key="item">
-                        <li>
+                <div >
+                    <ul  v-for="item in proList" :key="item" >
+                        <li style="margin-bottom: 40px;">
                             <div class="arrow_box">
                                 <div class="ti"></div>
-                                <div class="ci"></div>
                                 <ul class="details">
                                     <li><a href="#">{{item.userName}}</a></li>
                                     <li class="comments"><a href="#">{{item.creatTime|parseTime('{y}-{m}-{d}  {h}:{i}:{s}')}}</a></li>
@@ -41,8 +39,9 @@
                                     <p style="padding-top:18px;"> {{item.context}}</p>
                                 </ul>
                                 <ul class="details">
-                                    <li><a @click="reply(item.id)">回复</a></li>
-                                    <li v-if="replyId!=''" style="margin-bottom: 20px;">
+
+                                    <li><a @click="reply(item.id)" style="font-size: 16px;color:#20a0ff; ">回复</a></li>
+                                    <li v-if="replyId!=''" >
                                         <el-input
                                                 type="textarea"
                                                 :autosize="{ minRows: 2, maxRows: 4}"
@@ -55,6 +54,9 @@
                                                 style="float: right;margin-top: 10px; border: 1px #20a0ff solid;background-color: white;color: #20a0ff;"
                                                 @click="saveReply">&nbsp;&nbsp;回&nbsp;&nbsp;&nbsp;&nbsp;复&nbsp;&nbsp;
                                         </el-button>
+                                        <br>
+                                        <br>
+
                                     </li>
                                     <li v-if="item.hasChild==1">
                                         <div v-for="it in item.children" :key="it">
@@ -175,13 +177,14 @@
             savePro() {
 
                 this.Proposal.userName = this.UNAME;
-                this.Proposal.userId = tokenStore.local('User').id;
+                this.Proposal.userId = tokenStore.session('User').id;
 
                 saveP(this.Proposal).then(response => {
                     this.getProList0();
                 });
             },
             reply(proId) {
+
                 this.replyId = proId;
             },
             saveReply() {
@@ -223,14 +226,6 @@
     }
 </script>
 <style>
-
-
-
-
-
-
-
-
     /* CSS Document */
     * {
         margin: 0;
@@ -260,29 +255,19 @@
     }
 
     /* --------------------评论列表-------------------- */
-    .blogs {
-        width: 1000px;
-        margin: 0 auto 20px;
-    }
 
-    .bloglist {
-        width: 666px;
-        float: left;
 
-    }
 
-    .bloglist > li {
-        border-right: #000 2px solid;
-        padding: 20px 0;
-    }
+
+
 
     .arrow_box {
         background: white;
         box-shadow: 0px 1px 1px rgba(255, 0, 0, .7), inset 0px 1px 1px rgba(255, 0, 0, .7);
-        width: 630px;
+
         color: #000000;
         border-radius: 6px;
-        position: relative
+
     }
 
     .ti {
@@ -291,27 +276,11 @@
         border-style: solid;
         border-width: 0px 0 20px 22px;
         border-color: transparent transparent transparent #20a0ff;
-        position: absolute;
-        left: 630px;
-        top: 20px;
+
     }
 
-    /* 三角形 */
-    .ci {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        position: absolute;
-        left: 658px;
-        top: 16px;
-        background: #000;
-        border: 2px solid #333;
-    }
 
-    /* 圆形定义边框色与背景一致 */
-    .ci:hover {
-        border: 2px solid #B9B9B9;
-    }
+
 
     .arrow_box h2.title {
         padding: 0 0 0 20px;

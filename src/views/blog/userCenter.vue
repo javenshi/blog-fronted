@@ -143,7 +143,7 @@
                 resource:'',
             };
         }, created() {
-            this.UID = tokenStore.local('User').id;
+            this.UID = tokenStore.session('User').id;
             this.getBlogs();
             this.getResources();
         },

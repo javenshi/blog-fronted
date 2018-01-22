@@ -90,7 +90,7 @@
                 noBlog: false,
             };
         }, created() {
-            this.UID = tokenStore.local('User').id;
+            this.UID = tokenStore.session('User').id;
 
             if(this.UID==null||this.UID==0){
                 this.$router.push('/blog/updateBlogs3123123?id=' + id);

@@ -65,6 +65,7 @@
     import tokenStore from 'store2';
     import {saveB} from 'api/blog/blog';
 
+
     export default {
         components: {
             quillEditor, top,down
@@ -77,7 +78,14 @@
                 UNAME: '',
             };
         }, mounted() {
-            this.UNAME = tokenStore.local('User').userName;
+            if(tokenStore.local('user')==null){
+                this.$message({
+                    message: "请先登录后再发表文章",
+                    type: 'error',
+                    duration: 5 * 1000
+                });
+                window.location.href = "/";
+            }
         },
 
         methods: {
@@ -88,7 +96,7 @@
 
                 this.blog.blogsStatus = blogsStatus;
                 this.blog.blogsUrl = this.blogContext;
-                this.blog.userName = this.UNAME;
+                this.blog.userName =tokenStore.session('user').userName;
                 saveB(this.blog).then(response => {
                     this.$notify({
                         title: response.data.returnCode == 200 ? '成功' : '失败',
