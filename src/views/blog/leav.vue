@@ -262,7 +262,7 @@
 
 
     .arrow_box {
-        background: white;
+
         box-shadow: 0px 1px 1px rgba(255, 0, 0, .7), inset 0px 1px 1px rgba(255, 0, 0, .7);
 
         color: #000000;

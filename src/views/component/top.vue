@@ -1,7 +1,7 @@
 <template>
 
-    <div class="ng-scope">
-        <div class="console-component-topbar ng-scope">
+    <div>
+        <div class="console-component-topbar ">
             <div class=" topbar-clearfix" style="display: block; color: #666;">
                 <div class="topbar-head topbar-left">
 
@@ -54,20 +54,14 @@
                     <div class="aliyun-common-search-outline"></div>
 
                 </div>
-                <div v-if="user==null" class="topbar-info topbar-right topbar-clearfix">
+
+
+                <div  class="topbar-info topbar-right topbar-clearfix">
                     <div class=" topbar-user ">
                         <div class="topbar-info-dropdown topbar-info-item">
                             <a class="topbar-info-dropdown-toggle topbar-btn">
-                                <span @click="openLoginDialog">登录</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                <div v-if="user!=null" class="topbar-info topbar-right topbar-clearfix">
-                    <div class=" topbar-user ">
-                        <div class="topbar-info-dropdown topbar-info-item">
-                            <a class="topbar-info-dropdown-toggle topbar-btn">
-                                <router-link :to="'/blog/userCenter'"><span v-html="headurl"></span> </router-link>
+                                <span  v-if="user.id==null||user.id==''" @click="openLoginDialog"  >登录</span>
+                                <router-link :to="'/blog/userCenter'"><span v-if="user.id!=null&&user.id!=''" v-html="headurl"></span> </router-link>
                             </a>
                         </div>
                     </div>
@@ -75,6 +69,7 @@
 
             </div>
         </div>
+
         <el-dialog title="传资源" :visible.sync="resourceDialog" align="center">
 
             <el-form :model="resource" status-icon ref="resour"
@@ -123,6 +118,7 @@
             </el-dialog>
     </div>
 
+
 </template>
 <script>
     import tokenStore from 'store2';
@@ -169,7 +165,7 @@
         }, created() {
             if(tokenStore.session('user')!=null){
                 this.user = tokenStore.session('user');
-                this.headurl='<img style="width: 55%;height: 55%;margin-left: -20%;" src='+this.user.profileUrl+'/>';
+                this.headurl='<img style="width: 55%;height: 55%;" src='+this.user.profileUrl+'/>';
             }
         },
         methods: {
@@ -473,7 +469,7 @@
     }
 
     .common-topbar-body .common-topbar-bottom .common-topbar-dropdown .common-topbar-dropdown-category-container .common-topbar-dropdown-category-list {
-        padding: 28px 20px;
+
         overflow: hidden
     }
 
@@ -518,7 +514,7 @@
     }
 
     .common-topbar-body .common-topbar-bottom .common-topbar-dropdown .common-topbar-dropdown-all-product .all-product-individual-wrapper {
-        padding: 0 20px;
+
         height: 60px;
         line-height: 60px;
         background: #2f3438;
@@ -561,9 +557,7 @@
         letter-spacing: 0
     }
 
-    .common-topbar-body .common-topbar-bottom .common-topbar-dropdown .common-topbar-dropdown-all-product .all-product-column-wrapper {
-        padding: 0 20px 20px
-    }
+
 
     .common-topbar-body .common-topbar-bottom .common-topbar-dropdown .common-topbar-dropdown-all-product .product-column {
         width: 264px;
@@ -618,9 +612,7 @@
         display: none
     }
 
-    .common-topbar-body .common-topbar-bottom .common-topbar-dropdown .common-topbar-dropdown-all-product .product-column .product-item:first-child {
-        margin-top: 20px
-    }
+
 
     .common-topbar-body .common-topbar-bottom .common-topbar-dropdown .common-topbar-dropdown-all-product .product-column:last-child {
         margin-right: 0
@@ -651,7 +643,7 @@
         right: 0;
         height: 18px;
         line-height: 18px;
-        padding-top: 10px;
+
         padding-left: 20px;
         padding-bottom: 20px;
         font-size: 14px;
@@ -669,7 +661,7 @@
         box-sizing: border-box;
         border-right: 1px solid hsla(0, 0%, 100%, .15);
         float: left;
-        padding: 20px 0;
+
         overflow: hidden
     }
 
@@ -683,7 +675,7 @@
 
     .common-topbar-body .common-topbar-bottom .common-topbar-all-nav-dropdown .common-topbar-leve2-content .common-topbar-detail-list .content-wrapper {
         width: 370px;
-        padding: 8px 10px;
+
         margin-left: 10px;
         margin-right: 20px;
         box-sizing: border-box
@@ -751,7 +743,7 @@
         color: #fff;
         line-height: 20px;
         margin-left: 20px;
-        margin-top: 16px;
+
         font-weight: 600
     }
 
@@ -764,21 +756,20 @@
         width: 280px;
         height: 100%;
         box-sizing: border-box;
-        padding: 20px 0;
+
         overflow: hidden
     }
 
     .common-topbar-body .common-topbar-bottom .common-topbar-all-nav-dropdown .common-topbar-leve2-content .common-topbar-relevant-list .relavant-title {
         font-size: 14px;
         color: #9b9ea0;
-        padding: 0 20px
+
     }
 
     .common-topbar-body .common-topbar-bottom .common-topbar-all-nav-dropdown .common-topbar-leve2-content .common-topbar-relevant-list a {
         display: block;
         font-size: 12px;
         line-height: 24px;
-        padding: 4px 20px
     }
 
     .common-topbar-body .common-topbar-bottom .common-topbar-all-nav-dropdown .common-topbar-leve2-content .common-topbar-relevant-list a:first-child {
@@ -1080,7 +1071,7 @@
         color: #fff;
         position: absolute;
         z-index: 999;
-        top: 26px;
+
         left: 0;
         width: 100%;
         background: #262c30;
@@ -1105,7 +1096,7 @@
     }
 
     .aliyun-common-search-container .aliyun-common-search-dropdown .dropdown-list {
-        padding: 12px;
+
         display: none;
         margin: 0
     }

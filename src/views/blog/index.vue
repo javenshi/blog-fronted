@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <top></top>
+    <div >
+        <top ></top>
         <div style="padding-left: 10px;padding-right:10px;padding-top:15px;">
             <el-row :gutter="20">
                 <el-col :span="1"><br></el-col>
@@ -275,81 +275,4 @@
         }
     }
 </script>
-<style lang="scss">
-    @import '../../styles/index.scss'; // 全局自定义的css样式
 
-    .el-carousel__item h3 {
-        color: #475669;
-        font-size: 14px;
-        opacity: 0.75;
-        line-height: 100px;
-        margin: 0;
-    }
-
-    .el-carousel__item:nth-child(2n) {
-        background-color: #99a9bf;
-    }
-
-    .el-carousel__item:nth-child(2n+1) {
-        background-color: #d3dce6;
-    }
-
-    .el-row {
-        margin-bottom: 20px;
-        &:last-child {
-            margin-bottom: 0;
-        }
-    }
-
-    .el-col {
-        border-radius: 4px;
-    }
-
-    .tuijian li, .clicks li {
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        overflow: hidden
-    }
-
-    .tuijian li a:hover {
-        padding-left: 10px
-    }
-
-    .tuijian li span:before {
-        content: "0";
-    }
-
-    /* 数字列表前面统一加0  */
-    .tuijian li span {
-        margin-right: 10px;
-        font-size: 14px;
-        font-family: "微软雅黑";
-    }
-
-    .tuijian li:nth-child(-n+3) span {
-        width: 39px;
-        color: #999
-    }
-
-    /* 选择从第3个开始倒数也就是第三个前面的 */
-    .tuijian li:nth-child(-n+3) strong {
-        font-size: 24px;
-        font-weight: normal;
-    }
-
-    .tuijian li:first-child span {
-        color: #f8490b;
-    }
-
-    /* 选择第一个 */
-    .tuijian li:nth-child(n+3) {
-        line-height: 24px
-    }
-
-    /* 选择从第3个开始往后数 */
-    .tuijian li:nth-child(4) {
-        margin: 5px 0 0 0
-    }
-
-    /* 选择第四个 */
-</style>
