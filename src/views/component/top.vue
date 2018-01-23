@@ -60,8 +60,10 @@
                     <div class=" topbar-user ">
                         <div class="topbar-info-dropdown topbar-info-item">
                             <a class="topbar-info-dropdown-toggle topbar-btn">
-                                <span  v-if="user.id==null||user.id==''" @click="openLoginDialog"  >登录</span>
-                                <router-link :to="'/blog/userCenter'"><span v-if="user.id!=null&&user.id!=''" v-html="headurl"></span> </router-link>
+                                <span  v-if="user.uid==null||user.uid==''" @click="openLoginDialog"  >登录</span>
+                                <div class="topbar-user-info" style="display: block;">
+                                    <router-link :to="'/blog/userCenter'"><span v-if="user.uid!=null&&user.uid!=''" v-html="headurl"></span> </router-link>
+                                </div>
                             </a>
                         </div>
                     </div>
@@ -163,23 +165,24 @@
                 },
             };
         }, created() {
+            console.log(tokenStore.session('user'))
             if(tokenStore.session('user')!=null){
                 this.user = tokenStore.session('user');
-                this.headurl='<img style="width: 55%;height: 55%;" src='+this.user.profileUrl+'/>';
+                this.headurl='<img class="common-topbar-user-image-wrapper1" src='+this.user.profileUrl+'/>';
             }
         },
         methods: {
 
             write(){
                 if(tokenStore.session('user')!=null){
-                    window.location.href = "/%23/blog/write";
+                    window.location.href = "/#/blog/write";
                 }else{
                     this.$message({
                         message: "请先登录后再发表文章",
                         type: 'error',
-                        duration: 5 * 1000
+                        duration: 3 * 1000
                     });
-                    window.location.href = "/";
+
                 }
             },
             searchBySel() {
@@ -190,8 +193,9 @@
                 window.location.reload();
             },
             saveReso() {
-                this.resource.userId = tokenStore.session('User').id;
-                this.resource.userName = tokenStore.session('User').userName;
+                this.resource.userId = tokenStore.session('user').id;
+                this.resource.userName = tokenStore.session('user').userName;
+                this.resource.profileUrl = tokenStore.session('user').profileUrl;
                 saveResouce(this.resource).then(response => {
                     this.$notify({
                         title: response.data.returnCode == 200 ? '成功' : '失败',
@@ -211,7 +215,7 @@
                     this.$message({
                         message: "请先登录后再上传资源",
                         type: 'error',
-                        duration: 5 * 1000
+                        duration: 3 * 1000
                     });
                 }
 
@@ -316,8 +320,17 @@
     }
 </script>
 <style>
+    .topbar-user-info {
 
+        padding: 8px 24px 0 12px;
+        height: 40px;
 
+    }
+     .common-topbar-user-image-wrapper1 {
+        width: 24px;
+        height: 24px;
+
+    }
     @media (max-width: 1124px) and (min-width: 1004px) {
         .common-topbar-dropdown .common-topbar-dropdown-category-container.column-5 {
             padding-left: 0 !important
@@ -376,9 +389,7 @@
         }
     }
 
-    .common-topbar-body * {
-        box-sizing: content-box
-    }
+
 
     .common-topbar-body em {
         color: #ff8a00
@@ -433,9 +444,7 @@
         color: #fff
     }
 
-    .common-topbar-body .common-topbar-top .common-topbar-user-info .common-topbar-user-image-wrapper img {
-        height: 100%
-    }
+
 
     .common-topbar-body .common-topbar-bottom .common-topbar-nav .common-topbar-nav-list li {
         float: left;
@@ -464,9 +473,7 @@
         cursor: default
     }
 
-    .common-topbar-body .common-topbar-bottom .common-topbar-nav .common-topbar-user-info .common-topbar-user-image-wrapper img {
-        height: 100%
-    }
+
 
     .common-topbar-body .common-topbar-bottom .common-topbar-dropdown .common-topbar-dropdown-category-container .common-topbar-dropdown-category-list {
 
@@ -678,7 +685,7 @@
 
         margin-left: 10px;
         margin-right: 20px;
-        box-sizing: border-box
+
     }
 
     .common-topbar-body .common-topbar-bottom .common-topbar-all-nav-dropdown .common-topbar-leve2-content .common-topbar-detail-list .content-wrapper .content-link {
@@ -755,7 +762,7 @@
         background-repeat: no-repeat;
         width: 280px;
         height: 100%;
-        box-sizing: border-box;
+
 
         overflow: hidden
     }
@@ -788,11 +795,7 @@
         display: block
     }
 
-    .common-topbar-body .common-topbar-user-info-dropdown .big-customer-info img, .common-topbar-body .common-topbar-user-info-dropdown .info-prefix-icon {
-        width: 16px;
-        vertical-align: text-bottom;
-        margin-right: 8px
-    }
+
 
     .common-topbar-body .common-topbar-user-info-dropdown .bottom-line a, .common-topbar-body .common-topbar-user-info-dropdown .bottom-line a:link, .common-topbar-body .common-topbar-user-info-dropdown .bottom-line a:visited {
         color: #73777a
@@ -1076,7 +1079,6 @@
         width: 100%;
         background: #262c30;
         box-shadow: 0 2px 4px rgba(0, 0, 0, .15);
-        box-sizing: border-box;
         transition: all .17s ease;
         padding: 0;
         height: 0;
@@ -1497,7 +1499,7 @@
     }
 
     .console-component-topbar .topbar-info .topbar-info-btn-gap {
-        margin: 10px 0;
+
         height: 1px;
         display: block;
         width: 100%;
@@ -1544,7 +1546,7 @@
     .console-component-topbar .topbar-notice .topbar-notice-panel .topbar-notice-body ul li a {
         display: block;
         height: 100%;
-        padding: 10px 10px;
+
         background: #fff;
         color: #333;
     }
@@ -1596,7 +1598,7 @@
 
     .console-component-topbar .topbar-user .topbar-info-dropdown-memu .topbar-user-entrance-logo {
         font-size: 20px;
-        margin: 8px auto 4px;
+     
         width: 40px;
         height: 40px;
         display: block;

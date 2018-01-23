@@ -1,5 +1,5 @@
 module.exports = {
     NODE_ENV: '"production"',
-    BASE_API: '"http://portal.c1.centling.cn:30264/smartseal-eye-0.1"',
+    BASE_API: '"http://zhixiang.org.cn/blog-0.1"',
     APP_ORIGIN: '"https://wallstreetcn.com"'
 };

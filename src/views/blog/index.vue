@@ -1,6 +1,6 @@
 <template>
-    <div >
-        <top ></top>
+    <div style="margin: -8px;">
+        <top></top>
         <div style="padding-left: 10px;padding-right:10px;padding-top:15px;">
             <el-row :gutter="20">
                 <el-col :span="1"><br></el-col>
@@ -49,9 +49,10 @@
                                             <span style="font-size: 14px;color: #666;"> {{scope.row.blogsPart}}...</span>
                                             <br> <span
                                                 style="margin-left:-1%;margin-right:18px;padding: 1%;font-size: 14px;color:#20a0ff"> {{scope.row.blogsClassifyName}}</span>
-                                            <span style="margin-right:18px; margin-top: 2px;"> <img
-                                                    src="../../img/time.png" style="margin-right:6px;">{{scope.row.blogsDate|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
-                                            <span style="margin-right:18px;"><img src="" style="margin-right:6px;"> {{scope.row.userName}}</span>
+                                            <span style="margin-right:18px; margin-top: 2px;"><el-icon style="margin-right:6px;" name="time"></el-icon>{{scope.row.blogsDate|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
+                                            <span style="margin-right:18px;"><img class="userLogo"
+                                                                                  src='scope.row.profileUrl'
+                                                                                  style="margin-right:6px;"> {{scope.row.userName}}</span>
                                             <span style="margin-right:18px; margin-top: 2px;"><img
                                                     src="../../img/click.png" style="margin-right:6px;"> {{scope.row.blogsClick}}</span>
                                             <br><br>
@@ -78,13 +79,14 @@
                                 </div>
                                 <template>
                                     <div v-for="item in resourceList" :key="item">
-                                        <span style=" width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 14px; color: #282828;"> <span style="float: left;"> {{item.resouceName}}</span></span>
+                                        <span style=" width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 14px; color: #282828;"> <span
+                                                style="float: left;"> {{item.resouceName}}</span></span>
 
-<br>
+                                        <br>
                                         <div style="width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 12px;">
-                                            <span> <img src="" style="margin-right:6px;"> {{item.userName}}</span>
-                                            <span style="margin-right:18px;"> <img src="../../img/time.png"
-                                                                                   style="margin-right:6px;">{{item.creatTime |parseTime('{y}-{m}-{d} ')}}</span>
+                                            <span> <img class="userLogo" src='scope.row.profileUrl'
+                                                        style="margin-right:6px;"> {{item.userName}}</span>
+                                            <span style="margin-right:18px;"> <el-icon style="margin-right:6px;" name="time"></el-icon>{{item.creatTime |parseTime('{y}-{m}-{d} ')}}</span>
                                         </div>
                                         <hr>
                                     </div>
@@ -154,7 +156,7 @@
                         </el-col>
                         <el-col :span="1"></el-col>
                     </el-row>
-<down></down>
+                    <down></down>
                 </div>
             </template>
 
@@ -174,9 +176,10 @@
     import {getResouceList} from 'api/blog/resouce';
     import tokenStore from 'store2';
     import {parseTime} from 'utils';
+
     export default {
         components: {
-            contact, notice, top,down
+            contact, notice, top, down
         },
 
         data() {
@@ -276,3 +279,9 @@
     }
 </script>
 
+<style>
+    .userLogo {
+        width: 16px;
+        height: 16px;
+    }
+</style>

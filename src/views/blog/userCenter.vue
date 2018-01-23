@@ -2,6 +2,9 @@
     <div><top></top>
     <div class="app-container calendar-list-container">
         <el-tabs type="border-card">
+            <el-tab-pane label="个人资料" >
+
+            </el-tab-pane>
             <el-tab-pane label="我的博客" >
                 <el-table
                         :data="blogList"
@@ -143,7 +146,7 @@
                 resource:'',
             };
         }, created() {
-            this.UID = tokenStore.session('User').id;
+            this.UID = tokenStore.session('user').id;
             this.getBlogs();
             this.getResources();
         },

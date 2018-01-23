@@ -72,18 +72,13 @@
         },
         data() {
             return {
-                blog: {blogsName: '', blogsClassifyId: '', blogsStatus: '',blogsPart:''},
+                blog: {blogsName: '',profileUrl: '', blogsClassifyId: '', blogsStatus: '',blogsPart:''},
                 blogContext: '',
-                datas: '',
-                UNAME: '',
+
+
             };
         }, mounted() {
-            if(tokenStore.local('user')==null){
-                this.$message({
-                    message: "请先登录后再发表文章",
-                    type: 'error',
-                    duration: 5 * 1000
-                });
+            if(tokenStore.session('user')==null){
                 window.location.href = "/";
             }
         },
@@ -97,6 +92,9 @@
                 this.blog.blogsStatus = blogsStatus;
                 this.blog.blogsUrl = this.blogContext;
                 this.blog.userName =tokenStore.session('user').userName;
+                this.blog.userId =tokenStore.session('user').id;
+                this.blog.profileUrl =tokenStore.session('user').profileUrl;
+
                 saveB(this.blog).then(response => {
                     this.$notify({
                         title: response.data.returnCode == 200 ? '成功' : '失败',

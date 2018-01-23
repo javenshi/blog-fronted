@@ -16,8 +16,6 @@
             if (ht.indexOf("=") > -1) {
                 ht = ht.substring(ht.indexOf("=") + 1, ht.length);
                 weibo(ht).then(response => {
-                    alert(response.data.returnCode)
-                    console.log(response.data.returnData)
                     if (response.data.returnCode == 400||response.data.returnCode == 300) {
                         this.$message({
                             message: response.data.returnMsg,

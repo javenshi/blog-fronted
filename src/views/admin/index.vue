@@ -1,13 +1,16 @@
 <template>
-    <div class="app-container calendar-list-container">
+
+    <div >
+            <top></top>
+       <div class="app-container calendar-list-container">
         <template>
             <el-tabs type="border-card">
-                <el-tab-pane label="轮播图"  >
+                <el-tab-pane label="轮播图">
                     <el-upload
                             class="upload-demo"
                             drag
                             :onSuccess="uploadSuccess"
-                            action="url"
+                            :action="url"
                             multiple>
                         <i class="el-icon-upload"></i>
                         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
@@ -53,19 +56,20 @@
                     </el-table>
 
                 </el-tab-pane>
-                <el-tab-pane label="博客管理" >
+                <el-tab-pane label="博客管理">
                     <el-table
                             :data="blogList"
                             style="width: 100%">
                         <el-table-column width="120px">
-                            <template scope="scope" >
+                            <template scope="scope">
 
-                                    <el-button size="small" type="danger" @click="deleteBlogsById(scope.row.id)">删除</el-button>
+                                <el-button size="small" type="danger" @click="deleteBlogsById(scope.row.id)">删除
+                                </el-button>
 
                             </template>
                         </el-table-column>
                         <el-table-column width="180px">
-                            <template scope="scope" >
+                            <template scope="scope">
                                 <div v-if="scope.row.blogsStatus==1&&scope.row.status==0">
                                     <el-button size="small" type="success" @click="pass(2,scope.row.id)">通过</el-button>
                                     <el-button size="small" type="danger" @click="pass(1,scope.row.id)">驳回</el-button>
@@ -73,10 +77,10 @@
                             </template>
                         </el-table-column>
                         <el-table-column width="180px">
-                            <template scope="scope" >
-                                <el-tag v-show="scope.row.status==0"type="warning">未审核</el-tag>
+                            <template scope="scope">
+                                <el-tag v-show="scope.row.status==0" type="warning">未审核</el-tag>
                                 <el-tag v-show="scope.row.status==1" type="danger">驳回</el-tag>
-                                <el-tag v-show="scope.row.status==2"type="success">通过</el-tag>
+                                <el-tag v-show="scope.row.status==2" type="success">通过</el-tag>
                                 <el-tag v-if="scope.row.blogsStatus==0" type="warning">草稿</el-tag>
                             </template>
                         </el-table-column>
@@ -107,24 +111,26 @@
                             style="width: 100%">
                         <el-table-column width="180px">
                             <el-table-column width="220px">
-                                <template scope="scope" >
-                                    <el-button size="small" type="danger" @click="deleteResourceById(scope.row.id)">删除</el-button>
-                                    <span  v-if="scope.row.status==0">
-                                        <el-button size="small" type="success" @click="passResourc(2,scope.row.id)">通过</el-button>
-                                        <el-button size="small" type="danger" @click="passResourc(1,scope.row.id)">驳回</el-button>
+                                <template scope="scope">
+                                    <el-button size="small" type="danger" @click="deleteResourceById(scope.row.id)">删除
+                                    </el-button>
+                                    <span v-if="scope.row.status==0">
+                                        <el-button size="small" type="success"
+                                                   @click="passResourc(2,scope.row.id)">通过</el-button>
+                                        <el-button size="small" type="danger"
+                                                   @click="passResourc(1,scope.row.id)">驳回</el-button>
                                     </span>
                                 </template>
-
 
 
                             </el-table-column>
 
                         </el-table-column>
                         <el-table-column width="180px">
-                            <template scope="scope" >
-                                <el-tag v-show="scope.row.status==0"type="warning">未审核</el-tag>
+                            <template scope="scope">
+                                <el-tag v-show="scope.row.status==0" type="warning">未审核</el-tag>
                                 <el-tag v-show="scope.row.status==1" type="danger">驳回</el-tag>
-                                <el-tag v-show="scope.row.status==2"type="success">通过</el-tag>
+                                <el-tag v-show="scope.row.status==2" type="success">通过</el-tag>
                             </template>
                         </el-table-column>
                         <el-table-column width="210px">
@@ -156,9 +162,10 @@
                             :data="proList"
                             style="width: 100%">
                         <el-table-column width="180px">
-                            <template scope="scope" >
+                            <template scope="scope">
                                 <div>
-                                    <el-button size="small" type="danger" @click="deletePro(scope.row.id)">删除</el-button>
+                                    <el-button size="small" type="danger" @click="deletePro(scope.row.id)">删除
+                                    </el-button>
                                 </div>
                             </template>
                         </el-table-column>
@@ -175,39 +182,45 @@
                             </template>
                         </el-table-column>
                         <el-table-column width="180px">
-                            <template scope="scope" >
+                            <template scope="scope">
                                 <div v-if="scope.row.answer==null">
                                     <el-button size="small" type="primary" @click="Reply0(scope.$index)">回复</el-button>
                                 </div>
                             </template>
                         </el-table-column>
                     </el-table>
-                    <el-button type="danger"  @click="getMorePro">加载更多</el-button>
+                    <el-button type="danger" @click="getMorePro">加载更多</el-button>
                     <el-dialog title="传资源" :visible.sync="proPlyDialog" align="center">
                         <el-form>
-                        <el-input v-model="answer" placeholder="请输入内容"></el-input>
-                        <el-button size="small" type="primary" @click="Reply">回复</el-button>
-                        </el-form> </el-dialog>
+                            <el-input v-model="answer" placeholder="请输入内容"></el-input>
+                            <el-button size="small" type="primary" @click="Reply">回复</el-button>
+                        </el-form>
+                    </el-dialog>
 
 
                 </el-tab-pane>
             </el-tabs>
         </template>
-
+       </div>
     </div>
 </template>
 
 <script>
     import {formatDate} from 'utils/date.js';
+    import top from '../component/top';
     import {getAllCarousel, deleteCarousel} from 'api/admin/index';
-    import {selectBlogsPage,passBlog,saveNa,deleteBlog} from 'api/blog/blog';
-    import {getResouceList,passResourc,deleteRe} from 'api/blog/resouce';
-    import {getProList,deletePro0,updatePro} from 'api/blog/proposal';
+    import {selectBlogsPage, passBlog, saveNa, deleteBlog} from 'api/blog/blog';
+    import {getResouceList, passResourc, deleteRe} from 'api/blog/resouce';
+    import {getProList, deletePro0, updatePro} from 'api/blog/proposal';
+
     export default {
         name: 'cloudUser',
+        components: {
+            top
+        },
         data() {
             return {
-                url:process.env.BASE_API+'/api/admin/upl',
+                url: process.env.BASE_API + '/api/admin/upl',
                 Carousel: '',
                 listQuery: {
                     pageNum: 1,
@@ -216,17 +229,17 @@
                     sortList: [],
                     searchKey: ''
                 },
-                rowId:'',
-                proPlyDialog:false,
-                answer:'',
-                pageSize:1,
-                resourceList:'',
+                rowId: '',
+                proPlyDialog: false,
+                answer: '',
+                pageSize: 1,
+                resourceList: '',
                 blogList: '',
                 proList: '',
                 proSize: 5,
-                notice:{name:'',context:''},
+                notice: {name: '', context: ''},
                 total: '',
-                resource:{resouceName:''},
+                resource: {resouceName: ''},
             }
         },
         created() {
@@ -256,31 +269,31 @@
             read(id) {
                 this.$router.push('/blog/read?id=' + id);
             },
-            pass(status,id){
-                passBlog(status,id).then(response => {
+            pass(status, id) {
+                passBlog(status, id).then(response => {
                     this.getBlogs();
                 });
             },
-            deleteBlogsById(id){
+            deleteBlogsById(id) {
                 deleteBlog(id).then(response => {
                     this.getBlogs();
                 });
             },
-            deleteResourceById(id){
+            deleteResourceById(id) {
                 deleteRe(id).then(response => {
                     this.getReso();
                 });
             },
-            passResourc(status,id){
-                passResourc(status,id).then(response => {
+            passResourc(status, id) {
+                passResourc(status, id).then(response => {
                     this.getReso();
 
                 });
             },
             getReso() {
-                this.resource.resouceName="";
-                this.resource.status=3;
-                getResouceList(this.resource,this.pageSize).then(response => {
+                this.resource.resouceName = "";
+                this.resource.status = 3;
+                getResouceList(this.resource, this.pageSize).then(response => {
                     this.resourceList = response.data.returnData.list;
                 });
             },
@@ -299,22 +312,22 @@
                     this.getProList0();
                 });
             },
-            Reply0(id){
-                this.rowId=id;
-                this.proPlyDialog=true;
+            Reply0(id) {
+                this.rowId = id;
+                this.proPlyDialog = true;
             },
             Reply() {
 
-                this.proList[this.rowId].answer=this.answer;
+                this.proList[this.rowId].answer = this.answer;
 
 
                 updatePro(this.proList[this.rowId]).then(response => {
-                    this.proPlyDialog=false;
+                    this.proPlyDialog = false;
                     this.getProList0();
                 });
             },
             getMorePro() {
-                this.proSize+=5;
+                this.proSize += 5;
                 this.getProList0();
             },
             handleEdit(index, row) {
