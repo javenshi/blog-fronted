@@ -130,7 +130,6 @@
         data() {
             return {
                 loadingBlog:false,
-                UNAME: '',
                 blog: '',
                 textarea: '',
                 Comments: {blogId: '', userId: '', context: '', userName: ''},
@@ -140,7 +139,6 @@
             };
         }, created() {
             this.loadingBlog=true;
-            this.UNAME = tokenStore.local('User').userName;
             getBlogsById(this.$route.query.id).then(response => {
                 if (response.data.returnCode == 404 || response.data.returnCode == 400) {
                     this.noBlog = true;
@@ -165,7 +163,7 @@
             },
             getComents() {
                 this.Comments.blogId = this.$route.query.id;
-                this.Comments.userId = tokenStore.local('User').id;
+                this.Comments.userId = tokenStore.session('user').id;
                 getComentsList(this.Comments, this.pageSize).then(response => {
                     this.comentsList = response.data.returnData.list;
                 });

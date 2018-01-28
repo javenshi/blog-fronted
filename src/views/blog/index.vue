@@ -49,10 +49,9 @@
                                             <span style="font-size: 14px;color: #666;"> {{scope.row.blogsPart}}...</span>
                                             <br> <span
                                                 style="margin-left:-1%;margin-right:18px;padding: 1%;font-size: 14px;color:#20a0ff"> {{scope.row.blogsClassifyName}}</span>
-                                            <span style="margin-right:18px; margin-top: 2px;"><el-icon style="margin-right:6px;" name="time"></el-icon>{{scope.row.blogsDate|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
-                                            <span style="margin-right:18px;"><img class="userLogo"
-                                                                                  src='scope.row.profileUrl'
-                                                                                  style="margin-right:6px;"> {{scope.row.userName}}</span>
+                                            <span style="margin-right:18px; margin-top: 2px;"><el-icon
+                                                    style="margin-right:6px;" name="time"></el-icon>{{scope.row.blogsDate|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
+                                            <span style="margin-right:18px;"><span v-html="scope.row.profileUrl"></span>{{scope.row.userName}}</span>
                                             <span style="margin-right:18px; margin-top: 2px;"><img
                                                     src="../../img/click.png" style="margin-right:6px;"> {{scope.row.blogsClick}}</span>
                                             <br><br>
@@ -84,9 +83,9 @@
 
                                         <br>
                                         <div style="width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 12px;">
-                                            <span> <img class="userLogo" src='scope.row.profileUrl'
-                                                        style="margin-right:6px;"> {{item.userName}}</span>
-                                            <span style="margin-right:18px;"> <el-icon style="margin-right:6px;" name="time"></el-icon>{{item.creatTime |parseTime('{y}-{m}-{d} ')}}</span>
+                                            <span> <span v-html="item.profileUrl"></span> {{item.userName}}</span>
+                                            <span style="margin-right:18px;"> <el-icon style="margin-right:6px;"
+                                                                                       name="time"></el-icon>{{item.creatTime |parseTime('{y}-{m}-{d} ')}}</span>
                                         </div>
                                         <hr>
                                     </div>
@@ -120,30 +119,22 @@
                                         <span style="margin-left:-75%;color: #666;font-size: 16px;">点击排行</span>
                                     </div>
                                     <template>
-                                        <aside style="margin-left: -40px; margin-top: -20px;">
-                                            <div class="tuijian">
+                                        <div v-for="(item,index) in resourceList" :key="item">
 
-                                                <ol>
-                                                    <li><span><strong>1</strong></span><a
-                                                            href="/">有一种思念，是淡淡的幸福,一个心情一行文字</a></li>
-                                                    <li><span><strong>2</strong></span><a href="/">励志人生-要做一个潇洒的女人</a>
-                                                    </li>
-                                                    <li><span><strong>3</strong></span><a
-                                                            href="/">女孩都有浪漫的小情怀——浪漫的求婚词</a></li>
-                                                    <li><span><strong>4</strong></span><a
-                                                            href="/">Green绿色小清新的夏天-个人博客模板</a></li>
-                                                    <li><span><strong>5</strong></span><a href="/">女生清新个人博客网站模板</a></li>
-                                                    <li><span><strong>6</strong></span><a
-                                                            href="/">Wedding-婚礼主题、情人节网站模板</a></li>
-                                                    <li><span><strong>7</strong></span><a href="/">Column 三栏布局
-                                                        个人网站模板</a></li>
-                                                    <li><span><strong>8</strong></span><a href="/">时间煮雨-个人网站模板</a></li>
-                                                    <li><span><strong>9</strong></span><a href="/">花气袭人是酒香—个人网站模板</a>
-                                                    </li>
-                                                </ol>
+                                        <span style=" width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 14px; color: #282828;"> <span
+                                                style="float: left;">   <el-badge :value="index+1">
+                                            </el-badge>{{item.resouceName}}</span></span>
+
+                                            <br>
+                                            <div style="width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 12px;">
+                                                <span> <span v-html="item.profileUrl"></span> {{item.userName}}</span>
+                                                <span style="margin-right:18px;"> <el-icon style="margin-right:6px;"
+                                                                                           name="time"></el-icon>{{item.creatTime |parseTime('{y}-{m}-{d} ')}}</span>
                                             </div>
+                                            <hr>
+                                        </div>
 
-                                        </aside>
+
                                     </template>
                                 </el-card>
                             </div>
@@ -275,7 +266,16 @@
                 this.listQuery.pageNum = val;
                 this.getBlogs();
             },
+        },
+        filters: {
+            formatUrl(url) {
+                url = "  <img  src=\"" + url +
+                    "\" style=\"margin-right:6px;\">";
+                return url;
+            }
         }
+
+
     }
 </script>
 
@@ -283,5 +283,7 @@
     .userLogo {
         width: 16px;
         height: 16px;
+        border-radius: 50%;
     }
+
 </style>

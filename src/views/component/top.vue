@@ -107,7 +107,7 @@
             <br>
             <br>
             <br>
-            <img style="margin-right: 10%; "  width="10%" height="10%"src="../../img/qq.png">
+            <a href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101453375&redirect_uri=http://zhixiang.org.cn/%23/qqLogin&state=1"> <img style="margin-right: 10%; "  width="10%" height="10%"src="../../img/qq.png"></a>
             <img style=" margin-right: 10%;" width="10%" height="10%" src="../../img/wexin.png">
             <a href="https://api.weibo.com/oauth2/authorize?client_id=3191489564&response_type=code&redirect_uri=http://zhixiang.org.cn/%23/login"> <img src="../../img/weibo.png" width="10%" height="10%"></a>
             <br>
@@ -195,7 +195,7 @@
             saveReso() {
                 this.resource.userId = tokenStore.session('user').id;
                 this.resource.userName = tokenStore.session('user').userName;
-                this.resource.profileUrl = tokenStore.session('user').profileUrl;
+                this.resource.profileUrl ="<img class=\"userLogo\" src=\""+tokenStore.session('user').profileUrl+"\">";
                 saveResouce(this.resource).then(response => {
                     this.$notify({
                         title: response.data.returnCode == 200 ? '成功' : '失败',
@@ -329,7 +329,7 @@
      .common-topbar-user-image-wrapper1 {
         width: 24px;
         height: 24px;
-
+         border-radius: 50%;
     }
     @media (max-width: 1124px) and (min-width: 1004px) {
         .common-topbar-dropdown .common-topbar-dropdown-category-container.column-5 {

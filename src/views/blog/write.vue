@@ -45,14 +45,16 @@
                                 <div style="margin-left: 35%;">
                                     <el-button type="success" @click="saveBlog(1)" round>保存</el-button>
                                     <el-button type="info" @click="saveBlog(0)" round>草稿</el-button>
-                                    <el-button type="danger" round><router-link :to="'/'">取消</router-link></el-button>
+                                    <el-button type="danger" round>
+                                        <router-link :to="'/'">取消</router-link>
+                                    </el-button>
                                 </div>
                             </el-form-item>
                         </el-form>
                     </el-col>
                     <el-col :span="3"></el-col>
                 </el-row>
-<down></down>
+                <down></down>
             </template>
         </div>
     </div>
@@ -68,17 +70,17 @@
 
     export default {
         components: {
-            quillEditor, top,down
+            quillEditor, top, down
         },
         data() {
             return {
-                blog: {blogsName: '',profileUrl: '', blogsClassifyId: '', blogsStatus: '',blogsPart:''},
+                blog: {blogsName: '', profileUrl: '', blogsClassifyId: '', blogsStatus: '', blogsPart: ''},
                 blogContext: '',
 
 
             };
         }, mounted() {
-            if(tokenStore.session('user')==null){
+            if (tokenStore.session('user') == null) {
                 window.location.href = "/";
             }
         },
@@ -87,13 +89,13 @@
 
             saveBlog(blogsStatus) {
 
-              this.blog.blogsPart=this.delHtmlTag(this.blogContext).substring(0,100);
+                this.blog.blogsPart = this.delHtmlTag(this.blogContext).substring(0, 100);
 
                 this.blog.blogsStatus = blogsStatus;
                 this.blog.blogsUrl = this.blogContext;
-                this.blog.userName =tokenStore.session('user').userName;
-                this.blog.userId =tokenStore.session('user').id;
-                this.blog.profileUrl =tokenStore.session('user').profileUrl;
+                this.blog.userName = tokenStore.session('user').userName;
+                this.blog.userId = tokenStore.session('user').id;
+                this.blog.profileUrl = "<img class=\"userLogo\" src=\"" + tokenStore.session('user').profileUrl + "\">";
 
                 saveB(this.blog).then(response => {
                     this.$notify({
