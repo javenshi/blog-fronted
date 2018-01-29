@@ -1,6 +1,6 @@
 <template>
     <div>
-     <top></top>
+        <top></top>
 
 
         <div class=" calendar-list-container;" style="padding: 20px;">
@@ -8,18 +8,28 @@
             <el-row :gutter="20">
                 <el-col :span="1"><br></el-col>
                 <el-col :span="17">
-               <div v-if="!noBlog"v-loading="loadingBlog"
-                    element-loading-text="拼命加载中"
-                    element-loading-spinner="el-icon-loading"
-                    element-loading-background="rgba(0, 0, 0, 0.8)" >
+                    <div v-if="!noBlog" v-loading="loadingBlog"
+                         element-loading-text="拼命加载中"
+                         element-loading-spinner="el-icon-loading"
+                         element-loading-background="rgba(0, 0, 0, 0.8)">
+                        <div>
                             <div>
-                                <div>
-                                    <h1> {{blog.blogsName}}</h1>
-                                    {{blog.blogsDate | parseTime('{y}年{m}月{d}日 ')}} 点击 {{blog.blogsClick}}次
-                                </div>
-                                <div v-html="blog.blogsUrl"></div>
+                                <h1> {{blog.blogsName}}</h1>
+                                {{blog.blogsDate | parseTime('{y}年{m}月{d}日 ')}} 总访问次数：{{blog.blogsClick}}
                             </div>
-                            <div>
+                            <br>
+                            <br>
+                            <br>
+                            <div v-html="blog.blogsUrl"></div>
+                            <br>
+                            <br>
+                            <br>
+                            <div v-if="top==null||top==''">上一篇：这是作者的第一篇博客</div>
+                            <div v-else>上一篇：<span @click="read(top.id)">{{top.blogsName}}</span></div>
+                            <div v-if="down==null||down==''">下一篇：作者暂时还未更新</div>
+                            <div v-else>下一篇：<span @click="read(down.id)">{{down.blogsName}}</span></div>
+                        </div>
+                        <!--    <div>
                                 <el-input
                                         type="textarea"
                                         :rows="2"
@@ -27,60 +37,56 @@
                                         v-model="textarea">
                                 </el-input>
                                 <el-button type="danger" style="float: right;" @click="savePinglun">评论</el-button>
-                            </div>
-                            <div>
-                                <el-table
-                                        :data="comentsList"
-                                        style="width: 100%">
-                                    <el-table-column>
-                                        <template scope="scope">
-                                                <span>
-                                                    {{scope.row.context}}
-                                                </span>
-                                            <br>
-                                            <span> {{scope.row.userName}}</span>
-                                            <span> {{scope.row.creatTime|parseTime('{y}-{m}-{d}{h}:{i} ')}}</span>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-                                <el-button type="danger" style="float: right;" @click="loading">加载更多</el-button>
-                            </div>
-                        </div style>
-                        <div style="margin-top: 17%;font-size: 20px; font-weight: 300; color: #999;" v-if="noBlog" align="center" >
-                            <img src="../../assets/4044.png"><br>我勒个去，博客被外星人挟持了!
+                            </div>-->
+                        <div>
+                            <!--  <el-table
+                                      :data="comentsList"
+                                      style="width: 100%">
+                                  <el-table-column>
+                                      <template scope="scope">
+                                                  <span>
+                                                      {{scope.row.context}}
+                                                  </span>
+                                          <br>
+                                          <span> {{scope.row.userName}}</span>
+                                          <span> {{scope.row.creatTime|parseTime('{y}-{m}-{d}{h}:{i} ')}}</span>
+                                      </template>
+                                  </el-table-column>
+                              </el-table>
+                              <el-button type="danger" style="float: right;" @click="loading">加载更多</el-button>-->
                         </div>
+                    </div>
+                    <div style="margin-top: 17%;font-size: 20px; font-weight: 300; color: #999;" v-if="noBlog"
+                         align="center">
+                        <img src="../../assets/4044.png"><br>我勒个去，博客被外星人挟持了!
+                    </div>
 
 
                 </el-col>
 
                 <el-col :span="5">
+
+                    <br>
+                    <br>
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
-                            <span>资源</span>
+                            作者：
+                            <span v-html="headurl"></span>
+                            {{user.userName}}
                         </div>
                         <template>
+                            性别：{{user.gender|fomartGender}}
+                            <br>
+                            来自：{{user.location}}
+                            <br>
+                            个性签名：{{user.description}}
+                            <br>
 
-                            abcd<br>
-                            abcd<br>
-                            abcd<br>
-                            abcd<br>
-                            abcd<br>
-                            加载更多
                         </template>
                     </el-card>
-                    <el-card class="box-card">
-                        <div slot="header" class="clearfix">
-                            <span>点击排行</span>
-                        </div>
-                        <template>
-
-                            abcd<br>
-                            abcd<br>
-                            abcd<br>
-                            abcd<br>
-                            abcd<br>
-                        </template>
-                    </el-card>
+                    <br>
+                    <br>
+                    <br>
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
                             <span>本站公告</span>
@@ -119,38 +125,59 @@
 <script>
     import top from '../component/top';
     import down from '../component/down';
-    import {getBlogsById, saveComents, getComentsList} from 'api/blog/blog';
+    import {getBlogsById, saveComents, getComentsList, getTopAndDown} from 'api/blog/blog';
+    import {getUserById} from 'api/blog/user';
     import tokenStore from 'store2';
     import {parseTime} from 'utils';
 
     export default {
         components: {
-             top,down
+            top, down
         },
         data() {
             return {
-                loadingBlog:false,
+                loadingBlog: false,
                 blog: '',
                 textarea: '',
                 Comments: {blogId: '', userId: '', context: '', userName: ''},
                 pageSize: 5,
                 comentsList: '',
                 noBlog: false,
+                top: '',
+                down: '',
+                user: {
+                    id: '', uid: '', userName: '', uSource: '', location: '', description: '',
+                    profileUrl: '', gender: '', passWord: '', email: '', integral: '', status: '', createdTime: '',
+                }, headurl: '',
             };
         }, created() {
-            this.loadingBlog=true;
-            getBlogsById(this.$route.query.id).then(response => {
-                if (response.data.returnCode == 404 || response.data.returnCode == 400) {
-                    this.noBlog = true;
-                    return false;
-                }
-                this.blog = response.data.returnData;
-                this.loadingBlog=false;});
+            this.loadingBlog = true;
+            this.getBById(this.$route.query.id);
             this.getComents();
 
         },
 
         methods: {
+            getBById(id) {
+
+
+                getBlogsById(id, this.getIp()).then(response => {
+                    if (response.data.returnCode == 404 || response.data.returnCode == 400) {
+                        this.noBlog = true;
+                        return false;
+                    }
+                    this.blog = response.data.returnData;
+                    this.loadingBlog = false;
+                    getUserById(this.blog.userId).then(response => {
+                        this.user = response.data.returnData;
+                        this.headurl = '<img class="common-topbar-user-image-wrapper1" src=' + this.user.profileUrl + '>';
+                    });
+                    getTopAndDown(id).then(response => {
+                        this.top = response.data.returnData[0];
+                        this.down = response.data.returnData[1];
+                    });
+                });
+            },
             savePinglun() {
                 this.Comments.context = this.textarea;
                 this.Comments.blogId = this.$route.query.id;
@@ -171,8 +198,34 @@
             loading() {
                 this.pageSize += 5;
                 this.getComents();
+            },
+            getIp() {
+                return returnCitySN["cip"];
+            },
+            read(id) {
+                this.getBById(id);
+                //this.$router.push('/blog/read?id=' + id);
+            },
+        },
+        filters: {
+            fomartGender(gender) {
+
+                if ('m' == gender) {
+                    return '男';
+                } else if ('f' == gender) {
+                    return '女';
+                } else {
+                    return '未知';
+                }
             }
         }
     }
 
 </script>
+<style>
+    .common-topbar-user-image-wrapper1 {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
+</style>

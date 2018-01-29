@@ -34,9 +34,15 @@ export function selectBlogsPage(query) {
         data:JSON.stringify(query)
     });
 }
-export function getBlogsById(query) {
+export function getTopAndDown(query) {
     return fetch({
-        url: '/api/blog/getBlogsById',
+        url: '/api/blog/getTopAndDown/'+query,
+        method: 'post'
+    });
+}
+export function getBlogsById(query,ip) {
+    return fetch({
+        url: '/api/blog/getBlogsById/'+ip,
         method: 'post',
         data:query
     });

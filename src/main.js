@@ -17,6 +17,7 @@ import noticeIng from 'views/component/notice';
 import topIng from 'views/component/top';
 import downIng from 'views/component/down';
 
+
 const config = {
     fieldsBagName: 'validafield',
 };

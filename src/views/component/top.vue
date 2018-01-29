@@ -113,7 +113,7 @@
             <br>
             <br>
             <span style=" margin-right: 10%;">QQ登录</span>
-            <span style=" margin-left: 1%; margin-right: 10%;">微信登录</span>
+            <span style=" margin-left: 1%; margin-right: 10%;" @click="qqlogin">微信登录</span>
             <span style=" margin-left: 1%;">微博登录</span>
             <br><br>
 
@@ -125,7 +125,7 @@
 <script>
     import tokenStore from 'store2';
     import {saveResouce} from 'api/blog/resouce';
-
+    import {qqLogin} from 'api/admin/login';
     import {getCode, cName, saveUser, login, valUser} from 'api/blog/user';
 
     export default {
@@ -168,11 +168,30 @@
             console.log(tokenStore.session('user'))
             if(tokenStore.session('user')!=null){
                 this.user = tokenStore.session('user');
-                this.headurl='<img class="common-topbar-user-image-wrapper1" src='+this.user.profileUrl+'/>';
+                this.headurl='<img class="common-topbar-user-image-wrapper1" src='+this.user.profileUrl+'>';
             }
         },
         methods: {
+            qqlogin(){
+                qqLogin("1111111").then(response => {
+                    if (response.data.returnCode == 400||response.data.returnCode == 300) {
+                        this.$message({
+                            message: response.data.returnMsg,
+                            type: 'error',
+                            duration: 5 * 1000
+                        });
+                    }else{
 
+                        tokenStore.session.set("user", response.data.returnData);
+                        this.$message({
+                            message: "登录成功",
+                            type: 'success',
+                            duration: 5 * 1000
+                        });
+                    }
+                    window.location.href = "/";
+                });
+            },
             write(){
                 if(tokenStore.session('user')!=null){
                     window.location.href = "/#/blog/write";
@@ -326,10 +345,10 @@
         height: 40px;
 
     }
-     .common-topbar-user-image-wrapper1 {
+    .common-topbar-user-image-wrapper1 {
         width: 24px;
         height: 24px;
-         border-radius: 50%;
+        border-radius: 50%;
     }
     @media (max-width: 1124px) and (min-width: 1004px) {
         .common-topbar-dropdown .common-topbar-dropdown-category-container.column-5 {

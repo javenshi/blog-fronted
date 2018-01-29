@@ -16,6 +16,14 @@ export function getResouceList(query,size) {
         data:JSON.stringify(query)
     });
 }
+export function resourceClick(id,ip) {
+
+    return fetch({
+        url: '/api/resource/resourceClick/'+ip,
+        method: 'post',
+        data:id
+    });
+}
 export function selectResourcesPage(query) {
 
     return fetch({

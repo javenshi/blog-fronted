@@ -38,3 +38,10 @@ export function login(query) {
         data:JSON.stringify(query)
     });
 }
+export function getUserById(id) {
+
+    return fetch({
+        url: '/api/blogUser/getUserById/'+id,
+        method: 'post'
+    });
+}

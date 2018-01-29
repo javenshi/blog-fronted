@@ -50,7 +50,7 @@
                                             <br> <span
                                                 style="margin-left:-1%;margin-right:18px;padding: 1%;font-size: 14px;color:#20a0ff"> {{scope.row.blogsClassifyName}}</span>
                                             <span style="margin-right:18px; margin-top: 2px;"><el-icon
-                                                    style="margin-right:6px;" name="time"></el-icon>{{scope.row.blogsDate|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
+                                                    name="time"></el-icon>{{scope.row.blogsDate|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
                                             <span style="margin-right:18px;"><span v-html="scope.row.profileUrl"></span>{{scope.row.userName}}</span>
                                             <span style="margin-right:18px; margin-top: 2px;"><img
                                                     src="../../img/click.png" style="margin-right:6px;"> {{scope.row.blogsClick}}</span>
@@ -79,30 +79,18 @@
                                 <template>
                                     <div v-for="item in resourceList" :key="item">
                                         <span style=" width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 14px; color: #282828;"> <span
-                                                style="float: left;"> {{item.resouceName}}</span></span>
+                                                style="float: left;"
+                                                @click="getResource(item)"> {{item.resouceName}}</span></span>
 
                                         <br>
                                         <div style="width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 12px;">
-                                            <span> <span v-html="item.profileUrl"></span> {{item.userName}}</span>
-                                            <span style="margin-right:18px;"> <el-icon style="margin-right:6px;"
-                                                                                       name="time"></el-icon>{{item.creatTime |parseTime('{y}-{m}-{d} ')}}</span>
-                                        </div>
+                                            <span style="float: left;"> <span v-html="item.profileUrl"></span> {{item.userName}}
+                                            <span> <el-icon
+                                                    name="time"></el-icon>{{item.creatTime |parseTime('{y}-{m}-{d} ')}}</span>
+                                       </span></div>
                                         <hr>
                                     </div>
-                                    <!--  <el-table
-                                              :data="resourceList"
-                                              v-loading="loadingRes"
-                                              style="margin-top: -20px;margin-left: -39px; "
 
-                                              :show-header=false>
-                                          <el-table-column style="padding-right: -40px;"  show-overflow-tooltip >
-                                              <template scope="scope">
-                                                  <span style="font-size: 14px; color: #282828;"> {{scope.row.resouceName}}</span><br>
-                                                  <span> <img src="" style="margin-right:6px;"> {{scope.row.userName}}</span>
-                                                  <span style="margin-right:18px;"> <img src="" style="margin-right:6px;">{{scope.row.creatTime |parseTime('{y}-{m}-{d} ')}}</span>
-                                              </template>
-                                          </el-table-column>
-                                      </el-table>-->
                                     <el-pagination
                                             style="padding-top: -39px;"
                                             small
@@ -113,24 +101,51 @@
                                     </el-pagination>
                                 </template>
                             </el-card>
+                            <el-dialog :title="resourceItem.resouceName" :visible.sync="resourceDialog" align="center">
+
+                                <el-form :model="resourceItem" status-icon
+                                         class="demo-ruleForm">
+
+                                    <el-form-item label="资源Url:" prop="resouceUrl">
+                                        <span class="disable">{{resourceItem.resouceUrl}}</span>
+                                        &nbsp;&nbsp;&nbsp;
+                                        <el-button type="primary" size="mini"
+                                                   @click="copyUrl(resourceItem.resouceUrl,resourceItem.id)"
+                                        >下载
+                                        </el-button>
+                                    </el-form-item>
+                                    <el-form-item label="资源描述:" prop="context">
+                                        {{resourceItem.context}}
+                                    </el-form-item>
+                                    <el-form-item label="作者:" prop="context">
+                                        <span v-html="resourceItem.profileUrl"></span>
+                                        {{resourceItem.userName}}于{{resourceItem.creatTime|parseTime('{y}年{m}月{d}日')}}发表
+                                    </el-form-item>
+                                    <el-form-item label="下载次数:">
+                                        {{resourceItem.resouceClick}}
+                                    </el-form-item>
+
+                                </el-form>
+
+                            </el-dialog>
                             <div style="padding-top: 20px;">
                                 <el-card class="box-card">
                                     <div slot="header" class="clearfix">
                                         <span style="margin-left:-75%;color: #666;font-size: 16px;">点击排行</span>
                                     </div>
                                     <template>
-                                        <div v-for="(item,index) in resourceList" :key="item">
-
-                                        <span style=" width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 14px; color: #282828;"> <span
-                                                style="float: left;">   <el-badge :value="index+1">
-                                            </el-badge>{{item.resouceName}}</span></span>
+                                        <div v-for="(item,index) in ranking" :key="item">
+                                            <br>
+                                            <span style=" width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 14px; color: #282828;">
+                                                <span style="float: left;">
+                                                <el-badge :value="index+1"></el-badge>
+                                                    <span v-if="item.status==0"  @click="read(item.id)">{{item.resouceName}}</span>
+                                                    <span v-if="item.status==1"  @click="getResource(item)">{{item.resouceName}}</span>
+                                                </span>
+                                            </span>
 
                                             <br>
-                                            <div style="width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 12px;">
-                                                <span> <span v-html="item.profileUrl"></span> {{item.userName}}</span>
-                                                <span style="margin-right:18px;"> <el-icon style="margin-right:6px;"
-                                                                                           name="time"></el-icon>{{item.creatTime |parseTime('{y}-{m}-{d} ')}}</span>
-                                            </div>
+                                            <br>
                                             <hr>
                                         </div>
 
@@ -138,12 +153,7 @@
                                     </template>
                                 </el-card>
                             </div>
-                            <!--<div style="padding-top: 20px;">
-                                <notice></notice>
-                            </div>
-                            <div style="padding-top: 20px;">
-                                <contact></contact>
-                            </div>-->
+
                         </el-col>
                         <el-col :span="1"></el-col>
                     </el-row>
@@ -161,10 +171,9 @@
     import notice from '../component/notice';
     import top from '../component/top';
     import down from '../component/down';
-    import {weibo} from 'api/admin/login';
     import {selectBlogsPage} from 'api/blog/blog';
-    import {getAllCarousel} from 'api/admin/index';
-    import {getResouceList} from 'api/blog/resouce';
+    import {getAllCarousel, getRankIng} from 'api/admin/index';
+    import {getResouceList, resourceClick} from 'api/blog/resouce';
     import tokenStore from 'store2';
     import {parseTime} from 'utils';
 
@@ -180,6 +189,7 @@
                 loadingRes: false,
                 blogList: [],
                 resourceList: [],
+                resourceDialog: false,
                 indexUrl: [],
                 listLoading: false,
                 listQuery: {
@@ -191,6 +201,25 @@
                 },
                 pageSize: 1,
                 resource: {resouceName: '', status: ''},
+                resourceItem: {
+                    resouceName: '',
+                    resouceUrl: '',
+                    resouceClick: '',
+                    creatTime: '',
+                    userName: '',
+                    context: '',
+                    profileUrl: ''
+                },
+                ranking: {
+                    id: '',
+                    status: '',
+                    resouceName: '',
+                    resouceUrl: '',
+                    resouceClick: '',
+                    userName: '',
+                    context: '',
+                    profileUrl: ''
+                },
                 total: null,
                 totalRe: null,
             };
@@ -201,6 +230,9 @@
             getAllCarousel().then(response => {
                 this.indexUrl = response.data.returnData;
             });
+            getRankIng().then(response => {
+                this.ranking = response.data.returnData;
+            });
 
         },
 
@@ -209,7 +241,10 @@
             read(id) {
                 this.$router.push('/blog/read?id=' + id);
             },
-
+            getResource(item) {
+                this.resourceItem = item;
+                this.resourceDialog = true;
+            },
 
             getBlogs() {
                 this.loadingBlog = true;
@@ -250,8 +285,16 @@
                     this.resource.resouceName = '';
                     this.loadingRes = false;
                 });
+            }, copyUrl(url, id) {
+                window.open(url);
+                resourceClick(id, this.getIp()).then(response => {
+                    this.getReso();
+                });
+                this.resourceDialog = false;
             },
-
+            getIp() {
+                return returnCitySN["cip"];
+            },
             loading(val) {
                 this.pageSize = val;
                 this.getReso();
@@ -277,6 +320,7 @@
 
 
     }
+
 </script>
 
 <style>
@@ -284,6 +328,14 @@
         width: 16px;
         height: 16px;
         border-radius: 50%;
+    }
+
+    .disable {
+        -moz-user-select: -moz-none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 
 </style>
