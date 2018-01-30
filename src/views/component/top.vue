@@ -5,42 +5,34 @@
             <div class=" topbar-clearfix" style="display: block; color: #666;">
                 <div class="topbar-head topbar-left">
 
-                    <a
-                            class="topbar-btn topbar-logo topbar-left">
+                    <a class="topbar-logo topbar-left">
                         <img style="margin-top: 14px;" src="../../img/logo.png"/>
                     </a>
 
 
                 </div>
                 <div style="margin-left: 30px;" class="topbar-product topbar-left">
-                    <div class="topbar-btn  topbar-product-btn">
-
-                        <router-link :to="'/'"><span style="color: #999;" class="ng-binding"><a href="" target="_blank"
-                                                                                                class="topbar-home-link  ">首页</a></span>
-                        </router-link>
-
+                    <div class="topbar-btn" @click="index">
+首页
                     </div>
                 </div>
                 <div class="topbar-product topbar-left">
-                    <div class="topbar-btn  topbar-product-btn">
-
-                       <span style="color: #999;" class="ng-binding"><a @click="write" target="_blank"class="topbar-home-link  ">写博客</a></span>
-
+                    <div class="topbar-btn" @click="write" >
+                     写博客
                     </div>
                 </div>
                 <div class="topbar-product topbar-left">
-                    <div class="topbar-btn  topbar-product-btn">
-                        <span class="ng-binding" style="color: #999;" @click="openResourceDialog"><a>贡献资源</a></span>
+                    <div class="topbar-btn  " @click="openResourceDialog">
+                        贡献资源
                     </div>
                 </div>
                 <div class="topbar-product topbar-left">
-                    <div class="topbar-btn topbar-product-btn">
-                        <router-link :to="'/blog/leav'"><span style="color: #999;" class="ng-binding"><a>留言</a></span>
-                        </router-link>
+                    <div class="topbar-btn " @click="leav">
+                       留言
                     </div>
                 </div>
                 <div class="topbar-product topbar-left">
-                    <div class="topbar-btn topbar-product-btn">
+                    <div class="topbar-btn ">
                         <router-link :to="'/admin/index'">后台</router-link>
                     </div>
                 </div>
@@ -204,6 +196,11 @@
 
                 }
             },
+            index(){
+                    window.location.href = "/#/";
+            }, leav(){
+                    window.location.href = "/#/blog/leav";
+            },
             searchBySel() {
                 if (this.search != null && this.search != '') {
                     tokenStore.session.set('search', this.search)
@@ -339,10 +336,11 @@
     }
 </script>
 <style>
+
     .topbar-user-info {
 
         padding: 8px 24px 0 12px;
-        height: 40px;
+        height: 50px;
 
     }
     .common-topbar-user-image-wrapper1 {
@@ -370,7 +368,6 @@
         width: 1px;
         height: 16px;
         position: absolute;
-        top: 5px;
         background: hsla(0, 0%, 100%, .15);
         right: 26px
     }
@@ -460,39 +457,6 @@
         font-size: 12px;
         min-width: 990px;
     }
-
-    .console-component-topbar span, .console-component-topbar a, .console-component-topbar p, .console-component-topbar li {
-        text-rendering: optimizeLegibility;
-        -webkit-font-smoothing: antialiased;
-        letter-spacing: 0.02em;
-    }
-
-    .console-component-topbar a {
-        text-decoration: none;
-    }
-
-    .console-component-topbar a:focus {
-        outline: none;
-    }
-
-    .console-component-topbar .dropdown .dropdown-menu a {
-        padding: 0;
-    }
-
-    .console-component-topbar .topbar-info-dropdown {
-        position: relative;
-    }
-
-    .console-component-topbar .topbar-info-dropdown .topbar-btn {
-        position: relative;
-    }
-
-    .console-component-topbar .topbar-info-dropdown .topbar-info-dropdown-toggle {
-        color: #fff;
-    }
-
-
-
     .console-component-topbar .topbar-info-dropdown:hover .topbar-info-dropdown-toggle {
         background: #2a2f32;
     }
@@ -500,32 +464,6 @@
     .console-component-topbar .topbar-info-dropdown:hover .topbar-info-dropdown-toggle:hover {
         background: #2a2f32;
     }
-
-
-
-
-
-
-
-    .console-component-topbar .topbar-info-dropdown-memu li a {
-        display: block;
-        padding: 0 20px;
-        clear: both;
-        font-weight: normal;
-        line-height: 1.428571429;
-        color: #333333;
-        white-space: nowrap;
-        min-width: 140px;
-        -webkit-transition: all 0.15s;
-        transition: all 0.15s;
-    }
-
-    .console-component-topbar .topbar-info-dropdown-memu li a:hover, .console-component-topbar .topbar-info-dropdown-memu li a:focus {
-        background-color: #f5f5f5;
-    }
-
-
-
     .console-component-topbar .topbar-info-dropdown-toggle {
         -webkit-transition: background 0.2s, color 0.2s;
         transition: background 0.2s, color 0.2s;
@@ -552,25 +490,12 @@
         display: table;
         content: " ";
     }
-
-    .console-component-topbar .topbar-clearfix:after {
-        clear: both;
-    }
-
-
     .console-component-topbar .topbar-head {
         background: #2a2f32;
         height: 50px;
         position: relative;
         z-index: 3;
     }
-
-    .console-component-topbar .topbar-product {
-        position: relative;
-        z-index: 2;
-        background: #373d41;
-    }
-
     .console-component-topbar .topbar-logo {
         display: block;
         width: 150px;
@@ -580,7 +505,6 @@
         line-height: 50px;
         margin-right: 1px;
     }
-
     .console-component-topbar .topbar-logo span {
         line-height: 50px;
     }
@@ -588,171 +512,21 @@
     .console-component-topbar .topbar-logo {
         background: #373d41;
     }
-
-    .console-component-topbar .topbar-home-link {
-        margin-right: 1px;
-        background: #373d41;
-        width: 128px;
-        text-align: center;
-    }
-
-    a:hover {
+    .topbar-product .topbar-btn:hover {
         color: white;
     }
-
     .console-component-topbar .topbar-btn {
-        color: #fff;
+        color: #999;
         font-size: 14px;
         line-height: 50px;
-    }
-
-    .console-component-topbar .topbar-product.open .topbar-product-btn {
-        background: #fff;
-        color: #333;
-    }
-
-    .console-component-topbar .topbar-product-btn {
         padding: 0 20px;
         display: inline-block;
         height: 50px;
         cursor: pointer;
     }
 
-    .console-component-topbar .topbar-product-dropdown ul {
-        margin: 0;
-        padding: 0;
-        list-style: none;
-    }
 
-    .console-component-topbar .topbar-product-dropdown ul li > a {
-        color: #333;
-        display: inline-block;
-        width: 100%;
-        height: 100%;
-    }
 
-    .console-component-topbar .topbar-product-container-simple .topbar-product-all-item ul.topbar-product-all-list li a {
-        width: 140px;
-    }
-
-    .console-component-topbar .topbar-product-nav ul.topbar-product-nav-list li {
-        height: 32px;
-        line-height: 32px;
-        padding-left: 16px;
-        width: 164px;
-        -o-transition: all 0.1s, 0s;
-        -moz-transition: all 0.1s 0s;
-        -webkit-transition: all 0.1s 0s;
-        transition: all 0.1s 0s;
-    }
-
-    .console-component-topbar .topbar-product-nav ul.topbar-product-nav-list li.active {
-        color: #fff;
-        background: #00c1de;
-    }
-
-    .console-component-topbar .topbar-product-nav ul.topbar-product-nav-list li > span {
-        cursor: default;
-        overflow: hidden;
-        white-space: nowrap;
-        display: inline-block;
-        width: 100%;
-        text-overflow: ellipsis;
-    }
-
-    .console-component-topbar .topbar-product-close .icon-double-arrow i {
-        display: block;
-        border: 1px solid #333;
-        width: 8px;
-        height: 8px;
-        border-bottom: none;
-        border-left: 0;
-        background-color: transparent;
-        transform: rotate(-45deg);
-    }
-
-    .console-component-topbar .topbar-product-close .icon-double-arrow i:first-child {
-        margin-bottom: -3px;
-    }
-
-    .console-component-topbar .topbar-product-all-item ul.topbar-product-all-list li {
-        height: 28px;
-        line-height: 28px;
-    }
-
-    .console-component-topbar .topbar-product-all-item ul.topbar-product-all-list li a {
-        width: 136px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        background: #f7f8fa;
-        padding: 0 8px;
-        margin-right: 10px;
-    }
-
-    .console-component-topbar .topbar-product-all-item ul.topbar-product-all-list li a:hover {
-        background: #00C1DE;
-        color: #fff;
-    }
-
-    .console-component-topbar .topbar-product-history ul.topbar-product-history-list li {
-        height: 32px;
-        line-height: 32px;
-        padding-left: 10px;
-        margin-bottom: 8px;
-        background: #fff;
-        -o-transition: all 0.15s, 0s;
-        -moz-transition: all 0.15s, 0s;
-        -webkit-transition: all 0.15s, 0s;
-        transition: all 0.15s, 0s;
-    }
-
-    .console-component-topbar .topbar-product-history ul.topbar-product-history-list li:hover {
-        background: #00c1de;
-    }
-
-    .console-component-topbar .topbar-product-history ul.topbar-product-history-list li:hover a {
-        color: #fff;
-        background: #00c1de;
-    }
-
-    .console-component-topbar .topbar-product-history ul.topbar-product-history-list li a {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        color: #373D41;
-        background-color: #fff;
-    }
-
-    .console-component-topbar .topbar-product-history ul.topbar-product-history-list li i {
-        font-size: 14px;
-        vertical-align: middle;
-    }
-
-    .console-component-topbar .topbar-product-category .topbar-product-category-col li {
-        background-color: #F5F5F6;
-        margin-bottom: 4px;
-        margin-right: 8px;
-    }
-
-    .console-component-topbar .topbar-product-category ul {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    .console-component-topbar .topbar-product-search input {
-        display: block;
-        height: 32px;
-        padding: 4px 38px 4px 18px;
-        width: 180px;
-        border-width: 0;
-        outline: 0;
-        line-height: 32px;
-        color: #666;
-        font-size: 12px;
-        background: #f0f0f0;
-    }
 
     .console-component-topbar .topbar-info {
         background: #2a2f32;
@@ -763,7 +537,7 @@
     }
 
     .console-component-topbar .topbar-info .topbar-btn {
-        padding: 0 18px;
+        padding: 0 10px;
         height: 50px;
         display: block;
         z-index: 2;

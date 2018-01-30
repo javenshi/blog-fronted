@@ -1,5 +1,5 @@
 <template>
-    <div style="margin: -8px;">
+    <div>
         <top></top>
         <div style="padding-left: 10px;padding-right:10px;padding-top:15px;">
             <el-row :gutter="20">
