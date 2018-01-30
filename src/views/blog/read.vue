@@ -7,7 +7,8 @@
 
             <el-row :gutter="20">
                 <el-col :span="1"><br></el-col>
-                <el-col :span="17">
+                <el-col :span="1"><br></el-col>
+                <el-col :span="16">
                     <div v-if="!noBlog" v-loading="loadingBlog"
                          element-loading-text="拼命加载中"
                          element-loading-spinner="el-icon-loading"
@@ -116,12 +117,31 @@
                 <el-col :span="1"></el-col>
             </el-row>
 
+
+            <div>
+                <ul>
+                    <!-- 新浪微博 -->
+                    <li @click="weiBo">新浪微博</li>
+                    <!-- QQ好友 -->
+                    <li @click="qqFriend">QQ好友</li>
+                    <!-- QQ空间 -->
+                    <li @click="qqZone">QQ空间</li>
+                    <!-- 腾讯微博 -->
+                    <li href="" @click="tencentWeiBo">腾讯微博</li>
+                    <!--<li href="" @click="weiXin">微信</li>-->
+                </ul>
+
+
+            </div>
+
+
         </div>
         <down></down>
     </div>
 
 
 </template>
+
 <script>
     import top from '../component/top';
     import down from '../component/down';
@@ -159,8 +179,6 @@
 
         methods: {
             getBById(id) {
-
-
                 getBlogsById(id, this.getIp()).then(response => {
                     if (response.data.returnCode == 404 || response.data.returnCode == 400) {
                         this.noBlog = true;
@@ -204,8 +222,18 @@
             },
             read(id) {
                 this.getBById(id);
-                //this.$router.push('/blog/read?id=' + id);
             },
+            weiBo() {
+                window.open("http://service.weibo.com/share/share.php?url=http://www.zhixiang.org.cn/%23/blog/read?id=" + this.blog.id + "&title=我在智享看到了 " + this.blog.blogsName + " ,真的很赞。&pic=http://www.zhixiang.org.cn/img/120-120.png&appkey=3191489564&searchPic=false");
+            },
+            qqZone() {
+                window.open("http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://www.zhixiang.org.cn&showcount=0&title=我在智享看到了 " + this.blog.blogsName + " ,真的很赞。&pic=http://www.zhixiang.org.cn/img/120-120.png");
+            }, qqFriend() {
+                window.open("http://connect.qq.com/widget/shareqq/index.html?url=http://www.zhixiang.org.cn/%23/blog/read?id=" + this.blog.id + "&title=智享&summary=我在智享看到了 " + this.blog.blogsName + " ,真的很赞。&pics=http://www.zhixiang.org.cn/img/120-120.png&site=http://www.zhixiang.org.cn&style=201&width=32&height=32");
+            }, tencentWeiBo() {
+                window.open("http://share.v.t.qq.com/index.php?c=share&a=index&url=http://www.zhixiang.org.cn/%23/blog/read?id=" + this.blog.id + "&title=我在智享看到了 " + this.blog.blogsName + " ,真的很赞。&site=我在智享看到了 " + this.blog.blogsName + " ,真的很赞。&pic=http://www.zhixiang.org.cn/img/120-120.png");
+            },
+
         },
         filters: {
             fomartGender(gender) {
