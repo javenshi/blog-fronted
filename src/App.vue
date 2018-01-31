@@ -16,6 +16,10 @@
     el-icon{
         margin-right:6px;
     }
-
+    .common-topbar-user-image-wrapper1 {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+    }
 
 </style>

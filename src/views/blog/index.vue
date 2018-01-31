@@ -23,83 +23,187 @@
                      align="center">
 
                     <el-row :gutter="20">
-                        <el-col :span="1"><br></el-col>
-                        <el-col :span="17">
-
-
-                            <template>
-                                <el-table
-
-                                        style="width: 100%;"
-                                        :show-header=false
-                                        v-loading="loadingBlog"
-                                        element-loading-text="拼命加载中"
-                                        element-loading-spinner="el-icon-loading"
-                                        element-loading-background="rgba(0, 0, 0, 0.8)"
-                                        :data="blogList"
-                                >
-                                    <el-table-column>
-                                        <template scope="scope" style="line-height: 39px;">
-                                            <br>
-                                            <span style="font-size: 20px; font-weight: bold;color: #282828;"
-                                                  @click="read(scope.row.id)">
-                                                    {{scope.row.blogsName}}
-                                                </span>
-                                            <br>
-                                            <span style="font-size: 14px;color: #666;"> {{scope.row.blogsPart}}...</span>
-                                            <br> <span
-                                                style="margin-left:-1%;margin-right:18px;padding: 1%;font-size: 14px;color:#20a0ff"> {{scope.row.blogsClassifyName}}</span>
-                                            <span style="margin-right:18px; margin-top: 2px;"><el-icon
-                                                    name="time"></el-icon>{{scope.row.blogsDate|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
-                                            <span style="margin-right:18px;"><span v-html="scope.row.profileUrl"></span>{{scope.row.userName}}</span>
-                                            <span style="margin-right:18px; margin-top: 2px;"><img
-                                                    src="../../img/click.png" style="margin-right:6px;"> {{scope.row.blogsClick}}</span>
-                                            <br><br>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-
-                            </template>
-                            <div style="padding: 20px;">
-                                <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                                               :current-page.sync="listQuery.pageNum"
-                                               :page-sizes="[10,20,30, 50]" :page-size="listQuery.pageSize"
-                                               layout="total, sizes, prev, pager, next, jumper" :total="total">
-                                </el-pagination>
-                            </div>
-
+                        <el-col :span="1">
+                            <br>
                         </el-col>
-
-                        <el-col :span="5">
-                            <el-card>
+                        <el-col :span="16">
+                            <el-card v-if="blog">
                                 <div slot="header">
-                                    <span style="margin-left:-75%;color: #666;font-size: 16px;">资源</span>
-
+                                    <span class="title">博客</span>
                                 </div>
                                 <template>
-                                    <div v-for="item in resourceList" :key="item">
-                                        <span style=" width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 14px; color: #282828;"> <span
-                                                style="float: left;"
-                                                @click="getResource(item)"> {{item.resouceName}}</span></span>
+                                    <el-table
+                                            style="width: 100%;"
+                                            :show-header=false
+                                            v-loading="loadingBlog"
+                                            element-loading-text="拼命加载中"
+                                            element-loading-spinner="el-icon-loading"
+                                            element-loading-background="rgba(0, 0, 0, 0.8)"
+                                            :data="blogList"
+                                    >
+                                        <el-table-column>
+                                            <template scope="scope" >
+                                                <br>
+                                                <span class="titleName"
+                                                      @click="read(scope.row.id)">
+                                                    {{scope.row.blogsName}}
+                                                </span>
+                                                <br>
+                                                <br>
+                                                <span class="part"> {{scope.row.blogsPart}}...</span>
+                                                <br> <span
+                                                    class="className"> {{scope.row.blogsClassifyName}}</span>
+                                                <span class="img1"><img
+                                                        src="../../img/time.png" >{{scope.row.blogsDate|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
+                                                <span  class="img1"><span
+                                                        v-html="scope.row.profileUrl"></span>{{scope.row.userName}}</span>
+                                                <span  class="img1"><img
+                                                        src="../../img/click.png" > {{scope.row.blogsClick}}</span>
+                                                <br><br>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
 
-                                        <br>
-                                        <div style="width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 12px;">
-                                            <span style="float: left;"> <span v-html="item.profileUrl"></span> {{item.userName}}
-                                            <span> <el-icon
-                                                    name="time"></el-icon>{{item.creatTime |parseTime('{y}-{m}-{d} ')}}</span>
-                                       </span></div>
-                                        <hr>
-                                    </div>
+                                </template>
+                                <div style="padding: 20px;">
+                                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                                                   :current-page.sync="listQuery.pageNum"
+                                                   :page-sizes="[10,20,30, 50]" :page-size="listQuery.pageSize"
+                                                   layout="total, sizes, prev, pager, next, jumper" :total="total">
+                                    </el-pagination>
+                                </div>
+                            </el-card>
+                            <el-card v-else>
+                                <div slot="header">
+                                    <span class="title">资源</span>
+                                </div>
+                                <template>
+                                    <el-table
+                                            style="width: 100%;"
+                                            :show-header=false
+                                            v-loading="loadingRes"
+                                            element-loading-text="拼命加载中"
+                                            element-loading-spinner="el-icon-loading"
+                                            element-loading-background="rgba(0, 0, 0, 0.8)"
+                                            :data="resourceList"
+                                    >
+                                        <el-table-column>
+                                            <template scope="scope" >
+                                                <br>
+                                                <span class="titleName"
+                                                      @click="getResource(scope.row)"> {{scope.row.resouceName}}
+                                                </span>
+                                                <br>
+                                                <br>
+                                                <span class="part"> {{scope.row.context}}...</span>
+                                                <br> <span class="className"> {{scope.row.blogsClassifyName}}</span>
+                                                <span  class="img1"><img
+                                                        src="../../img/time.png" >{{scope.row.creatTime|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
+                                                <span  class="img1"><span
+                                                        v-html="scope.row.profileUrl"></span>{{scope.row.userName}}</span>
+                                                <span  class="img1"><img
+                                                        src="../../img/click.png" > {{scope.row.resouceClick}}</span>
+                                                <br><br>
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+
+                                </template>
+                                <div style="padding: 20px;">
+                                    <el-pagination @size-change="handleSizeChange1"
+                                                   @current-change="handleCurrentChange1"
+                                                   :current-page.sync="listQuery1.pageNum"
+                                                   :page-sizes="[10,20,30, 50]" :page-size="listQuery1.pageSize"
+                                                   layout="total, sizes, prev, pager, next, jumper" :total="total1">
+                                    </el-pagination>
+                                </div>
+                            </el-card>
+                        </el-col>
+                        <el-col :span="1">
+                            <br>
+                            <div align="center">
+                                <el-button type="small" @click="toLeft"><i class="el-icon-d-arrow-left"></i></el-button>
+                                <br>
+                                <el-button type="small" @click="toRight"><i class="el-icon-d-arrow-right"></i>
+                                </el-button>
+                            </div>
+                        </el-col>
+                        <el-col :span="5">
+                            <el-card v-if="blog">
+                                <div slot="header">
+                                    <span class="rTitle">资源</span>
+                                </div>
+                                <template>
+                                    <el-table
+                                            style="width: 100%;"
+                                            :show-header=false
+                                            v-loading="loadingRes"
+                                            element-loading-text="拼命加载中"
+                                            element-loading-spinner="el-icon-loading"
+                                            element-loading-background="rgba(0, 0, 0, 0.8)"
+                                            :data="resourceList"
+                                    >
+                                        <el-table-column>
+                                            <template scope="scope" >
+
+                                                <span v-html="scope.row.profileUrl"></span>
+                                                <span
+                                                      @click="getResource(scope.row)"> {{scope.row.resouceName}}
+                                                </span>
+
+
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
 
                                     <el-pagination
                                             style="padding-top: -39px;"
                                             small
-                                            :total="totalRe"
-                                            @current-change="loading"
+                                            :total="total1"
+                                            @current-change="handleCurrentChange1"
                                             layout="prev, pager, next"
                                     >
                                     </el-pagination>
                                 </template>
+                            </el-card>
+                            <el-card v-else>
+                                <div slot="header">
+                                    <span  class="rTitle">博客</span>
+                                </div>
+
+                                <template>
+
+                                    <el-table
+
+                                            style="width: 100%;"
+                                            :show-header=false
+                                            v-loading="loadingBlog"
+                                            element-loading-text="拼命加载中"
+                                            element-loading-spinner="el-icon-loading"
+                                            element-loading-background="rgba(0, 0, 0, 0.8)"
+                                            :data="blogList"
+                                    >
+                                        <el-table-column>
+                                            <template scope="scope" >
+                                                <span v-html="scope.row.profileUrl"></span>
+                                                <span
+                                                      @click="read(scope.row.id)">
+                                                    {{scope.row.blogsName}}
+                                                </span>
+                                                <br>
+
+                                            </template>
+                                        </el-table-column>
+                                    </el-table>
+
+                                </template>
+                                <div style="padding: 20px;">
+                                    <el-pagination @current-change="handleCurrentChange"
+                                                   small
+                                                   layout="prev, pager, next" :total="total">
+                                    </el-pagination>
+
+                                </div>
                             </el-card>
                             <el-dialog :title="resourceItem.resouceName" :visible.sync="resourceDialog" align="center">
 
@@ -128,31 +232,7 @@
                                 </el-form>
 
                             </el-dialog>
-                            <div style="padding-top: 20px;">
-                                <el-card class="box-card">
-                                    <div slot="header" class="clearfix">
-                                        <span style="margin-left:-75%;color: #666;font-size: 16px;">点击排行</span>
-                                    </div>
-                                    <template>
-                                        <div v-for="(item,index) in ranking" :key="item">
-                                            <br>
-                                            <span style=" width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 14px; color: #282828;">
-                                                <span style="float: left;">
-                                                <el-badge :value="index+1"></el-badge>
-                                                    <span v-if="item.status==0"  @click="read(item.id)">{{item.resouceName}}</span>
-                                                    <span v-if="item.status==1"  @click="getResource(item)">{{item.resouceName}}</span>
-                                                </span>
-                                            </span>
 
-                                            <br>
-                                            <br>
-                                            <hr>
-                                        </div>
-
-
-                                    </template>
-                                </el-card>
-                            </div>
 
                         </el-col>
                         <el-col :span="1"></el-col>
@@ -172,7 +252,7 @@
     import top from '../component/top';
     import down from '../component/down';
     import {selectBlogsPage} from 'api/blog/blog';
-    import {getAllCarousel, getRankIng} from 'api/admin/index';
+
     import {getResouceList, resourceClick} from 'api/blog/resouce';
     import tokenStore from 'store2';
     import {parseTime} from 'utils';
@@ -199,6 +279,13 @@
                     sortList: [],
                     searchKey: ''
                 },
+                listQuery1: {
+                    pageNum: 1,
+                    pageSize: 10,
+                    filterList: [],
+                    sortList: [],
+                    searchKey: ''
+                },
                 pageSize: 1,
                 resource: {resouceName: '', status: ''},
                 resourceItem: {
@@ -210,18 +297,11 @@
                     context: '',
                     profileUrl: ''
                 },
-                ranking: {
-                    id: '',
-                    status: '',
-                    resouceName: '',
-                    resouceUrl: '',
-                    resouceClick: '',
-                    userName: '',
-                    context: '',
-                    profileUrl: ''
-                },
+
                 total: null,
                 totalRe: null,
+                blog: true,
+
             };
         },
         created() {
@@ -230,14 +310,17 @@
             getAllCarousel().then(response => {
                 this.indexUrl = response.data.returnData;
             });
-            getRankIng().then(response => {
-                this.ranking = response.data.returnData;
-            });
+
 
         },
 
         methods: {
-
+            toLeft() {
+                this.blog = true;
+            },
+            toRight() {
+                this.blog = false;
+            },
             read(id) {
                 this.$router.push('/blog/read?id=' + id);
             },
@@ -264,7 +347,6 @@
                     })
                     this.resource.resouceName = tokenStore.session('search');
                     tokenStore.session.remove('search');
-
                 }
                 selectBlogsPage(this.listQuery).then(response => {
                     this.blogList = response.data.returnData.pageInfo.list;
@@ -277,15 +359,29 @@
 
             getReso() {
                 this.loadingRes = true;
-                this.resource.status = 2;
-
-                getResouceList(this.resource, this.pageSize).then(response => {
-                    this.resourceList = response.data.returnData.list;
-                    this.totalRe = response.data.returnData.total;
+                this.listQuery1.filterList = [];
+                this.listQuery1.filterList.push({
+                    filterKey: 'status',
+                    filterValue: 2
+                });
+                if (this.resource.resouceName != null && this.resource.resouceName != '') {
+                    this.listQuery1.filterList.push({
+                        filterKey: 'resouceName',
+                        filterValue: this.resource.resouceName
+                    })
+                    this.listQuery1.filterList.push({
+                        filterKey: 'userName',
+                        filterValue: this.resource.resouceName
+                    })
+                }
+                getResouceList(this.listQuery1).then(response => {
+                    this.resourceList = response.data.returnData.pageInfo.list;
+                    this.total1 = response.data.returnData.pageInfo.total;
                     this.resource.resouceName = '';
                     this.loadingRes = false;
                 });
-            }, copyUrl(url, id) {
+            },
+            copyUrl(url, id) {
                 window.open(url);
                 resourceClick(id, this.getIp()).then(response => {
                     this.getReso();
@@ -309,14 +405,16 @@
                 this.listQuery.pageNum = val;
                 this.getBlogs();
             },
+            handleSizeChange1(val) {
+                this.listQuery1.pageSize = val;
+                this.getReso();
+            },
+            handleCurrentChange1(val) {
+                this.listQuery1.pageNum = val;
+                this.getReso();
+            },
         },
-        filters: {
-            formatUrl(url) {
-                url = "  <img  src=\"" + url +
-                    "\" style=\"margin-right:6px;\">";
-                return url;
-            }
-        }
+        filters: {}
 
 
     }
@@ -329,6 +427,9 @@
         height: 16px;
         border-radius: 50%;
     }
+    .rTitle {
+        margin-left:-75%;color: #666;font-size: 16px;
+    }
 
     .disable {
         -moz-user-select: -moz-none;
@@ -336,6 +437,42 @@
         -webkit-user-select: none;
         -ms-user-select: none;
         user-select: none;
+    }
+
+    .zleft {
+        width: 180px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 14px;
+        color: #282828;
+    }
+
+    .title {
+        margin-left: -90%;
+        color: #666;
+        font-size: 16px;
+    }
+
+    .titleName {
+        font-size: 20px;
+        font-weight: bold;
+        color: #282828;
+    }
+
+    .className {
+        margin-left: -1%;
+        margin-right: 18px;
+        padding: 1%;
+        font-size: 14px;
+        color: #20a0ff
+    }
+    .part {
+        font-size: 14px;
+        color: #666;
+    }
+    .img1 {
+        margin-right:18px;
     }
 
 </style>

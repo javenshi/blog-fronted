@@ -71,11 +71,12 @@
                     <br>
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
-                            作者：
-                            <span v-html="headurl"></span>
-                            {{user.userName}}
+                           <!-- <span style="color: #666;font-size: 16px;">  本文作者：</span>-->
+                            <span v-html="headurl"></span><span style="padding: 13px;">{{user.userName}}</span>
                         </div>
                         <template>
+
+
                             性别：{{user.gender|fomartGender}}
                             <br>
                             来自：{{user.location}}
@@ -85,34 +86,60 @@
 
                         </template>
                     </el-card>
-                    <br>
-                    <br>
-                    <br>
-                    <el-card class="box-card">
-                        <div slot="header" class="clearfix">
-                            <span>本站公告</span>
-                        </div>
-                        <template>
-                            abcd<br>
-                            abcd<br>
-                            abcd<br>
-                            abcd<br>
-                            abcd<br>
-                        </template>
-                    </el-card>
-                    <el-card class="box-card">
-                        <div slot="header" class="clearfix">
-                            <span>联系我们</span>
-                        </div>
-                        <template>
 
-                            abcd<br>
-                            abcd<br>
-                            abcd<br>
-                            abcd<br>
-                            abcd<br>
-                        </template>
-                    </el-card>
+                    <div style="padding-top: 40px;" v-if="showRanking">
+                        <el-card class="box-card">
+                            <div slot="header">
+                                <span style="color: #666;font-size: 16px;">本站排行</span>
+                            </div>
+                            <template>
+                                <div v-for="(item,index) in ranking" :key="item">
+                                    <br>
+                                    <span style=" width:180px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;font-size: 14px; color: #282828;">
+                                                <span style="float: left;">
+                                                <el-badge :value="index+1"></el-badge>
+                                                    <span v-if="item.status==0" @click="read(item.id)">{{item.resouceName}}</span>
+                                                    <span v-if="item.status==1" @click="getResource(item)">{{item.resouceName}}</span>
+                                                </span>
+                                            </span>
+
+                                    <br>
+                                    <br>
+                                    <hr>
+                                </div>
+
+
+                            </template>
+                        </el-card>
+                        <el-dialog :title="resourceItem.resouceName" :visible.sync="resourceDialog" align="center">
+
+                            <el-form :model="resourceItem" status-icon
+                                     class="demo-ruleForm">
+
+                                <el-form-item label="资源Url:" prop="resouceUrl">
+                                    <span class="disable">{{resourceItem.resouceUrl}}</span>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <el-button type="primary" size="mini"
+                                               @click="copyUrl(resourceItem.resouceUrl,resourceItem.id)"
+                                    >下载
+                                    </el-button>
+                                </el-form-item>
+                                <el-form-item label="资源描述:" prop="context">
+                                    {{resourceItem.context}}
+                                </el-form-item>
+                                <el-form-item label="作者:" prop="context">
+                                    <span v-html="resourceItem.profileUrl"></span>
+                                    {{resourceItem.userName}}于{{resourceItem.creatTime|parseTime('{y}年{m}月{d}日')}}发表
+                                </el-form-item>
+                                <el-form-item label="下载次数:">
+                                    {{resourceItem.resouceClick}}
+                                </el-form-item>
+
+                            </el-form>
+
+                        </el-dialog>
+
+                    </div>
                 </el-col>
                 <el-col :span="1"></el-col>
             </el-row>
@@ -146,6 +173,7 @@
     import top from '../component/top';
     import down from '../component/down';
     import {getBlogsById, saveComents, getComentsList, getTopAndDown} from 'api/blog/blog';
+    import {getRankIng} from 'api/admin/index';
     import {getUserById} from 'api/blog/user';
     import tokenStore from 'store2';
     import {parseTime} from 'utils';
@@ -165,6 +193,18 @@
                 noBlog: false,
                 top: '',
                 down: '',
+                showRanking: false,
+                ranking: {
+                    id: '',
+                    status: '',
+                    resouceName: '',
+                    resouceUrl: '',
+                    resouceClick: '',
+                    userName: '',
+                    context: '',
+                    profileUrl: ''
+                },resourceDialog:false,
+                resourceItem:'',
                 user: {
                     id: '', uid: '', userName: '', uSource: '', location: '', description: '',
                     profileUrl: '', gender: '', passWord: '', email: '', integral: '', status: '', createdTime: '',
@@ -174,7 +214,10 @@
             this.loadingBlog = true;
             this.getBById(this.$route.query.id);
             this.getComents();
-
+            getRankIng().then(response => {
+                this.showRanking = true;
+                this.ranking = response.data.returnData;
+            });
         },
 
         methods: {
@@ -195,6 +238,17 @@
                         this.down = response.data.returnData[1];
                     });
                 });
+            },
+            getResource(item) {
+                this.resourceItem = item;
+                this.resourceDialog = true;
+            },
+            copyUrl(url, id) {
+                window.open(url);
+                resourceClick(id, this.getIp()).then(response => {
+                    this.getReso();
+                });
+                this.resourceDialog = false;
             },
             savePinglun() {
                 this.Comments.context = this.textarea;
@@ -250,10 +304,3 @@
     }
 
 </script>
-<style>
-    .common-topbar-user-image-wrapper1 {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-    }
-</style>

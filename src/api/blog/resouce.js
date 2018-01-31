@@ -8,10 +8,10 @@ export function saveResouce(query) {
     });
 }
 
-export function getResouceList(query,size) {
+export function getResouceList(query) {
 
     return fetch({
-        url: '/api/resource/getResouceList/'+size,
+        url: '/api/resource/getResouceList',
         method: 'post',
         data:JSON.stringify(query)
     });

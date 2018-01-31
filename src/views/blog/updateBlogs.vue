@@ -90,19 +90,23 @@
                 noBlog: false,
             };
         }, created() {
-            this.UID = tokenStore.session('User').id;
+            this.UID = tokenStore.session('user').id;
 
             if(this.UID==null||this.UID==0){
                 this.$router.push('/blog/updateBlogs3123123?id=' + id);
             }
             getBlogsById(this.$route.query.id).then(response => {
-                this.blog = response.data.returnData;
+                if(this.UID==response.data.returnData.userId){
+                    this.blog = response.data.returnData;
+                }
             });
         },
 
         methods: {
             saveBlog(blogsStatus) {
                 this.blog.blogsStatus = blogsStatus;
+                this.blog.status = 0;
+                this.blog.blogsPart = this.delHtmlTag(this.blog.blogsUrl).substring(0, 100);
                 saveB(this.blog).then(response => {
                     this.$notify({
                         title: response.data.returnCode == 200 ? '成功' : '失败',
@@ -112,6 +116,8 @@
                     });
                     this.getBlogs();
                 });
+            },  delHtmlTag(str) {
+                return str.replace(/<[^>]+>/g, "");
             },
         },
         computed: {
