@@ -21,5 +21,19 @@
         height: 40px;
         border-radius: 50%;
     }
+    .qq {
+        background-image: url(img/qq.png);
+    }
+
+    .qq:hover {
+        background-image: url(img/qq1.png)
+    }
+    .wb {
+        background-image: url(img/wb.png);
+    }
+
+    .wb:hover {
+        background-image: url(img/wb1.png)
+    }
 
 </style>

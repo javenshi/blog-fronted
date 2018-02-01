@@ -6,8 +6,29 @@
         <div class=" calendar-list-container;" style="padding: 20px;">
 
             <el-row :gutter="20">
-                <el-col :span="1"><br></el-col>
-                <el-col :span="1"><br></el-col>
+
+                <el-col :span="2">
+                    <br>
+                    <div style="position:fixed;left:0;top:30%">
+                        <ul>
+
+
+
+                            <!-- <li @click=""><img src="../../img/leav.png"></li>-->
+
+                            <li @click="qqFriend" class="qq img"></li>
+
+                            <li @click="qqZone" class="qqZon img"></li>
+
+                            <li @click="weiBo" class="wb img"></li>
+
+                            <li href="" @click="tencentWeiBo" class="twb img"></li>
+                            <!--<li href="" @click="weiXin">微信</li>-->
+                        </ul>
+
+
+                    </div>
+                </el-col>
                 <el-col :span="16">
                     <div v-if="!noBlog" v-loading="loadingBlog"
                          element-loading-text="拼命加载中"
@@ -18,6 +39,7 @@
                                 <h1> {{blog.blogsName}}</h1>
                                 {{blog.blogsDate | parseTime('{y}年{m}月{d}日 ')}} 总访问次数：{{blog.blogsClick}}
                             </div>
+                            <hr>
                             <br>
                             <br>
                             <br>
@@ -25,36 +47,14 @@
                             <br>
                             <br>
                             <br>
-                            <div v-if="top==null||top==''">上一篇：这是作者的第一篇博客</div>
-                            <div v-else>上一篇：<span @click="read(top.id)">{{top.blogsName}}</span></div>
-                            <div v-if="down==null||down==''">下一篇：作者暂时还未更新</div>
-                            <div v-else>下一篇：<span @click="read(down.id)">{{down.blogsName}}</span></div>
+                            <div v-if="top==null||top==''"> <el-tag type="warning">这是作者的第一篇博客</el-tag></div>
+                            <div v-else><el-tag type="success">上一篇</el-tag><span @click="read(top.id)">&nbsp;<a>{{top.blogsName}}</a></span></div>
+                            <br>
+                            <div v-if="down==null||down==''"><el-tag type="warning">作者暂时还未更新</el-tag></div>
+                            <div v-else><el-tag type="success">下一篇</el-tag><span @click="read(down.id)">&nbsp;<a>{{down.blogsName}}</a></span></div>
                         </div>
-                        <!--    <div>
-                                <el-input
-                                        type="textarea"
-                                        :rows="2"
-                                        placeholder="请输入内容"
-                                        v-model="textarea">
-                                </el-input>
-                                <el-button type="danger" style="float: right;" @click="savePinglun">评论</el-button>
-                            </div>-->
+
                         <div>
-                            <!--  <el-table
-                                      :data="comentsList"
-                                      style="width: 100%">
-                                  <el-table-column>
-                                      <template scope="scope">
-                                                  <span>
-                                                      {{scope.row.context}}
-                                                  </span>
-                                          <br>
-                                          <span> {{scope.row.userName}}</span>
-                                          <span> {{scope.row.creatTime|parseTime('{y}-{m}-{d}{h}:{i} ')}}</span>
-                                      </template>
-                                  </el-table-column>
-                              </el-table>
-                              <el-button type="danger" style="float: right;" @click="loading">加载更多</el-button>-->
                         </div>
                     </div>
                     <div style="margin-top: 17%;font-size: 20px; font-weight: 300; color: #999;" v-if="noBlog"
@@ -71,7 +71,7 @@
                     <br>
                     <el-card class="box-card">
                         <div slot="header" class="clearfix">
-                           <!-- <span style="color: #666;font-size: 16px;">  本文作者：</span>-->
+                            <!-- <span style="color: #666;font-size: 16px;">  本文作者：</span>-->
                             <span v-html="headurl"></span><span style="padding: 13px;">{{user.userName}}</span>
                         </div>
                         <template>
@@ -145,23 +145,6 @@
             </el-row>
 
 
-            <div>
-                <ul>
-                    <!-- 新浪微博 -->
-                    <li @click="weiBo">新浪微博</li>
-                    <!-- QQ好友 -->
-                    <li @click="qqFriend">QQ好友</li>
-                    <!-- QQ空间 -->
-                    <li @click="qqZone">QQ空间</li>
-                    <!-- 腾讯微博 -->
-                    <li href="" @click="tencentWeiBo">腾讯微博</li>
-                    <!--<li href="" @click="weiXin">微信</li>-->
-                </ul>
-
-
-            </div>
-
-
         </div>
         <down></down>
     </div>
@@ -203,8 +186,8 @@
                     userName: '',
                     context: '',
                     profileUrl: ''
-                },resourceDialog:false,
-                resourceItem:'',
+                }, resourceDialog: false,
+                resourceItem: '',
                 user: {
                     id: '', uid: '', userName: '', uSource: '', location: '', description: '',
                     profileUrl: '', gender: '', passWord: '', email: '', integral: '', status: '', createdTime: '',
@@ -213,7 +196,7 @@
         }, created() {
             this.loadingBlog = true;
             this.getBById(this.$route.query.id);
-            this.getComents();
+            //this.getComents();
             getRankIng().then(response => {
                 this.showRanking = true;
                 this.ranking = response.data.returnData;
@@ -304,3 +287,42 @@
     }
 
 </script>
+<style>
+    ul li {
+        list-style-type: none;
+       margin-bottom: 20px;
+    }
+    a:hover{
+        cursor: pointer;
+        color: blue;
+    }
+    .img {
+        z-index: 3;
+        width: 39px;
+        height: 39px;
+        cursor: pointer;
+
+        background-repeat: no-repeat;
+    }
+
+
+
+    .qqZon {
+        background-image: url(../../img/qqZon.png);
+    }
+
+    .qqZon:hover {
+        background-image: url(../../img/qqZon1.png)
+    }
+
+    .twb {
+        background-image: url(../../img/twb.png);
+    }
+
+    .twb:hover {
+        background-image: url(../../img/twb1.png)
+    }
+
+
+
+</style>

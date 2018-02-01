@@ -8,6 +8,7 @@ export function getAllCarousel() {
     });
 }
 export function getRankIng() {
+
     return fetch({
         url: '/api/proposal/getRankIng',
         method: 'post'

@@ -13,12 +13,12 @@
                 </div>
                 <div style="margin-left: 30px;" class="topbar-product topbar-left">
                     <div class="topbar-btn" @click="index">
-首页
+                        首页
                     </div>
                 </div>
                 <div class="topbar-product topbar-left">
-                    <div class="topbar-btn" @click="write" >
-                     写博客
+                    <div class="topbar-btn" @click="write">
+                        写博客
                     </div>
                 </div>
                 <div class="topbar-product topbar-left">
@@ -28,7 +28,7 @@
                 </div>
                 <div class="topbar-product topbar-left">
                     <div class="topbar-btn " @click="leav">
-                       留言
+                        留言
                     </div>
                 </div>
                 <div class="topbar-product topbar-left">
@@ -48,13 +48,14 @@
                 </div>
 
 
-                <div  class="topbar-info topbar-right topbar-clearfix">
+                <div class="topbar-info topbar-right topbar-clearfix">
                     <div class=" topbar-user ">
                         <div class="topbar-info-dropdown topbar-info-item">
                             <a class="topbar-info-dropdown-toggle topbar-btn">
-                                <span  v-if="user.uid==null||user.uid==''" @click="openLoginDialog"  >登录</span>
+                                <span v-if="user.uid==null||user.uid==''" @click="openLoginDialog">登录</span>
                                 <div class="topbar-user-info" style="display: block;">
-                                    <router-link :to="'/blog/userCenter'"><span v-if="user.uid!=null&&user.uid!=''" v-html="headurl"></span> </router-link>
+                                    <router-link :to="'/blog/userCenter'"><span v-if="user.uid!=null&&user.uid!=''"
+                                                                                v-html="headurl"></span></router-link>
                                 </div>
                             </a>
                         </div>
@@ -95,21 +96,128 @@
             </div>
             <br>
             <br>
-            <span>---请选择快捷登录方式---</span>
+            <div style="width: 320px;" v-if="loginOrRigister">
+                <el-form :model="loginUser" ref="dynamicValidateForm" label-width="100px" class="demo-dynamic">
+                    <el-form-item
+                            prop="userName"
+                            label="用户名"
+                            :rules="[
+        { min:2,max:20, message: '用户名长度不规范', trigger: 'blur，change' },
+       {  pattern:/^[^ ]+$/, message: '用户名中不能包含空格',trigger: 'blur'},
+       {  pattern:/^[^'`/+ - \\ ()（）《》<>~#^$@%&!*,.'' ? <> -]+$/, message: '用户名中不能包含特殊字符',trigger: 'blur'},
+       {  pattern:/^[^😃]+$/, message: '用户名中不能包含表情',trigger: 'blur'},
+         { required: true, message: '请输入用户名', trigger: 'blur' }
+    ]"
+                            required>
+                        <el-input autoComplete="off"
+                                  placeholder="用户名" type="text" v-model="loginUser.userName"></el-input>
+                    </el-form-item>
+                    <el-form-item style="height: 0px;  position: absolute;
+  left: 30px;
+  top: -280px;">
+                        <el-input type="password" v-model="loginUser.password1"></el-input>
+                    </el-form-item>
+                    <el-form-item
+                            prop="passWord"
+                            label="密码"
+                            :rules="[
+                                 { min:2,max:20, message: '密码长度不规范', trigger: 'blur，change' },
+      { required: true, message: '请输入密码', trigger: 'blur' }
+      ,
+    ]" required
+                    >
+                        <el-input type="password" autoComplete="off" placeholder="密码"
+                                  v-model="loginUser.passWord"></el-input>
+                    </el-form-item>
+
+
+                </el-form>
+                <br>
+                <img src="../../img/login1.png" class="cursor" @click="login('dynamicValidateForm')">
+                <br>
+                <br>
+                <span style="color: #58B7FF">— —使用第三方登录方式</span><span style="color: red">&nbsp;or&nbsp;</span><span
+                    class="cursor" @click="loginOrRigister=false">注册一个</span> <span style="color: #58B7FF">— —</span>
+            </div>
+            <div style="width: 320px;" v-else>
+                <el-form :model="rigitsterForm" ref="rigitsterRules" label-width="100px" class="demo-dynamic">
+                    <el-form-item
+                            prop="userName"
+                            label="用户名"
+                            :rules="[
+        { min:2,max:20, message: '用户名长度不规范', trigger: 'blur' },
+       {  pattern:/^[^ ]+$/, message: '用户名中不能包含空格',trigger: 'blur'},
+       {  pattern:/^[^'`/+ - \\ ()（）《》<>~#^$@%&!*,.'' ? <> -]+$/, message: '用户名中不能包含特殊字符',trigger: 'blur'},
+       {  pattern:/^[^😃]+$/, message: '用户名中不能包含表情',trigger: 'blur'},
+         { required: true, message: '请输入用户名', trigger: 'blur' }
+    ]"
+
+                            required>
+                        <el-input type="text" v-model="rigitsterForm.userName"
+                                  auto-complete="off" placeholder="用户名"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="passWord" label="密码:" :rules="[
+        { min:2,max:20, message: '密码长度不规范', trigger: 'blur，change' },
+       {  pattern:/^[^ ]+$/, message: '密码中不能包含空格',trigger: 'blur'},
+         { required: true, message: '请输入密码', trigger: 'blur' }
+    ]" required>
+                        <el-input type="password" v-model="rigitsterForm.passWord"
+                                  placeholder="密码"></el-input>
+                    </el-form-item>
+
+                    <el-form-item prop="email" label="邮箱:" :rules="[
+                        { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' },
+         {required: true, message: '请输入邮箱', trigger: 'blur'}
+    ]" required>
+                        <el-input type="text" v-model="rigitsterForm.email"
+                                  placeholder="邮箱"></el-input>
+                    </el-form-item>
+                    <el-form-item prop="code" label="验证码:" :rules="[
+                        { min:6,max:6, message: '请输入6位验证码', trigger: 'blur' },
+         {required: true, message: '请输入验证码', trigger: 'blur'}
+
+    ]" required>
+                        <el-input type="text" style="width: 40%" v-model="rigitsterForm.code"
+                                  placeholder="验证码"></el-input>
+
+                        <el-button v-show="!showTime" type="success" v-waves icon="plus"
+                                   @click="sendCode">
+                            获取验证码
+                        </el-button>
+                        <el-button v-show="showTime" disabled type="primary"
+                        >
+                            剩余{{count}}秒
+                        </el-button>
+
+
+                    </el-form-item>
+
+                </el-form>
+                <br>
+                <img src="../../img/rigister.png" class="cursor" @click="rigster('rigitsterRules')">
+                <br>
+                <br>
+                <span style="color: #58B7FF">— —使用第三方登录方式</span><span style="color: red">&nbsp;or&nbsp;</span><span
+                    class="cursor" @click="loginOrRigister=true">去登录</span> <span style="color: #58B7FF">— —</span>
+            </div>
+            <br>
+            <div class="ul">
+
+                <li class="loginLogo qq" @click="openQQ"></li>
+                <li class="loginLogo wx"></li>
+                <li class="loginLogo wb" @click="openWB"></li>
+
+            </div>
+
+
             <br>
             <br>
-            <br>
-            <a href="https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101453375&redirect_uri=http://zhixiang.org.cn/%23/qqLogin&state=1"> <img style="margin-right: 10%; "  width="10%" height="10%"src="../../img/qq.png"></a>
-            <img style=" margin-right: 10%;" width="10%" height="10%" src="../../img/wexin.png">
-            <a href="https://api.weibo.com/oauth2/authorize?client_id=3191489564&response_type=code&redirect_uri=http://zhixiang.org.cn/%23/login"> <img src="../../img/weibo.png" width="10%" height="10%"></a>
-            <br>
-            <br>
-            <span style=" margin-right: 10%;">QQ登录</span>
+
             <span style=" margin-left: 1%; margin-right: 10%;" @click="qqlogin">微信登录</span>
-            <span style=" margin-left: 1%;">微博登录</span>
+
             <br><br>
 
-            </el-dialog>
+        </el-dialog>
     </div>
 
 
@@ -126,17 +234,20 @@
         data() {
 
             return {
-                user:{
-                   id:'', uid:'', userName:'', uSource:'', location:'', description:'',
-                    profileUrl:'', gender:'', passWord:'', email:'', integral:'', status:'', createdTime:'',
+                user: {
+                    id: '', uid: '', userName: '', uSource: '', location: '', description: '',
+                    profileUrl: '', gender: '', passWord: '', email: '', integral: '', status: '', createdTime: '',
                 },
-                headurl:'',
+                loginUser: {
+                    userName: '',  passWord: ''
+                },
+                headurl: '',
                 search: '',
                 resourceDialog: false,
                 resource: {resouceName: '', resouceUrl: '', context: '', status: ''},
                 loginDialog: false,
 
-                loginForm: {userName: '', passWord: ''},
+
                 count: '',
                 rigitsterForm: {
                     userName: '',
@@ -149,30 +260,38 @@
                 timer: null,
                 showTime: false,
                 valCode: '',
-                rigitsterRules: {
+                rigitsterRules: {},
 
-                },
-                loginRules: {
-
-                },
             };
-        }, created() {
-            console.log(tokenStore.session('user'))
-            if(tokenStore.session('user')!=null){
+        },
+        created() {
+
+            if (tokenStore.session('user') != null) {
+
                 this.user = tokenStore.session('user');
-                this.headurl='<img class="common-topbar-user-image-wrapper1" src='+this.user.profileUrl+'>';
+                if(this.user.profileUrl !=null&&this.user.profileUrl !=''){
+                    this.headurl = '<img class="common-topbar-user-image-wrapper1" src=' + this.user.profileUrl + '>';
+                }else{
+                    this.headurl = '<img class="common-topbar-user-image-wrapper1" src="favicon.ico">';
+                }
             }
         },
         methods: {
-            qqlogin(){
+            openQQ() {
+                window.open("https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101453375&redirect_uri=http://zhixiang.org.cn/%23/qqLogin&state=1");
+            },
+            openWB() {
+                window.open("https://api.weibo.com/oauth2/authorize?client_id=3191489564&response_type=code&redirect_uri=http://zhixiang.org.cn/%23/login");
+            },
+            qqlogin() {
                 qqLogin("1111111").then(response => {
-                    if (response.data.returnCode == 400||response.data.returnCode == 300) {
+                    if (response.data.returnCode == 400 || response.data.returnCode == 300) {
                         this.$message({
                             message: response.data.returnMsg,
                             type: 'error',
                             duration: 5 * 1000
                         });
-                    }else{
+                    } else {
 
                         tokenStore.session.set("user", response.data.returnData);
                         this.$message({
@@ -184,10 +303,10 @@
                     window.location.href = "/";
                 });
             },
-            write(){
-                if(tokenStore.session('user')!=null){
+            write() {
+                if (tokenStore.session('user') != null) {
                     window.location.href = "/#/blog/write";
-                }else{
+                } else {
                     this.$message({
                         message: "请先登录后再发表文章",
                         type: 'error',
@@ -196,10 +315,10 @@
 
                 }
             },
-            index(){
-                    window.location.href = "/#/";
-            }, leav(){
-                    window.location.href = "/#/blog/leav";
+            index() {
+                window.location.href = "/#/";
+            }, leav() {
+                window.location.href = "/#/blog/leav";
             },
             searchBySel() {
                 if (this.search != null && this.search != '') {
@@ -211,7 +330,7 @@
             saveReso() {
                 this.resource.userId = tokenStore.session('user').id;
                 this.resource.userName = tokenStore.session('user').userName;
-                this.resource.profileUrl ="<img class=\"userLogo\" src=\""+tokenStore.session('user').profileUrl+"\">";
+                this.resource.profileUrl = "<img class=\"userLogo\" src=\"" + tokenStore.session('user').profileUrl + "\">";
                 saveResouce(this.resource).then(response => {
                     this.$notify({
                         title: response.data.returnCode == 200 ? '成功' : '失败',
@@ -225,9 +344,9 @@
             },
 
             openResourceDialog() {
-                if(tokenStore.session('user')!=null){
+                if (tokenStore.session('user') != null) {
                     this.resourceDialog = true;
-                }else{
+                } else {
                     this.$message({
                         message: "请先登录后再上传资源",
                         type: 'error',
@@ -240,34 +359,18 @@
                 this.$refs[formName].resetFields();
             }, openLoginDialog() {
                 this.loginDialog = true;
-            }, closeLoginDialog(formName) {
-                this.loginDialog = false;
-                this.$refs[formName].resetFields();
-            }, toRigister() {
-                this.loginOrRigister = false;
-            }, toLogin() {
                 this.loginOrRigister = true;
+                this.loginUser.userName = '';
+                this.loginUser.passWord = '';
             },
 
-            cheackName() {
-                if (this.rigitsterForm.userName.length < 3) {
-                    return false;
-                }
-                cName(this.rigitsterForm.userName).then(response => {
-                    if (response.data.returnCode != 200) {
-                        this.cna = true;
-                    } else {
-                        this.cna = false;
-                    }
-
-                });
-            },
             sendCode() {
                 if (this.rigitsterForm.email.length < 3 || this.rigitsterForm.email.indexOf("@") < 1 || this.rigitsterForm.email.indexOf(".") < 1) {
                     return false;
                 }
 
                 getCode(this.rigitsterForm).then(response => {
+
                     if (response.data.returnCode != 200) {
                         this.$notify({
                             title: response.data.returnCode == 200 ? '成功' : '失败',
@@ -297,7 +400,14 @@
             rigster(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
+                        var pass=this.rigitsterForm.passWord;
                         saveUser(this.rigitsterForm).then(response => {
+                            if(response.data.returnCode != 200){
+                                this.rigitsterForm.passWord=pass;
+                            } else{
+                                this.rigitsterForm=true;
+                            }
+
                             this.$notify({
                                 title: response.data.returnCode == 200 ? '成功' : '失败',
                                 message: response.data.returnMsg,
@@ -314,13 +424,14 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
 
-                        login(this.loginForm).then(response => {
+                        login(this.loginUser).then(response => {
+                            console.log(response.data.returnData)
                             if (response.data.returnCode == 200) {
-                                this.UNAME = response.data.returnData.userName;
-                                tokenStore.session.set('User', response.data.returnData)
-                                this.loginDialog = false;
-                                return false;
+                                tokenStore.session.set("user", response.data.returnData);
+                                window.location.href = "/";
+
                             }
+                            this.loginUser.passWord = '';
                             this.$notify({
                                 title: response.data.returnCode == 200 ? '成功' : '失败',
                                 message: response.data.returnMsg,
@@ -336,24 +447,49 @@
     }
 </script>
 <style>
+    .cursor {
+        cursor: pointer;
+    }
+
+    .ul {
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .loginLogo {
+        z-index: 3;
+        width: 39px;
+        height: 39px;
+        cursor: pointer;
+        background-repeat: no-repeat;
+        list-style-type: none;
+        float: left;
+    }
+
+    .wx {
+        background-image: url(../../img/wx.png);
+    }
+
+    .wx:hover {
+        background-image: url(../../img/wx1.png)
+    }
 
     .topbar-user-info {
-
         padding: 8px 24px 0 12px;
         height: 50px;
 
     }
+
     .common-topbar-user-image-wrapper1 {
         width: 35px;
         height: 35px;
         border-radius: 50%;
     }
+
     .common-topbar-body .common-topbar-bottom .common-topbar-all-nav-dropdown .common-topbar-level1-content.common-topbar-level2-nav ul {
         width: 200px
     }
-
-
-
 
     .aliyun-common-search-container {
         width: 100%;
@@ -363,20 +499,13 @@
         transition: all .3s linear
     }
 
-    .aliyun-common-search-container:after {
-        content: "";
-        width: 1px;
-        height: 16px;
-        position: absolute;
-        background: hsla(0, 0%, 100%, .15);
-        right: 26px
-    }
+
 
     .aliyun-common-search-container.active, .aliyun-common-search-container:hover {
         background: #262c30
     }
 
-    .aliyun-common-search-container.active .aliyun-common-search-outline, .aliyun-common-search-container:hover .aliyun-common-search-outline {
+    .aliyun-common-search-container.active , .aliyun-common-search-container:hover .aliyun-common-search-outline {
         opacity: 1
     }
 
@@ -420,10 +549,6 @@
         color: #ccc
     }
 
-
-
-
-
     .aliyun-common-search-container .aliyun-common-search-icon {
         display: block;
         position: absolute;
@@ -457,6 +582,7 @@
         font-size: 12px;
         min-width: 990px;
     }
+
     .console-component-topbar .topbar-info-dropdown:hover .topbar-info-dropdown-toggle {
         background: #2a2f32;
     }
@@ -464,6 +590,7 @@
     .console-component-topbar .topbar-info-dropdown:hover .topbar-info-dropdown-toggle:hover {
         background: #2a2f32;
     }
+
     .console-component-topbar .topbar-info-dropdown-toggle {
         -webkit-transition: background 0.2s, color 0.2s;
         transition: background 0.2s, color 0.2s;
@@ -490,12 +617,14 @@
         display: table;
         content: " ";
     }
+
     .console-component-topbar .topbar-head {
         background: #2a2f32;
         height: 50px;
         position: relative;
         z-index: 3;
     }
+
     .console-component-topbar .topbar-logo {
         display: block;
         width: 150px;
@@ -505,6 +634,7 @@
         line-height: 50px;
         margin-right: 1px;
     }
+
     .console-component-topbar .topbar-logo span {
         line-height: 50px;
     }
@@ -512,9 +642,11 @@
     .console-component-topbar .topbar-logo {
         background: #373d41;
     }
+
     .topbar-product .topbar-btn:hover {
         color: white;
     }
+
     .console-component-topbar .topbar-btn {
         color: #999;
         font-size: 14px;
@@ -524,9 +656,6 @@
         height: 50px;
         cursor: pointer;
     }
-
-
-
 
     .console-component-topbar .topbar-info {
         background: #2a2f32;
@@ -544,12 +673,6 @@
         background: #373d41;
         border-right: 1px solid #2a2f32;
     }
-
-
-
-
-
-
 
 
 </style>
