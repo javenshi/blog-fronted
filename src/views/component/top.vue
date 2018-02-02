@@ -37,6 +37,7 @@
                     </div>
                 </div>
                 <div class="aliyun-common-search-container " style="margin-top: 10px;margin-left: 60%;width: 200px;">
+
                     <input
                             class="aliyun-common-search-input-elem " @keyup.enter="searchBySel" v-model="search"
                             placeholder="全站搜索"
@@ -115,10 +116,10 @@
                     <el-form-item style="height: 0px;  position: absolute;
   left: 30px;
   top: -280px;">
-                        <el-input type="password" v-model="loginUser.password1"></el-input>
+                        <el-input type="password" v-model="loginUser.password2"></el-input>
                     </el-form-item>
                     <el-form-item
-                            prop="passWord"
+                            prop="passWord1"
                             label="密码"
                             :rules="[
                                  { min:2,max:20, message: '密码长度不规范', trigger: 'blur，change' },
@@ -127,7 +128,7 @@
     ]" required
                     >
                         <el-input type="password" autoComplete="off" placeholder="密码"
-                                  v-model="loginUser.passWord"></el-input>
+                                  v-model="loginUser.passWord1"></el-input>
                     </el-form-item>
 
 
@@ -136,8 +137,8 @@
                 <img src="../../img/login1.png" class="cursor" @click="login('dynamicValidateForm')">
                 <br>
                 <br>
-                <span style="color: #58B7FF">— —使用第三方登录方式</span><span style="color: red">&nbsp;or&nbsp;</span><span
-                    class="cursor" @click="loginOrRigister=false">注册一个</span> <span style="color: #58B7FF">— —</span>
+               — —使用第三方登录方式<span style="color: red">&nbsp;or&nbsp;</span><span
+                    class="cursor" @click="loginOrRigister=false">注册一个</span> — —
             </div>
             <div style="width: 320px;" v-else>
                 <el-form :model="rigitsterForm" ref="rigitsterRules" label-width="100px" class="demo-dynamic">
@@ -197,8 +198,8 @@
                 <img src="../../img/rigister.png" class="cursor" @click="rigster('rigitsterRules')">
                 <br>
                 <br>
-                <span style="color: #58B7FF">— —使用第三方登录方式</span><span style="color: red">&nbsp;or&nbsp;</span><span
-                    class="cursor" @click="loginOrRigister=true">去登录</span> <span style="color: #58B7FF">— —</span>
+                — —使用第三方登录方式<span style="color: red">&nbsp;or&nbsp;</span><span
+                    class="cursor" @click="loginOrRigister=true">去登录</span> — —
             </div>
             <br>
             <div class="ul">
@@ -213,7 +214,7 @@
             <br>
             <br>
 
-            <span style=" margin-left: 1%; margin-right: 10%;" @click="qqlogin">微信登录</span>
+
 
             <br><br>
 
@@ -239,7 +240,7 @@
                     profileUrl: '', gender: '', passWord: '', email: '', integral: '', status: '', createdTime: '',
                 },
                 loginUser: {
-                    userName: '',  passWord: ''
+                    userName: '',  passWord1: ''
                 },
                 headurl: '',
                 search: '',
@@ -283,26 +284,7 @@
             openWB() {
                 window.open("https://api.weibo.com/oauth2/authorize?client_id=3191489564&response_type=code&redirect_uri=http://zhixiang.org.cn/%23/login");
             },
-            qqlogin() {
-                qqLogin("1111111").then(response => {
-                    if (response.data.returnCode == 400 || response.data.returnCode == 300) {
-                        this.$message({
-                            message: response.data.returnMsg,
-                            type: 'error',
-                            duration: 5 * 1000
-                        });
-                    } else {
 
-                        tokenStore.session.set("user", response.data.returnData);
-                        this.$message({
-                            message: "登录成功",
-                            type: 'success',
-                            duration: 5 * 1000
-                        });
-                    }
-                    window.location.href = "/";
-                });
-            },
             write() {
                 if (tokenStore.session('user') != null) {
                     window.location.href = "/#/blog/write";
@@ -323,9 +305,10 @@
             searchBySel() {
                 if (this.search != null && this.search != '') {
                     tokenStore.session.set('search', this.search)
+                    this.$router.push('/');
+                    window.location.reload();
                 }
-                this.$router.push('/');
-                window.location.reload();
+
             },
             saveReso() {
                 this.resource.userId = tokenStore.session('user').id;
@@ -425,19 +408,19 @@
                     if (valid) {
 
                         login(this.loginUser).then(response => {
-                            console.log(response.data.returnData)
+
                             if (response.data.returnCode == 200) {
                                 tokenStore.session.set("user", response.data.returnData);
-                                window.location.href = "/";
-
                             }
-                            this.loginUser.passWord = '';
+
+                            window.location.reload();
                             this.$notify({
                                 title: response.data.returnCode == 200 ? '成功' : '失败',
                                 message: response.data.returnMsg,
                                 type: response.data.returnCode == 200 ? 'success' : 'warning',
                                 duration: 5000
                             });
+
 
                         });
                     }
@@ -447,9 +430,7 @@
     }
 </script>
 <style>
-    .cursor {
-        cursor: pointer;
-    }
+
 
     .ul {
         width: fit-content;

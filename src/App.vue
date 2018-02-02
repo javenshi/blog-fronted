@@ -12,7 +12,9 @@
 
 <style lang="scss">
     @import './styles/index.scss'; // 全局自定义的css样式
-
+    .cursor {
+        cursor: pointer;
+    }
     el-icon{
         margin-right:6px;
     }
@@ -34,6 +36,8 @@
 
     .wb:hover {
         background-image: url(img/wb1.png)
-    }
+    }.y{
+        float: right;
+         }
 
 </style>

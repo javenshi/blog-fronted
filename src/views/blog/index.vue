@@ -44,7 +44,7 @@
                                         <el-table-column>
                                             <template scope="scope" >
                                                 <br>
-                                                <span class="titleName"
+                                                <span class="titleName cursor"
                                                       @click="read(scope.row.id)">
                                                     {{scope.row.blogsName}}
                                                 </span>
@@ -90,7 +90,7 @@
                                         <el-table-column>
                                             <template scope="scope" >
                                                 <br>
-                                                <span class="titleName"
+                                                <span class="titleName cursor"
                                                       @click="getResource(scope.row)"> {{scope.row.resouceName}}
                                                 </span>
                                                 <br>
@@ -147,7 +147,7 @@
                                             <template scope="scope" >
 
                                                 <span v-html="scope.row.profileUrl"></span>
-                                                <span
+                                                <span class="cursor"
                                                       @click="getResource(scope.row)"> {{scope.row.resouceName}}
                                                 </span>
 
@@ -186,7 +186,7 @@
                                         <el-table-column>
                                             <template scope="scope" >
                                                 <span v-html="scope.row.profileUrl"></span>
-                                                <span
+                                                <span class="cursor"
                                                       @click="read(scope.row.id)">
                                                     {{scope.row.blogsName}}
                                                 </span>
@@ -252,7 +252,7 @@
     import top from '../component/top';
     import down from '../component/down';
     import {selectBlogsPage} from 'api/blog/blog';
-
+    import {getAllCarousel} from 'api/admin/index';
     import {getResouceList, resourceClick} from 'api/blog/resouce';
     import tokenStore from 'store2';
     import {parseTime} from 'utils';
@@ -286,7 +286,7 @@
                     sortList: [],
                     searchKey: ''
                 },
-                pageSize: 1,
+                total1:'',
                 resource: {resouceName: '', status: ''},
                 resourceItem: {
                     resouceName: '',
@@ -298,7 +298,7 @@
                     profileUrl: ''
                 },
 
-                total: null,
+                total: '',
                 totalRe: null,
                 blog: true,
 
