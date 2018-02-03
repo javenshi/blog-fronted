@@ -423,11 +423,7 @@
 
 <style>
 
-    .userLogo {
-        width: 16px;
-        height: 16px;
-        border-radius: 50%;
-    }
+
     .rTitle {
         margin-left:-75%;color: #666;font-size: 16px;
     }

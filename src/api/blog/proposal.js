@@ -41,3 +41,10 @@ export function deletePro0(id) {
         method: 'post'
     });
 }
+export function getChildProposal(id) {
+
+    return fetch({
+        url: '/api/proposal/getChildProposal/'+id,
+        method: 'post'
+    });
+}

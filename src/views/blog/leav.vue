@@ -15,6 +15,7 @@
                 <el-input
                         type="textarea"
                         :autosize="{ minRows: 2, maxRows: 4}"
+                        maxlength="800"
                         width="60%"
                         placeholder="请输入内容"
                         v-model="Proposal.context"></el-input>
@@ -26,57 +27,55 @@
                 </el-button>
                 <br><br>
                 <br><br>
-                <div >
-                    <ul  v-for="item in proList" :key="item" >
-                        <li style="margin-bottom: 40px;">
-                            <div class="arrow_box">
-                                <div class="ti"></div>
-                                <ul class="details">
-                                    <li><a href="#">{{item.userName}}</a></li>
-                                    <li class="comments"><a href="#">{{item.creatTime|parseTime('{y}-{m}-{d}  {h}:{i}:{s}')}}</a></li>
-                                </ul>
-                                <ul class="textinfo">
-                                    <p style="padding-top:18px;"> {{item.context}}</p>
-                                </ul>
-                                <ul class="details">
+                <ul v-for="item in proList" :key="item">
+                    <li>
+                        <el-card class="box-card ">
+                            <span v-html="item.userProfileUrl"></span> {{item.userName}} <span class="y el-icon-date">{{item.creatTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</span>
+                            <hr>
+                            <br>
+                            <p>{{item.context}}</p>
+                            <br>
+                            <a @click="reply(item.id)"
+                               style="font-size: 16px;color:#20a0ff; ">回复</a>&nbsp;&nbsp;&nbsp;
+                            <div v-if="replyId==item.id">
+                                <el-input
+                                        type="textarea"
+                                        :autosize="{ minRows: 2, maxRows: 4}"
+                                        maxlength="800"
+                                        width="60%"
+                                        placeholder="请输入内容"
+                                        v-model="context"></el-input>
+                                <div class="grid-content bg-purple"></div>
+                                <el-button
+                                        style="float: right;margin-top: 10px; border: 1px #20a0ff solid;background-color: white;color: #20a0ff;"
+                                        @click="saveReply">&nbsp;&nbsp;回&nbsp;&nbsp;&nbsp;&nbsp;复&nbsp;&nbsp;
+                                </el-button>
 
-                                    <li><a @click="reply(item.id)" style="font-size: 16px;color:#20a0ff; ">回复</a></li>
-                                    <li v-if="replyId!=''" >
-                                        <el-input
-                                                type="textarea"
-                                                :autosize="{ minRows: 2, maxRows: 4}"
-                                                width="60%"
-                                                placeholder="请输入内容"
-                                                v-model="item.toUserName"></el-input>
-                                        <div class="grid-content bg-purple"></div>
+                            </div>
+                            <br>
+                            <br>
+                            <br>
 
-                                        <el-button
-                                                style="float: right;margin-top: 10px; border: 1px #20a0ff solid;background-color: white;color: #20a0ff;"
-                                                @click="saveReply">&nbsp;&nbsp;回&nbsp;&nbsp;&nbsp;&nbsp;复&nbsp;&nbsp;
-                                        </el-button>
-                                        <br>
-                                        <br>
-
-                                    </li>
-                                    <li v-if="item.hasChild==1">
-                                        <div v-for="it in item.children" :key="it">
-                                            <ul class="details">
-                                                <li>{{it.userName}}回复:{{it.toUserName}}</li>
-                                                <li class="comments">{{it.creatTime|parseTime('{y}-{m}-{d}  {h}:{i}:{s}')}}
-                                                </li>
-                                            </ul>
-                                            <ul class="textinfo">
-                                                <p style="padding-top:18px;"> {{it.context}}</p>
-                                            </ul>
-
-                                        </div>
+                            <div v-if="item.children!=null">
+                                <ul v-for="it in item.children" :key="it">
+                                    <li>
+                                        <el-card class="box-card ">
+                                            <span v-html="it.userProfileUrl"></span> {{it.userName}} <span class="y el-icon-date">{{it.creatTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</span>
+                                            <hr>
+                                            <br>
+                                            <p>{{it.context}} </p>
+                                            <br>
+                                        </el-card>
                                     </li>
                                 </ul>
                             </div>
-                        </li>
-                    </ul>
-                </div>
-                <el-button style="margin-top: 20px;" type="primary" @click="getMorePro">加载更多</el-button>
+                        </el-card>
+                    </li>
+                </ul>
+
+                <br><br>
+                <el-button v-if="listQuery.pageSize<total" @click="getMorePro" style="margin-left: 42%;" type="info">查看更多</el-button>
+
             </el-col>
 
             <el-col :span="8">
@@ -146,12 +145,12 @@
     export default {
         name: 'leavIng',
         components: {
-            top,down
+            top, down
         },
         data() {
 
             return {
-                replyId: '',
+                replyId: 0,
                 listQuery: {
                     pageNum: 1,
                     pageSize: 5,
@@ -160,10 +159,9 @@
                     searchKey: ''
                 },
                 proList: [],
-                Proposal: {context: '', userId: '', UserName: '', answer: ''},
-                returnDate: '',
-
-                filterList: [],
+                Proposal: {context: '', userId: '', UserName: ''},
+                context: '',
+                total:0,
             };
         },
         created() {
@@ -174,50 +172,52 @@
             this.getProList0();
         },
         methods: {
+
             savePro() {
-
-                this.Proposal.userName = this.UNAME;
-                this.Proposal.userId = tokenStore.session('User').id;
-
+                if (tokenStore.session('user') == null) {
+                    this.$message({
+                        message: "请先登录后再留言",
+                        type: 'error',
+                        duration: 3 * 1000
+                    });
+                }
+                if(this.Proposal.context == ''||this.Proposal.context == null){
+                    return false;
+                }
+                this.Proposal.userProfileUrl = "<img class=\"userLogo\" src=\"" + tokenStore.session('user').profileUrl + "\">";
+                this.Proposal.userName = tokenStore.session('user').userName;
+                this.Proposal.userId = tokenStore.session('user').id;
                 saveP(this.Proposal).then(response => {
+                    this.Proposal.context = '';
                     this.getProList0();
                 });
             },
             reply(proId) {
-
                 this.replyId = proId;
             },
             saveReply() {
-                for (var one  of  this.proList) {
-                    if (one.id === this.replyId) {
-                        this.Proposal.pid = this.replyId;
-                        this.Proposal.context = one.toUserName;
-                        break;
-                    }
-                }
 
+                this.Proposal.context = this.context;
+                this.Proposal.pid = this.replyId;
                 this.savePro();
-                this.Proposal.pid = '';
-                this.replyId = '';
-                this.Proposal.context = '';
+                this.replyId = 0;
+                this.context='';
+
             },
             getMorePro() {
 
                 this.listQuery.pageSize += 5;
-                this.listQuery.filterList = [];
-                this.listQuery.filterList.push({
-                    filterKey: 'index',
-                    filterValue: "11"
-                })
                 this.getProList0();
             },
             getProList0() {
+                this.listQuery.filterList = [];
                 this.listQuery.filterList.push({
                     filterKey: 'noblog',
                     filterValue: "11"
                 })
                 getProList(this.listQuery).then(response => {
                     this.proList = response.data.returnData.list;
+                    this.total = response.data.returnData.total;
                 });
             },
 
@@ -227,139 +227,13 @@
 </script>
 <style>
     /* CSS Document */
-    * {
-        margin: 0;
-        padding: 0
-    }
-
-    p {
-        word-wrap: break-word
-    }
-
-    ul, ol {
-        list-style: none;
-    }
-
-    a {
-        color: #a6a6a6;
-        text-decoration: none;
-        transition: All 1s ease;
-        -webkit-transition: All 1s ease;
-        -moz-transition: All 1s ease;
-        -ms-transition: All 1s ease;
-        -o-transition: All 1s ease;
-    }
-
-    a:hover {
-        color: #fff;
-    }
-
-    /* --------------------评论列表-------------------- */
-
-
-
-
-
-
-    .arrow_box {
-
-        box-shadow: 0px 1px 1px rgba(255, 0, 0, .7), inset 0px 1px 1px rgba(255, 0, 0, .7);
-
-        color: #000000;
-        border-radius: 6px;
-
-    }
-
-    .ti {
-        width: 0px;
-        height: 0px;
-        border-style: solid;
-        border-width: 0px 0 20px 22px;
-        border-color: transparent transparent transparent #20a0ff;
-
+    li {
+        list-style-type: none;
+        margin-bottom: 30px;
     }
 
 
 
-
-    .arrow_box h2.title {
-        padding: 0 0 0 20px;
-        font: 16px/50px "微软雅黑", "Microsoft YaHei", Arial, Helvetica, sans-serif
-    }
-
-    .arrow_box h2 a:hover {
-        padding-left: 20px
-    }
-
-    .textinfo {
-        overflow: hidden;
-        border: 1px #20a0ff solid;
-    }
-
-    .arrow_box img {
-        width: 150px;
-        padding: 4px;
-        float: left;
-        -webkit-transition: All 1s ease;
-        -moz-transition: All 1s ease;
-        -ms-transition: All 1s ease;
-        -o-transition: All 1s ease;
-        border-radius: 4px;
-        margin: 0 20px 20px;
-    }
-
-    .arrow_box img:hover {
-        opacity: 0.6;
-    }
-
-    .arrow_box p {
-        line-height: 24px;
-        padding: 0 20px 20px
-    }
-
-    .arrow_box p:hover {
-        text-shadow: 1px 1px 1px #000;
-    }
-
-    .details {
-
-        background: rgba(190, 190, 190, 0.3);
-        border-radius: 0 0 6px 6px;
-        padding: 5px 20px
-    }
-
-    .details li {
-        line-height: 26px;
-        display: inline;
-        font-size: 11px;
-        margin-right: 10px;
-    }
-
-    .details li a {
-        color: #3F3E3C
-    }
-
-    .details li a:hover {
-        color: #933
-    }
-
-    .icon-time {
-        background-position: 0 -208px;
-        padding: 0 0 0 18px;
-    }
-
-    .likes, .comments {
-        float: right;
-        padding: 0 0 0 14px;
-    }
-
-    .likes {
-        background-position: 0 -240px;
-    }
-
-    .comments {
-        background-position: 0 -220px;
-    }
 
 
 </style>

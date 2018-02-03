@@ -11,9 +11,6 @@
                     <br>
                     <div style="position:fixed;left:0;top:30%">
                         <ul>
-
-
-
                             <!-- <li @click=""><img src="../../img/leav.png"></li>-->
 
                             <li @click="qqFriend" class="qq img"></li>
@@ -47,14 +44,92 @@
                             <br>
                             <br>
                             <br>
-                            <div v-if="top==null||top==''"> <el-tag type="warning">这是作者的第一篇博客</el-tag></div>
-                            <div v-else><el-tag type="success">上一篇</el-tag><span @click="read(top.id)">&nbsp;<a>{{top.blogsName}}</a></span></div>
+                            <div v-if="top==null||top==''">
+                                <el-tag type="warning">这是作者的第一篇博客</el-tag>
+                            </div>
+                            <div v-else>
+                                <el-tag type="success">上一篇</el-tag>
+                                <span @click="read(top.id)">&nbsp;<a>{{top.blogsName}}</a></span></div>
                             <br>
-                            <div v-if="down==null||down==''"><el-tag type="warning">作者暂时还未更新</el-tag></div>
-                            <div v-else><el-tag type="success">下一篇</el-tag><span @click="read(down.id)">&nbsp;<a>{{down.blogsName}}</a></span></div>
+                            <div v-if="down==null||down==''">
+                                <el-tag type="warning">作者暂时还未更新</el-tag>
+                            </div>
+                            <div v-else>
+                                <el-tag type="success">下一篇</el-tag>
+                                <span @click="read(down.id)">&nbsp;<a>{{down.blogsName}}</a></span></div>
                         </div>
 
                         <div>
+                            <br>
+                            <br>
+                            <br>
+
+                            <el-input
+                                    type="textarea"
+                                    :autosize="{ minRows: 2, maxRows: 4}"
+                                    maxlength="800"
+                                    width="60%"
+                                    placeholder="请输入内容"
+                                    v-model="Proposal.context"></el-input>
+                            <div class="grid-content bg-purple"></div>
+
+                            <el-button
+                                    style="float: right;margin-top: 10px; border: 1px #20a0ff solid;background-color: white;color: #20a0ff;"
+                                    @click="savePro">&nbsp;&nbsp;评&nbsp;&nbsp;&nbsp;&nbsp;论&nbsp;&nbsp;
+                            </el-button>
+
+                            <br><br>
+                            <br><br>
+                            <ul v-for="item in proList" :key="item">
+                                <li>
+                                    <el-card class="box-card ">
+                                        <span v-html="item.userProfileUrl"></span> {{item.userName}} <span
+                                            class="y el-icon-date">{{item.creatTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</span>
+                                        <hr>
+                                        <br>
+                                        <p>{{item.context}}</p>
+                                        <br>
+                                        <a @click="reply(item.id)"
+                                           style="font-size: 16px;color:#20a0ff; ">回复</a>&nbsp;&nbsp;&nbsp;
+                                        <div v-if="replyId==item.id">
+                                            <el-input
+                                                    type="textarea"
+                                                    :autosize="{ minRows: 2, maxRows: 4}"
+                                                    maxlength="800"
+                                                    width="60%"
+                                                    placeholder="请输入内容"
+                                                    v-model="context"></el-input>
+                                            <div class="grid-content bg-purple"></div>
+                                            <el-button
+                                                    style="float: right;margin-top: 10px; border: 1px #20a0ff solid;background-color: white;color: #20a0ff;"
+                                                    @click="saveReply">&nbsp;&nbsp;回&nbsp;&nbsp;&nbsp;&nbsp;复&nbsp;&nbsp;
+                                            </el-button>
+
+                                        </div>
+                                        <br>
+                                        <br>
+                                        <br>
+
+                                        <div v-if="item.children!=null">
+                                            <ul v-for="it in item.children" :key="it">
+                                                <li>
+                                                    <el-card class="box-card ">
+                                                        <span v-html="it.userProfileUrl"></span> {{it.userName}} <span
+                                                            class="y el-icon-date">{{it.creatTime|parseTime('{y}-{m}-{d} {h}:{i}:{s}')}}</span>
+                                                        <hr>
+                                                        <br>
+                                                        <p>{{it.context}} </p>
+                                                        <br>
+                                                    </el-card>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </el-card>
+                                </li>
+                            </ul>
+
+                            <br><br>
+                            <el-button v-if="listQuery.pageSize<total" @click="getMorePro" style="margin-left: 42%;" type="info">查看更多</el-button>
                         </div>
                     </div>
                     <div style="margin-top: 17%;font-size: 20px; font-weight: 300; color: #999;" v-if="noBlog"
@@ -69,7 +144,7 @@
 
                     <br>
                     <br>
-                    <el-card class="box-card">
+                    <el-card class="box-card" v-if="!noBlog">
                         <div slot="header" class="clearfix">
                             <!-- <span style="color: #666;font-size: 16px;">  本文作者：</span>-->
                             <span v-html="headurl"></span><span style="padding: 13px;">{{user.userName}}</span>
@@ -155,7 +230,8 @@
 <script>
     import top from '../component/top';
     import down from '../component/down';
-    import {getBlogsById, saveComents, getComentsList, getTopAndDown} from 'api/blog/blog';
+    import {getBlogsById, getTopAndDown} from 'api/blog/blog';
+    import {saveP, getProList} from 'api/blog/proposal';
     import {getRankIng} from 'api/admin/index';
     import {getUserById} from 'api/blog/user';
     import tokenStore from 'store2';
@@ -192,18 +268,85 @@
                     id: '', uid: '', userName: '', uSource: '', location: '', description: '',
                     profileUrl: '', gender: '', passWord: '', email: '', integral: '', status: '', createdTime: '',
                 }, headurl: '',
+                replyId: 0,
+                listQuery: {
+                    pageNum: 1,
+                    pageSize: 5,
+                    filterList: [],
+                    sortList: [],
+                    searchKey: ''
+                },
+                proList: [],
+                Proposal: {context: '', userId: '', UserName: ''},
+                context: '',
+                total:0,
             };
         }, created() {
             this.loadingBlog = true;
             this.getBById(this.$route.query.id);
-            //this.getComents();
             getRankIng().then(response => {
                 this.showRanking = true;
                 this.ranking = response.data.returnData;
             });
+            this.listQuery.filterList = [];
+            this.listQuery.filterList.push({
+                filterKey: 'index',
+                filterValue: "11"
+            })
+            this.getProList0();
         },
 
         methods: {
+            savePro() {
+                if (tokenStore.session('user') == null) {
+                    this.$message({
+                        message: "请先登录后再留言",
+                        type: 'error',
+                        duration: 3 * 1000
+                    });
+                }
+                if (this.Proposal.context == '' || this.Proposal.context == null) {
+                    return false;
+                }
+                this.Proposal.blogId=this.$route.query.id;
+                this.Proposal.userProfileUrl = "<img class=\"userLogo\" src=\"" + tokenStore.session('user').profileUrl + "\">";
+                this.Proposal.userName = tokenStore.session('user').userName;
+                this.Proposal.userId = tokenStore.session('user').id;
+                saveP(this.Proposal).then(response => {
+                    this.Proposal.context = '';
+                    this.getProList0();
+                });
+            },
+            reply(proId) {
+                this.replyId = proId;
+            },
+            saveReply() {
+
+                this.Proposal.context = this.context;
+                this.Proposal.pid = this.replyId;
+                this.savePro();
+                this.replyId = 0;
+                this.context = '';
+
+            },
+            getMorePro() {
+
+                this.listQuery.pageSize += 5;
+                this.getProList0();
+            },
+            getProList0() {
+
+
+                this.listQuery.filterList.push({
+                    filterKey: 'blogId',
+                    filterValue: this.$route.query.id
+                });
+                getProList(this.listQuery).then(response => {
+                    this.proList = response.data.returnData.list;
+                    this.total = response.data.returnData.total;
+                });
+            },
+
             getBById(id) {
                 getBlogsById(id, this.getIp()).then(response => {
                     if (response.data.returnCode == 404 || response.data.returnCode == 400) {
@@ -233,23 +376,7 @@
                 });
                 this.resourceDialog = false;
             },
-            savePinglun() {
-                this.Comments.context = this.textarea;
-                this.Comments.blogId = this.$route.query.id;
-                this.Comments.userId = tokenStore.local('User').id;
-                this.Comments.userName = tokenStore.local('User').userName;
 
-                saveComents(this.Comments).then(response => {
-                    this.getComents();
-                });
-            },
-            getComents() {
-                this.Comments.blogId = this.$route.query.id;
-                this.Comments.userId = tokenStore.session('user').id;
-                getComentsList(this.Comments, this.pageSize).then(response => {
-                    this.comentsList = response.data.returnData.list;
-                });
-            },
             loading() {
                 this.pageSize += 5;
                 this.getComents();
@@ -290,12 +417,14 @@
 <style>
     ul li {
         list-style-type: none;
-       margin-bottom: 20px;
+        margin-bottom: 20px;
     }
-    a:hover{
+
+    a:hover {
         cursor: pointer;
         color: blue;
     }
+
     .img {
         z-index: 3;
         width: 39px;
@@ -304,8 +433,6 @@
 
         background-repeat: no-repeat;
     }
-
-
 
     .qqZon {
         background-image: url(../../img/qqZon.png);
@@ -322,7 +449,6 @@
     .twb:hover {
         background-image: url(../../img/twb1.png)
     }
-
 
 
 </style>

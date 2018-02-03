@@ -15,6 +15,10 @@
     .cursor {
         cursor: pointer;
     }
+    *{
+        margin: 0;
+        padding: 0;
+    }
     el-icon{
         margin-right:6px;
     }
@@ -39,5 +43,11 @@
     }.y{
         float: right;
          }
+    .userLogo {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        position:relative; top:2px;
+    }
 
 </style>
