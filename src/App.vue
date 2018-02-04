@@ -15,6 +15,12 @@
     .cursor {
         cursor: pointer;
     }
+    .el-tag--primary {
+        background-color: rgba(32, 160, 255, .1);
+        border-color: rgba(32, 160, 255, .2);
+        color: #20a0ff;
+        margin-right: 10px;
+    }
     *{
         margin: 0;
         padding: 0;

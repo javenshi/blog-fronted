@@ -74,15 +74,16 @@
                 </ul>
 
                 <br><br>
-                <el-button v-if="listQuery.pageSize<total" @click="getMorePro" style="margin-left: 42%;" type="info">查看更多</el-button>
-
+                <el-button v-if="listQuery.pageSize<total" @click="getMorePro" style="margin-left: 42%;" type="info">加载更多</el-button>
+                <p v-else style="color: #999;margin-left: 42%;">我是有底线的</p>
             </el-col>
 
             <el-col :span="8">
 
                 <el-card class="box-card">
                     <div>
-                        智享简介：<br>
+                        <strong>智享简介：</strong><br><br>
+                        <div style="font-size: 14px;">
                         <span style="margin-left: 30px;"></span> 智享，一个分享你智慧和才智的地方。 <br>
                         <span style="margin-left: 30px;"></span> 站长和站长夫人是97年生人，作为年轻人，我们的梦想以及成立智享的初衷是为了给广大热爱学习的朋友们提供一个
                         写写博客，分享分享资源的平台。仅此而已。<br>
@@ -93,8 +94,9 @@
                         <span style="margin-left: 30px;"></span> 2.本站所有博客及资源都会经过站长审核，如果您发现有人抄袭您的作品请直接联系站长，一经核实，马上处理。<br>
                         <span style="margin-left: 30px;"></span> 3.如果您想学习建站技巧，请联系站长<br>
                         <span style="margin-left: 30px;"></span> 4.如果您想成为智享的一员，和站长一起经营智享，那么请加入我们。<br>
-                        <br><br>联系站主:<a target="_blank"
-                                        href="http://wpa.qq.com/msgrd?v=3&uin=2388386839&site=qq&menu=yes"><img src=""
+                        </div>
+                        <br><br><strong>联系站主:</strong> &nbsp;&nbsp;<a target="_blank"
+                                        href="http://wpa.qq.com/msgrd?v=3&uin=2388386839&site=qq&menu=yes"><img src="../../img/qqjiaoliu.png"
                                                                                                                 alt="qq"
                                                                                                                 title="qq"/></a>
                         <el-popover
@@ -105,17 +107,18 @@
                                 trigger="hover"
                         ><img src="../../assets/wecat.png">
                         </el-popover>
-                        <a v-popover:popover1>微信</a>
+                        <a v-popover:popover1><img src="../../img/weixinjiaoliu.png"></a>
 
                         <br><br>
-                        加入我们:<a target="_blank"
+                       <strong> 加入我们:</strong>&nbsp;&nbsp;&nbsp;<a target="_blank"
                                 href="//shang.qq.com/wpa/qunwpa?idkey=d45324b056242c9171abd284c697d99e182b5963bf5f6018315c14cb243d8e01"><img
                             border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="智享" title="智享"></a>
                         <br><br>
+                        <div style="font-size: 14px;">
                         如果您觉得本站的内容给您带来了帮助，恰好您愿意打赏一下的话，请动一下您的小手为我们的服务器延长一下期限：
-                        <br><br><br> 微信：<br>
+                        </div><br><br><br> <strong>微信：</strong><br>
                         <img src="../../img/WM.png"><br>
-                        支付宝：<br>
+                        <strong>支付宝：</strong><br>
                         <img src="../../img/PM.png">
 
                     </div>
@@ -165,6 +168,7 @@
             };
         },
         created() {
+            this.listQuery.filterList = [];
             this.listQuery.filterList.push({
                 filterKey: 'index',
                 filterValue: "11"
@@ -210,7 +214,7 @@
                 this.getProList0();
             },
             getProList0() {
-                this.listQuery.filterList = [];
+
                 this.listQuery.filterList.push({
                     filterKey: 'noblog',
                     filterValue: "11"

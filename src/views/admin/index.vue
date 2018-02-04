@@ -246,7 +246,7 @@
             this.getAllC();
             this.getBlogs();
             this.getReso();
-            this.getProList0();
+           // this.getProList0();
         },
         filters: {
             formatDate(time) {
@@ -291,10 +291,9 @@
                 });
             },
             getReso() {
-                this.resource.resouceName = "";
-                this.resource.status = 3;
-                getResouceList(this.resource, this.pageSize).then(response => {
-                    this.resourceList = response.data.returnData.list;
+
+                getResouceList(this.listQuery).then(response => {
+                    this.resourceList = response.data.returnData.pageInfo.list;
                 });
             },
             saveNotice() {

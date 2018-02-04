@@ -361,7 +361,7 @@
                 this.listQuery.filterList = [];
                 this.listQuery.filterList.push({
                     filterKey: 'userId',
-                    filterValue: this.user.id
+                    filterValue: tokenStore.session('user').id
                 });
 
                 selectBlogsPage(this.listQuery).then(response => {
@@ -373,7 +373,7 @@
                 this.listQuery1.filterList = [];
                 this.listQuery1.filterList.push({
                     filterKey: 'userId',
-                    filterValue: this.user.id
+                    filterValue: tokenStore.session('user').id
                 });
 
                 selectResourcesPage(this.listQuery1).then(response => {

@@ -121,11 +121,10 @@
                         </el-col>
                         <el-col :span="1">
                             <br>
-                            <div align="center">
-                                <el-button type="small" @click="toLeft"><i class="el-icon-d-arrow-left"></i></el-button>
+                            <div align="center ">
+                                <img  @click="toLeft" class="cursor" src="../../img/huadong.png">
                                 <br>
-                                <el-button type="small" @click="toRight"><i class="el-icon-d-arrow-right"></i>
-                                </el-button>
+
                             </div>
                         </el-col>
                         <el-col :span="5">
@@ -316,11 +315,14 @@
 
         methods: {
             toLeft() {
-                this.blog = true;
+                if(this.blog){
+                    this.blog = false;
+                }else{
+                    this.blog = true;
+                }
+
             },
-            toRight() {
-                this.blog = false;
-            },
+
             read(id) {
                 this.$router.push('/blog/read?id=' + id);
             },

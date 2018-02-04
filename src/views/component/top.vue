@@ -27,12 +27,17 @@
                     </div>
                 </div>
                 <div class="topbar-product topbar-left">
+                    <div class="topbar-btn  " >
+                        <router-link :to="'/UI/ui'"> UI专区</router-link>
+                    </div>
+                </div>
+                <div class="topbar-product topbar-left">
                     <div class="topbar-btn " @click="leav">
                         留言
                     </div>
                 </div>
                 <div class="topbar-product topbar-left">
-                    <div class="topbar-btn ">
+                    <div class="topbar-btn " v-if="user.authority==1">
                         <router-link :to="'/admin/index'">后台</router-link>
                     </div>
                 </div>
@@ -70,20 +75,31 @@
 
             <el-form :model="resource" status-icon ref="resour"
                      class="demo-ruleForm">
-                <el-form-item label="资源名称:" prop="resouceName" required>
+                <el-form-item label="资源名称:" prop="resouceName" :rules="[
+        { min:1,max:100, message: '标题长度不规范', trigger: 'blur' },
+         { required: true, message: '请输入标题', trigger: 'blur' }
+                                ]" >
                     <el-input size="small" type="input" v-model="resource.resouceName"
                               auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="资源Url:" prop="resouceUrl" required>
+
+                <el-form-item label="资源Url:" prop="resouceUrl" :rules="[
+                    {pattern:/^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?$/, message: 'url格式不正确',trigger: 'blur'},
+        { min:1,max:1000, message: 'url长度不规范', trigger: 'blur' },
+         { required: true, message: '请输入url', trigger: 'blur' }
+                                ]" >
                     <el-input size="small" type="input" v-model="resource.resouceUrl"
                               auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="资源描述:" prop="context">
+                <el-form-item label="资源描述:" prop="context" :rules="[
+        { min:1,max:1000, message: '描述长度不规范', trigger: 'blur' },
+         { required: true, message: '请输入描述', trigger: 'blur' }
+                                ]" >
                     <el-input type="textarea" v-model="resource.context"></el-input>
                 </el-form-item>
                 <el-form-item>
                     <el-button @click="closeResourceDialog('resour')">取 消</el-button>
-                    <el-button @click="saveReso" type="primary">确
+                    <el-button @click="saveReso('resour')" type="primary">确
                         定
                     </el-button>
                 </el-form-item>
@@ -137,8 +153,8 @@
                 <img src="../../img/login1.png" class="cursor" @click="login('dynamicValidateForm')">
                 <br>
                 <br>
-               — —使用第三方登录方式<span style="color: red">&nbsp;or&nbsp;</span><span
-                    class="cursor" @click="loginOrRigister=false">注册一个</span> — —
+                — —使用第三方登录方式<span style="color: red">&nbsp;or&nbsp;</span><span
+                    class="cursor font" @click="loginOrRigister=false">注册一个</span> — —
             </div>
             <div style="width: 320px;" v-else>
                 <el-form :model="rigitsterForm" ref="rigitsterRules" label-width="100px" class="demo-dynamic">
@@ -199,13 +215,13 @@
                 <br>
                 <br>
                 — —使用第三方登录方式<span style="color: red">&nbsp;or&nbsp;</span><span
-                    class="cursor" @click="loginOrRigister=true">去登录</span> — —
+                    class="cursor font" @click="loginOrRigister=true">去登录</span> — —
             </div>
             <br>
             <div class="ul">
 
                 <li class="loginLogo qq" @click="openQQ"></li>
-                <li class="loginLogo wx"></li>
+              <!--  <li class="loginLogo wx"></li>-->
                 <li class="loginLogo wb" @click="openWB"></li>
 
             </div>
@@ -213,7 +229,6 @@
 
             <br>
             <br>
-
 
 
             <br><br>
@@ -238,9 +253,10 @@
                 user: {
                     id: '', uid: '', userName: '', uSource: '', location: '', description: '',
                     profileUrl: '', gender: '', passWord: '', email: '', integral: '', status: '', createdTime: '',
+                    authority:'',
                 },
                 loginUser: {
-                    userName: '',  passWord1: ''
+                    userName: '', passWord1: ''
                 },
                 headurl: '',
                 search: '',
@@ -270,9 +286,9 @@
             if (tokenStore.session('user') != null) {
 
                 this.user = tokenStore.session('user');
-                if(this.user.profileUrl !=null&&this.user.profileUrl !=''){
+                if (this.user.profileUrl != null && this.user.profileUrl != '') {
                     this.headurl = '<img class="common-topbar-user-image-wrapper1" src=' + this.user.profileUrl + '>';
-                }else{
+                } else {
                     this.headurl = '<img class="common-topbar-user-image-wrapper1" src="favicon.ico">';
                 }
             }
@@ -310,20 +326,25 @@
                 }
 
             },
-            saveReso() {
-                this.resource.userId = tokenStore.session('user').id;
-                this.resource.userName = tokenStore.session('user').userName;
-                this.resource.profileUrl = "<img class=\"userLogo\" src=\"" + tokenStore.session('user').profileUrl + "\">";
-                saveResouce(this.resource).then(response => {
-                    this.$notify({
-                        title: response.data.returnCode == 200 ? '成功' : '失败',
-                        message: response.data.returnMsg,
-                        type: response.data.returnCode == 200 ? 'success' : 'warning',
-                        duration: 5000
-                    });
-                    this.resourceDialog = false;
+            saveReso(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        this.resource.userId = tokenStore.session('user').id;
+                        this.resource.userName = tokenStore.session('user').userName;
+                        this.resource.status = 2;
+                        this.resource.profileUrl = "<img class=\"userLogo\" src=\"" + tokenStore.session('user').profileUrl + "\">";
+                        saveResouce(this.resource).then(response => {
+                            this.$notify({
+                                title: response.data.returnCode == 200 ? '成功' : '失败',
+                                message: response.data.returnMsg,
+                                type: response.data.returnCode == 200 ? 'success' : 'warning',
+                                duration: 5000
+                            });
+                            this.resourceDialog = false;
+                        });
+                        window.location.reload();
+                    }});
 
-                });
             },
 
             openResourceDialog() {
@@ -383,12 +404,12 @@
             rigster(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
-                        var pass=this.rigitsterForm.passWord;
+                        var pass = this.rigitsterForm.passWord;
                         saveUser(this.rigitsterForm).then(response => {
-                            if(response.data.returnCode != 200){
-                                this.rigitsterForm.passWord=pass;
-                            } else{
-                                this.rigitsterForm=true;
+                            if (response.data.returnCode != 200) {
+                                this.rigitsterForm.passWord = pass;
+                            } else {
+                                this.rigitsterForm = true;
                             }
 
                             this.$notify({
@@ -408,18 +429,20 @@
                     if (valid) {
 
                         login(this.loginUser).then(response => {
-
-                            if (response.data.returnCode == 200) {
-                                tokenStore.session.set("user", response.data.returnData);
-                            }
-
-                            window.location.reload();
                             this.$notify({
                                 title: response.data.returnCode == 200 ? '成功' : '失败',
                                 message: response.data.returnMsg,
                                 type: response.data.returnCode == 200 ? 'success' : 'warning',
                                 duration: 5000
                             });
+                            if (response.data.returnCode == 200) {
+                                tokenStore.session.set("user", response.data.returnData);
+                            }else{
+                                return false;
+                            }
+
+                            window.location.reload();
+
 
 
                         });
@@ -431,6 +454,9 @@
 </script>
 <style>
 
+    .font {
+        color: #20a0ff;
+    }
 
     .ul {
         width: fit-content;
@@ -480,13 +506,11 @@
         transition: all .3s linear
     }
 
-
-
     .aliyun-common-search-container.active, .aliyun-common-search-container:hover {
         background: #262c30
     }
 
-    .aliyun-common-search-container.active , .aliyun-common-search-container:hover .aliyun-common-search-outline {
+    .aliyun-common-search-container.active, .aliyun-common-search-container:hover .aliyun-common-search-outline {
         opacity: 1
     }
 

@@ -69,3 +69,18 @@ export function getNoticeList() {
         method: 'post'
     });
 }
+export function seletcClassifyName() {
+
+    return fetch({
+        url: '/api/blog/seletcClassifyName',
+        method: 'post'
+    });
+}
+export function insertClassName(query) {
+
+    return fetch({
+        url: '/api/blog/insertClassName',
+        method: 'post',
+        data:query
+    });
+}

@@ -16,6 +16,8 @@ const updateBlogs = _import('blog/updateBlogs');
 const leav = _import('blog/leav');
 const wLogin = _import('login/login');
 const qLogin = _import('login/qqLogin');
+const ui = _import('UI/ui');
+const browse = _import('UI/browse');
 
 const Admin = _import('admin/index');
 
@@ -45,6 +47,8 @@ export const constantRouterMap = [
     { meta: { role: [""] }, path: '/blog/leav', name: '留言', component: leav, hidden: true },
     { meta: { role: [""] }, path: '/login' , name: '微博登录', component: wLogin, hidden: true },
     { meta: { role: [""] }, path: '/qqLogin' , name: 'QQ登录', component: qLogin, hidden: true },
+    { meta: { role: [""] }, path: '/UI/ui' , name: 'UI专区', component: ui, hidden: true },
+    { meta: { role: [""] }, path: '/UI/browse' , name: '浏览ui', component: browse, hidden: true },
     { path: '*', component: Err404, hidden: true, meta: { role: [""] } }
 
 ]

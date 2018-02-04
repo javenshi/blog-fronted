@@ -30,7 +30,7 @@
                     <div v-if="!noBlog" v-loading="loadingBlog"
                          element-loading-text="拼命加载中"
                          element-loading-spinner="el-icon-loading"
-                         element-loading-background="rgba(0, 0, 0, 0.8)">
+                         element-loading-background="rgba(0, 0, 0, 0.8)"style="height: 800px;">
                         <div>
                             <div>
                                 <h1> {{blog.blogsName}}</h1>
@@ -129,7 +129,8 @@
                             </ul>
 
                             <br><br>
-                            <el-button v-if="listQuery.pageSize<total" @click="getMorePro" style="margin-left: 42%;" type="info">查看更多</el-button>
+                            <el-button v-if="listQuery.pageSize<total" @click="getMorePro" style="margin-left: 42%;" type="info">加载更多</el-button>
+                            <p v-else style="color: #999;margin-left: 42%;">我是有底线的</p>
                         </div>
                     </div>
                     <div style="margin-top: 17%;font-size: 20px; font-weight: 300; color: #999;" v-if="noBlog"
@@ -336,7 +337,6 @@
             },
             getProList0() {
 
-
                 this.listQuery.filterList.push({
                     filterKey: 'blogId',
                     filterValue: this.$route.query.id
@@ -388,14 +388,14 @@
                 this.getBById(id);
             },
             weiBo() {
-                window.open("http://service.weibo.com/share/share.php?url=http://www.zhixiang.org.cn/%23/blog/read?id=" + this.blog.id + "&title=我在智享看到了 " + this.blog.blogsName + " ,真的很赞。&pic=http://www.zhixiang.org.cn/img/120-120.png&appkey=3191489564&searchPic=false");
+                window.open("http://service.weibo.com/share/share.php?url=http://www.zhixiang.org.cn/%23/blog/read?id=" + this.blog.id + "&title=我在智享看到了 " + this.blog.blogsName + " ,真的很赞。&pic=http://zx-blog.oss-cn-beijing.aliyuncs.com/ui/%E5%AE%A3%E4%BC%A0%E5%9B%BE.png&appkey=3191489564&searchPic=false");
             },
             qqZone() {
-                window.open("http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://www.zhixiang.org.cn&showcount=0&title=我在智享看到了 " + this.blog.blogsName + " ,真的很赞。&pic=http://www.zhixiang.org.cn/img/120-120.png");
+                window.open("http://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=http://www.zhixiang.org.cn&showcount=0&title=我在智享看到了 " + this.blog.blogsName + " ,真的很赞。&pic=http://zx-blog.oss-cn-beijing.aliyuncs.com/ui/%E5%AE%A3%E4%BC%A0%E5%9B%BE.png");
             }, qqFriend() {
-                window.open("http://connect.qq.com/widget/shareqq/index.html?url=http://www.zhixiang.org.cn/%23/blog/read?id=" + this.blog.id + "&title=智享&summary=我在智享看到了 " + this.blog.blogsName + " ,真的很赞。&pics=http://www.zhixiang.org.cn/img/120-120.png&site=http://www.zhixiang.org.cn&style=201&width=32&height=32");
+                window.open("http://connect.qq.com/widget/shareqq/index.html?url=http://www.zhixiang.org.cn/%23/blog/read?id=" + this.blog.id + "&title=智享&summary=我在智享看到了 " + this.blog.blogsName + " ,真的很赞。&pics=http://zx-blog.oss-cn-beijing.aliyuncs.com/ui/%E5%AE%A3%E4%BC%A0%E5%9B%BE.png&site=http://www.zhixiang.org.cn&style=201&width=32&height=32");
             }, tencentWeiBo() {
-                window.open("http://share.v.t.qq.com/index.php?c=share&a=index&url=http://www.zhixiang.org.cn/%23/blog/read?id=" + this.blog.id + "&title=我在智享看到了 " + this.blog.blogsName + " ,真的很赞。&site=我在智享看到了 " + this.blog.blogsName + " ,真的很赞。&pic=http://www.zhixiang.org.cn/img/120-120.png");
+                window.open("http://share.v.t.qq.com/index.php?c=share&a=index&url=http://www.zhixiang.org.cn/%23/blog/read?id=" + this.blog.id + "&title=我在智享看到了 " + this.blog.blogsName + " ,真的很赞。&site=我在智享看到了 " + this.blog.blogsName + " ,真的很赞。&pic=http://zx-blog.oss-cn-beijing.aliyuncs.com/ui/%E5%AE%A3%E4%BC%A0%E5%9B%BE.png");
             },
 
         },
@@ -406,8 +406,10 @@
                     return '男';
                 } else if ('f' == gender) {
                     return '女';
-                } else {
+                } else if('n' == gender){
                     return '未知';
+                }else{
+                    return '';
                 }
             }
         }
