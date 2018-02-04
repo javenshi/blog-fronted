@@ -11,16 +11,16 @@
                             <el-row :gutter="20">
                                 <div v-for=" item in uiList" :key="item">
                                 <el-col :span="6">
-                                    <el-card class="box-card">
-                                        <div class="cursor cursor1" @click="browse(item.id)" v-html="item.brief"></div>
+                                    <el-card class="box-card"style="margin-bottom: 10px;" >
+                                        <div class="cursor " @click="browse(item.id)" v-html="item.brief"></div>
                                         <strong> {{item.uiName}}</strong><br>
 
-                                        <span class="img1"><span
+                                        <span class="img1 time" ><span
                                                 v-html="item.profileUrl"></span> {{item.userName}}</span>
-                                        <span class="img1"><img
+                                        <span class="img1 time"><img class="time"
                                                 src="../../img/click.png"> {{item.uiClick}}</span>
                                         <br>
-                                        <span class="img1"><img
+                                        <span class="img1"><img class="time"
                                                 src="../../img/time.png">
                                             {{item.createdTime|parseTime('{y}-{m}-{d} {h}:{i} ')}}
                                         </span>
@@ -137,7 +137,7 @@
                 this.ui.brief = "<img style=\"width: 100%;height: 200px;\" src=\"" + response.returnData + "\">";
             },
             successMore(response, file, fileList) {
-                this.ui.sample = "<img style=\"width: 100%;height: 100%;\" src=\"" + response.returnData + "\"><br><br>";
+                this.ui.sample = this.ui.sample+"<img style=\"width: 100%;height: 100%;\" src=\"" + response.returnData + "\"><br><br>";
                 this.fileList.push({
                     name: file.name,
                     url: file.url
@@ -182,8 +182,3 @@
     }
 </script>
 
-<style>
-    .cursor1:hover{
-       margin-top: -3px;
-    }
-</style>

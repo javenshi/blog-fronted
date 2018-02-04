@@ -53,7 +53,7 @@
                                                 <span class="part"> {{scope.row.blogsPart}}...</span>
                                                 <br> <span
                                                     class="className"> {{scope.row.blogsClassifyName}}</span>
-                                                <span class="img1"><img
+                                                <span class="img1 "><img class="time"
                                                         src="../../img/time.png" >{{scope.row.blogsDate|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
                                                 <span  class="img1"><span
                                                         v-html="scope.row.profileUrl"></span>{{scope.row.userName}}</span>
@@ -96,8 +96,8 @@
                                                 <br>
                                                 <br>
                                                 <span class="part"> {{scope.row.context}}...</span>
-                                                <br> <span class="className"> {{scope.row.blogsClassifyName}}</span>
-                                                <span  class="img1"><img
+                                                <br>
+                                                <span  class="img1 "><img class="time"
                                                         src="../../img/time.png" >{{scope.row.creatTime|parseTime('{y}-{m}-{d} {h}:{i} ')}}</span>
                                                 <span  class="img1"><span
                                                         v-html="scope.row.profileUrl"></span>{{scope.row.userName}}</span>
@@ -425,7 +425,10 @@
 
 <style>
 
-
+.time{
+    margin-bottom: -2px;
+    margin-right: 5px;
+}
     .rTitle {
         margin-left:-75%;color: #666;font-size: 16px;
     }

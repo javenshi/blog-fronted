@@ -27,8 +27,8 @@
                     </div>
                 </div>
                 <div class="topbar-product topbar-left">
-                    <div class="topbar-btn  " >
-                        <router-link :to="'/UI/ui'"> UI专区</router-link>
+                    <div class="topbar-btn  " @click="toUi">
+                        UI专区
                     </div>
                 </div>
                 <div class="topbar-product topbar-left">
@@ -113,18 +113,11 @@
             </div>
             <br>
             <br>
-            <div style="width: 320px;" v-if="loginOrRigister">
-                <el-form :model="loginUser" ref="dynamicValidateForm" label-width="100px" class="demo-dynamic">
+            <div style="width: 320px;">
+                <el-form :model="loginUser" ref="dynamicValidateForm" :rules="rule21" label-width="100px" class="demo-dynamic">
                     <el-form-item
                             prop="userName"
                             label="用户名"
-                            :rules="[
-        { min:2,max:20, message: '用户名长度不规范', trigger: 'blur，change' },
-       {  pattern:/^[^ ]+$/, message: '用户名中不能包含空格',trigger: 'blur'},
-       {  pattern:/^[^'`/+ - \\ ()（）《》<>~#^$@%&!*,.'' ? <> -]+$/, message: '用户名中不能包含特殊字符',trigger: 'blur'},
-       {  pattern:/^[^😃]+$/, message: '用户名中不能包含表情',trigger: 'blur'},
-         { required: true, message: '请输入用户名', trigger: 'blur' }
-    ]"
                             required>
                         <el-input autoComplete="off"
                                   placeholder="用户名" type="text" v-model="loginUser.userName"></el-input>
@@ -137,11 +130,7 @@
                     <el-form-item
                             prop="passWord1"
                             label="密码"
-                            :rules="[
-                                 { min:2,max:20, message: '密码长度不规范', trigger: 'blur，change' },
-      { required: true, message: '请输入密码', trigger: 'blur' }
-      ,
-    ]" required
+                             required
                     >
                         <el-input type="password" autoComplete="off" placeholder="密码"
                                   v-model="loginUser.passWord1"></el-input>
@@ -154,46 +143,52 @@
                 <br>
                 <br>
                 — —使用第三方登录方式<span style="color: red">&nbsp;or&nbsp;</span><span
-                    class="cursor font" @click="loginOrRigister=false">注册一个</span> — —
+                    class="cursor font" @click="loginOrRigister=true;">注册一个</span> — —
             </div>
-            <div style="width: 320px;" v-else>
-                <el-form :model="rigitsterForm" ref="rigitsterRules" label-width="100px" class="demo-dynamic">
+
+
+            <br>
+           <div>
+            <ul style="margin-left: 45%;margin-right: 40%;" >
+                <li class="loginLogo qq" @click="openQQ"></li>
+              <!--  <li class="loginLogo wx"></li>-->
+                <li class="loginLogo wb" @click="openWB"></li>
+            </ul>
+            </div>
+
+
+            <br>
+            <br>
+
+
+            <br><br>
+
+        </el-dialog>
+        <el-dialog :visible.sync="loginOrRigister" align="center">
+            <div>
+                <img src="../../img/login.png">
+            </div>
+            <br>
+            <br>
+            <div style="width: 320px;" >
+                <el-form :model="rigitsterForm" ref="rigitsterRules" :rules="rule22" label-width="100px" class="demo-dynamic">
                     <el-form-item
                             prop="userName"
                             label="用户名"
-                            :rules="[
-        { min:2,max:20, message: '用户名长度不规范', trigger: 'blur' },
-       {  pattern:/^[^ ]+$/, message: '用户名中不能包含空格',trigger: 'blur'},
-       {  pattern:/^[^'`/+ - \\ ()（）《》<>~#^$@%&!*,.'' ? <> -]+$/, message: '用户名中不能包含特殊字符',trigger: 'blur'},
-       {  pattern:/^[^😃]+$/, message: '用户名中不能包含表情',trigger: 'blur'},
-         { required: true, message: '请输入用户名', trigger: 'blur' }
-    ]"
-
                             required>
                         <el-input type="text" v-model="rigitsterForm.userName"
                                   auto-complete="off" placeholder="用户名"></el-input>
                     </el-form-item>
-                    <el-form-item prop="passWord" label="密码:" :rules="[
-        { min:2,max:20, message: '密码长度不规范', trigger: 'blur，change' },
-       {  pattern:/^[^ ]+$/, message: '密码中不能包含空格',trigger: 'blur'},
-         { required: true, message: '请输入密码', trigger: 'blur' }
-    ]" required>
+                    <el-form-item prop="passWord" label="密码:"  required>
                         <el-input type="password" v-model="rigitsterForm.passWord"
                                   placeholder="密码"></el-input>
                     </el-form-item>
 
-                    <el-form-item prop="email" label="邮箱:" :rules="[
-                        { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' },
-         {required: true, message: '请输入邮箱', trigger: 'blur'}
-    ]" required>
+                    <el-form-item prop="email" label="邮箱:" required>
                         <el-input type="text" v-model="rigitsterForm.email"
                                   placeholder="邮箱"></el-input>
                     </el-form-item>
-                    <el-form-item prop="code" label="验证码:" :rules="[
-                        { min:6,max:6, message: '请输入6位验证码', trigger: 'blur' },
-         {required: true, message: '请输入验证码', trigger: 'blur'}
-
-    ]" required>
+                    <el-form-item prop="code" label="验证码:" required>
                         <el-input type="text" style="width: 40%" v-model="rigitsterForm.code"
                                   placeholder="验证码"></el-input>
 
@@ -214,25 +209,9 @@
                 <img src="../../img/rigister.png" class="cursor" @click="rigster('rigitsterRules')">
                 <br>
                 <br>
-                — —使用第三方登录方式<span style="color: red">&nbsp;or&nbsp;</span><span
-                    class="cursor font" @click="loginOrRigister=true">去登录</span> — —
+                <span
+                    class="cursor font" @click="loginOrRigister=false;loginDialog=true;">去登录</span>
             </div>
-            <br>
-            <div class="ul">
-
-                <li class="loginLogo qq" @click="openQQ"></li>
-              <!--  <li class="loginLogo wx"></li>-->
-                <li class="loginLogo wb" @click="openWB"></li>
-
-            </div>
-
-
-            <br>
-            <br>
-
-
-            <br><br>
-
         </el-dialog>
     </div>
 
@@ -273,11 +252,33 @@
                     passWord: '',
                     checkPassWord: ''
                 },
-                loginOrRigister: true,
+                loginOrRigister: false,
                 timer: null,
                 showTime: false,
                 valCode: '',
-                rigitsterRules: {},
+                rule22: {
+                    userName: [  { min:2,max:20, message: '用户名长度不规范', trigger: 'blur，change' },
+                        {  pattern:/^[^ ]+$/, message: '用户名中不能包含空格',trigger: 'blur'},
+                        {  pattern:/^[^'`/+ - \\ ()（）《》<>~#^$@%&!*,.'' ? <> -]+$/, message: '用户名中不能包含特殊字符',trigger: 'blur'},
+                        {  pattern:/^[^😃]+$/, message: '用户名中不能包含表情',trigger: 'blur'},
+                        { required: true, message: '请输入用户名', trigger: 'blur' }],
+                    passWord:[  { min:2,max:20, message: '密码长度不规范', trigger: 'blur' },
+                        {  pattern:/^[^ ]+$/, message: '密码中不能包含空格',trigger: 'blur'},
+                        { required: true, message: '请输入密码', trigger: 'blur,change' }],
+                    email:[{ type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' },
+                        {required: true, message: '请输入邮箱', trigger: 'blur'}],
+                    code:[ { min:6,max:6, message: '请输入6位验证码', trigger: 'blur' },
+                        {required: true, message: '请输入验证码', trigger: 'blur'}],
+                },
+                rule21: {
+                    userName: [  { min:2,max:20, message: '用户名长度不规范', trigger: 'blur' },
+                        {  pattern:/^[^ ]+$/, message: '用户名中不能包含空格',trigger: 'blur'},
+                        {  pattern:/^[^'`/+ - \\ ()（）《》<>~#^$@%&!*,.'' ? <> -]+$/, message: '用户名中不能包含特殊字符',trigger: 'blur'},
+                        {  pattern:/^[^😃]+$/, message: '用户名中不能包含表情',trigger: 'blur'},
+                        { required: true, message: '请输入用户名', trigger: 'blur' }],
+                    passWord1:[ { min:2,max:20, message: '密码长度不规范', trigger: 'blur' },
+                        { required: true, message: '请输入密码', trigger: 'blur,change' }]
+                },
 
             };
         },
@@ -295,10 +296,10 @@
         },
         methods: {
             openQQ() {
-                window.open("https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101453375&redirect_uri=http://zhixiang.org.cn/%23/qqLogin&state=1");
+                window.open("https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=101453375&redirect_uri=http://zhixiang.org.cn/%23/qqLogin&state=1",'_self');
             },
             openWB() {
-                window.open("https://api.weibo.com/oauth2/authorize?client_id=3191489564&response_type=code&redirect_uri=http://zhixiang.org.cn/%23/login");
+                window.open("https://api.weibo.com/oauth2/authorize?client_id=3191489564&response_type=code&redirect_uri=http://zhixiang.org.cn/%23/login",'_self');
             },
 
             write() {
@@ -317,6 +318,8 @@
                 window.location.href = "/#/";
             }, leav() {
                 window.location.href = "/#/blog/leav";
+            },toUi() {
+                window.location.href = "/#/UI/ui";
             },
             searchBySel() {
                 if (this.search != null && this.search != '') {
@@ -361,13 +364,13 @@
             }, closeResourceDialog(formName) {
                 this.resourceDialog = false;
                 this.$refs[formName].resetFields();
-            }, openLoginDialog() {
+            },
+            openLoginDialog() {
                 this.loginDialog = true;
-                this.loginOrRigister = true;
+                this.loginOrRigister = false;
                 this.loginUser.userName = '';
                 this.loginUser.passWord = '';
             },
-
             sendCode() {
                 if (this.rigitsterForm.email.length < 3 || this.rigitsterForm.email.indexOf("@") < 1 || this.rigitsterForm.email.indexOf(".") < 1) {
                     return false;
